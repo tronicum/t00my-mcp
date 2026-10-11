@@ -114,8 +114,9 @@ async def search_products(query: str, market: str | None = None, limit: int = 20
     """Search toom.de. Returns the first result page only (max ~72 hits, limited by `limit`).
 
     `availability` decodes toom's code for the selected market: `market_reservable` (can be reserved for
-    pickup), `market_orderable` (toom shows "Bestellbar in <Markt>": not in stock, but the market can order
-    it; this server cannot do that online, ask the market) and `home_delivery`. For real stock quantities
+    pickup), `market_orderable` (toom shows "Bestellbar in <Markt>": not in stock; on the product page "Artikel
+    anfragen" asks the market to order it, possibly plus transport costs. This server cannot send that
+    inquiry: give the user the product `url` so they can do it on toom.de) and `home_delivery`. For real stock quantities
     use compare_markets. Search by words: an exact article number is redirected by toom to a product page.
     """
     m = await _market(market)

@@ -55,8 +55,9 @@ stdio transport, no port. Any MCP client can launch `uv run toomy` the same way.
 - **Polite by design:** requests are throttled (0.5 s apart), search reads only the first result page (toom's
   `robots.txt` disallows `?page=`), and the client identifies itself. Personal use, please.
 - Search results decode toom's `availability_code` the way the product page does: `market_reservable` (reserve for
-  pickup), `market_orderable` ("Bestellbar in <Markt>": not in stock, the market can order it; this server cannot
-  do that online, ask the market) and `home_delivery`. For real stock quantities use `compare_markets`
+  pickup), `market_orderable` ("Bestellbar in <Markt>": not in stock, but on the product page toom offers "Artikel
+  anfragen" and the market orders it for you, possibly plus transport costs; this server does not send that
+  inquiry, do it on toom.de) and `home_delivery`. For real stock quantities use `compare_markets`
   (capped at the quantity you ask for). Search by words: toom redirects an exact article number to its product page.
 
 ## Development
@@ -121,8 +122,9 @@ stdio, kein Port. Andere MCP-Clients starten einfach `uv run toomy`.
 - **Höflich gebaut:** gedrosselte Requests (0,5 s Abstand), die Suche liest nur die erste Ergebnisseite (die
   `robots.txt` von toom sperrt `?page=`), und der Client gibt sich zu erkennen. Bitte nur persönliche Nutzung.
 - Suchergebnisse entschlüsseln toom's `availability_code` wie die Produktseite: `market_reservable` (zur Abholung
-  reservierbar), `market_orderable` („Bestellbar in <Markt>“: nicht vorrätig, der Markt kann es bestellen; das kann
-  dieser Server online nicht, bitte im Markt nachfragen) und `home_delivery`. Echte Bestandsmengen liefert
+  reservierbar), `market_orderable` („Bestellbar in <Markt>“: nicht vorrätig, aber toom bietet auf der Produktseite „Artikel
+  anfragen“ an und der Markt bestellt es für dich, ggf. zzgl. Transportkosten; diese Anfrage sendet der Server
+  nicht, bitte auf toom.de machen) und `home_delivery`. Echte Bestandsmengen liefert
   `compare_markets` (gedeckelt auf die angefragte Menge). Mit Wörtern suchen: toom leitet eine exakte Artikelnummer
   auf die Produktseite um.
 
