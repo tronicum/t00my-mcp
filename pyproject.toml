@@ -1,0 +1,29 @@
+[project]
+name = "toomy"
+version = "0.1.0"
+description = "MCP server (FastMCP) for the toom.de online shop: search, basket, markets, copy a basket between markets"
+readme = "README.md"
+license = "AGPL-3.0-or-later"
+requires-python = ">=3.10"
+dependencies = [
+    "fastmcp>=4.1.0",
+    "httpx>=0.28.1",
+]
+
+[project.scripts]
+toomy = "toomy.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/toomy"]
+
+[dependency-groups]
+dev = ["pytest>=9.1.1", "pytest-asyncio>=1.4.0"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = ["live: talks to the real toom.de (read-only); set TOOMY_LIVE=1"]

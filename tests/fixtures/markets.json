@@ -1,0 +1,139 @@
+{
+ "markets": [
+  {
+   "id": 3059,
+   "name": "Radolfzell",
+   "phone": "07732 92230",
+   "link": "m/radolfzell/",
+   "address": {
+    "street": "Zeppelinstraße 6",
+    "zip": "78315",
+    "city": "Radolfzell",
+    "state": "",
+    "country": "DE",
+    "longitude": 8.95777,
+    "latitude": 47.744202
+   }
+  },
+  {
+   "id": 3248,
+   "name": "Troisdorf",
+   "phone": "02241 95180-0",
+   "link": "m/troisdorf/",
+   "address": {
+    "street": "Heuserweg 1-5",
+    "zip": "53842",
+    "city": "Troisdorf",
+    "state": "",
+    "country": "DE",
+    "longitude": 7.103,
+    "latitude": 50.828499
+   }
+  },
+  {
+   "id": 3340,
+   "name": "Albstadt",
+   "phone": "07431 933431-0",
+   "link": "m/albstadt/",
+   "address": {
+    "street": "Berliner Str. 94",
+    "zip": "72458",
+    "city": "Albstadt",
+    "state": "Baden-Württemberg",
+    "country": "Germany",
+    "longitude": 9.042882,
+    "latitude": 48.203476
+   }
+  },
+  {
+   "id": 3373,
+   "name": "Bochum",
+   "phone": "02327 307981-0",
+   "link": "m/bochum/",
+   "address": {
+    "street": "Berliner Straße 50-62",
+    "zip": "44866",
+    "city": "Bochum",
+    "state": "",
+    "country": "",
+    "longitude": 7.1237,
+    "latitude": 51.475208
+   }
+  },
+  {
+   "id": 3378,
+   "name": "Hagen",
+   "phone": "02331 4803-0",
+   "link": "m/hagen/",
+   "address": {
+    "street": "Berliner Strasse 13-15",
+    "zip": "58135",
+    "city": "Hagen",
+    "state": "",
+    "country": "Germany",
+    "longitude": 7.444622,
+    "latitude": 51.352451
+   }
+  },
+  {
+   "id": 3382,
+   "name": "Berlin-Weißensee",
+   "phone": "030 39837169-0",
+   "link": "m/berlin-weissensee/",
+   "address": {
+    "street": "Roelckestr. 108",
+    "zip": "13086",
+    "city": "Berlin",
+    "state": "",
+    "country": "DE",
+    "longitude": 13.458366,
+    "latitude": 52.562518
+   }
+  },
+  {
+   "id": 3532,
+   "name": "Magdeburg-Brückfeld",
+   "phone": "0391 8110215",
+   "link": "m/magdeburg-brueckfeld/",
+   "address": {
+    "street": "Berliner Chaussee 48-50",
+    "zip": "39114",
+    "city": "Magdeburg-Brückfeld",
+    "state": "",
+    "country": "DE",
+    "longitude": 11.6718,
+    "latitude": 52.1292
+   }
+  },
+  {
+   "id": 3646,
+   "name": "Berlin-Friedrichshain",
+   "phone": "030 4677621-0",
+   "link": "m/berlin-friedrichshain/",
+   "address": {
+    "street": "Hermann-Blankenstein-Str. 44",
+    "zip": "10249",
+    "city": "Berlin-Friedrichshain",
+    "state": "",
+    "country": "DE",
+    "longitude": 13.4656,
+    "latitude": 52.5233
+   }
+  },
+  {
+   "id": 3839,
+   "name": "Prenzlau",
+   "phone": "03984 832721-0",
+   "link": "m/prenzlau/",
+   "address": {
+    "street": "Seelübber Weg 3",
+    "zip": "17291",
+    "city": "Prenzlau",
+    "state": "",
+    "country": "DE",
+    "longitude": 13.8781,
+    "latitude": 53.305698
+   }
+  }
+ ]
+}
