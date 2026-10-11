@@ -93,7 +93,11 @@ class FakeToom:
             return httpx.Response(200, json=self.markets)
         if path.startswith("/s/"):
             self.queries.append((unquote(path[3:]), market))
+            if unquote(path[3:]) in self.catalog:  # real site: an exact article number redirects to the product page
+                return httpx.Response(302, headers={"location": self.catalog[unquote(path[3:])]["url"]})
             return httpx.Response(200, text=self.search_html)
+        if path.startswith("/p/"):
+            return httpx.Response(200, text="<html>product page</html>")
         if market is None:
             return httpx.Response(400, text="no market cookie")
 

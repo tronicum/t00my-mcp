@@ -80,6 +80,20 @@ def _price_to_float(text: str | None) -> float | None:
     return float(m.group(0).replace(".", "").replace(",", ".")) if m else None
 
 
+def decode_availability(code: Any) -> dict[str, bool]:
+    """Decode toom's availabilityCode as the toom.de product page does ("0|1|2", "0|2", "1", "2", ...).
+
+    Digits: 0 = home delivery, 1 = available in the market (can be reserved for pickup),
+    2 = "orderable in the market" ("Bestellbar in <Markt>"). Anything else (e.g. "unavailable") = nothing.
+    """
+    digits = set(str(code or "").split("|"))
+    return {
+        "home_delivery": "0" in digits,
+        "market_reservable": "1" in digits,
+        "market_orderable": "2" in digits,
+    }
+
+
 def _undefined(v: Any) -> Any:
     return None if v == "$undefined" else v
 
@@ -110,8 +124,8 @@ def parse_search_payload(html: str) -> dict[str, Any]:
             "rating": _undefined(rating.get("rating")) if isinstance(rating, dict) else None,
             "reviews": rating.get("reviewsCount") if isinstance(rating, dict) else None,
             "on_offer": bool((p.get("flags") or {}).get("aktion")),
-            # toom's own "online|market" code as sent by the site; documented by observation only
-            "availability_code": p.get("availabilityCode"),
+            "availability_code": p.get("availabilityCode"),  # raw, as toom sends it
+            "availability": decode_availability(p.get("availabilityCode")),
             "low_stock": p.get("lowStockAvailability"),
         })
     return {"count": obj["products"].get("count", len(products)), "products": products}
@@ -193,6 +207,8 @@ class Toom:
     async def search(self, query: str) -> dict[str, Any]:
         """First result page only (up to ~72 hits) for the session's market."""
         r = await self._request("GET", f"/s/{quote(query.strip(), safe='')}", headers={"Accept": "text/html"})
+        if r.url.path.startswith("/p/"):  # an exact article number redirects to the product page
+            raise ToomError(f"'{query}' matched exactly one article and toom.de sent its product page ({r.url}); search by words instead.")
         return parse_search_payload(r.text)
 
     # ------------------------------------------------------------------ basket

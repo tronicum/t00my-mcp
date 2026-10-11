@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from toomy.client import Market, ToomError, _price_to_float, match_markets, parse_basket, parse_search_payload
+from toomy.client import Market, ToomError, _price_to_float, decode_availability, match_markets, parse_basket, parse_search_payload
 
 FIX = Path(__file__).parent / "fixtures"
 
@@ -82,3 +82,25 @@ def test_market_public_view_has_address_and_url():
     m = next(m for m in markets() if m.name == "Prenzlau")
     pub = m.public()
     assert pub["id"] == 3839 and "17291 Prenzlau" in pub["address"] and pub["url"].startswith("https://toom.de/")
+
+
+@pytest.mark.parametrize("code, delivery, reservable, orderable", [
+    ("0|1|2", True, True, True),
+    ("0|1", True, True, False),
+    ("0|2", True, False, True),  # e.g. a door: not in stock in the market, "Bestellbar in <Markt>", ships home
+    ("1|2", False, True, True),
+    ("0", True, False, False),
+    ("1", False, True, False),
+    ("2", False, False, True),
+    ("unavailable", False, False, False),
+    (None, False, False, False),
+    ("", False, False, False),
+])
+def test_decode_availability_like_the_toom_product_page(code, delivery, reservable, orderable):
+    assert decode_availability(code) == {"home_delivery": delivery, "market_reservable": reservable, "market_orderable": orderable}
+
+
+def test_search_results_carry_the_decoded_availability():
+    first = parse_search_payload((FIX / "search.html").read_text(encoding="utf-8"))["products"][0]
+    assert first["availability_code"] == "0|1"
+    assert first["availability"] == {"home_delivery": True, "market_reservable": True, "market_orderable": False}

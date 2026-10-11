@@ -54,8 +54,10 @@ stdio transport, no port. Any MCP client can launch `uv run toomy` the same way.
   (`TOOMY_LIVE=1 uv run pytest -m live`) are there to notice that.
 - **Polite by design:** requests are throttled (0.5 s apart), search reads only the first result page (toom's
   `robots.txt` disallows `?page=`), and the client identifies itself. Personal use, please.
-- `availability_code` in search results is toom's own hint, copied as sent and not decoded. For a reliable answer
-  use `compare_markets` (stock quantity per market, capped at the quantity you ask for).
+- Search results decode toom's `availability_code` the way the product page does: `market_reservable` (reserve for
+  pickup), `market_orderable` ("Bestellbar in <Markt>": not in stock, the market can order it; this server cannot
+  do that online, ask the market) and `home_delivery`. For real stock quantities use `compare_markets`
+  (capped at the quantity you ask for). Search by words: toom redirects an exact article number to its product page.
 
 ## Development
 
@@ -118,8 +120,11 @@ stdio, kein Port. Andere MCP-Clients starten einfach `uv run toomy`.
   (`TOOMY_LIVE=1 uv run pytest -m live`) sind dafür da, das zu bemerken.
 - **Höflich gebaut:** gedrosselte Requests (0,5 s Abstand), die Suche liest nur die erste Ergebnisseite (die
   `robots.txt` von toom sperrt `?page=`), und der Client gibt sich zu erkennen. Bitte nur persönliche Nutzung.
-- `availability_code` in Suchergebnissen ist toom's eigener Hinweis, unverändert übernommen und nicht entschlüsselt.
-  Verlässlich ist `compare_markets` (Bestandsmenge pro Markt, gedeckelt auf die angefragte Menge).
+- Suchergebnisse entschlüsseln toom's `availability_code` wie die Produktseite: `market_reservable` (zur Abholung
+  reservierbar), `market_orderable` („Bestellbar in <Markt>“: nicht vorrätig, der Markt kann es bestellen; das kann
+  dieser Server online nicht, bitte im Markt nachfragen) und `home_delivery`. Echte Bestandsmengen liefert
+  `compare_markets` (gedeckelt auf die angefragte Menge). Mit Wörtern suchen: toom leitet eine exakte Artikelnummer
+  auf die Produktseite um.
 
 ### Entwicklung
 

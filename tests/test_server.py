@@ -58,6 +58,17 @@ async def test_search_with_explicit_market_overrides_the_selected_one(mcp, toom)
     assert toom.queries[-1][1] == WEISSENSEE
 
 
+async def test_search_results_are_decoded_for_the_market(mcp, toom):
+    await call(mcp, "set_market", market="Prenzlau")
+    res = await call(mcp, "search_products", query="akku", limit=1)
+    assert res["products"][0]["availability"] == {"home_delivery": True, "market_reservable": True, "market_orderable": False}
+
+
+async def test_search_by_exact_article_number_explains_toom_redirect(mcp, toom):
+    await call(mcp, "set_market", market="Prenzlau")
+    assert "search by words" in await call_err(mcp, "search_products", query=A)
+
+
 async def test_search_reads_only_the_first_page(mcp, toom):
     await call(mcp, "set_market", market="Prenzlau")
     await call(mcp, "search_products", query="akkuschrauber")

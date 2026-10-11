@@ -113,9 +113,10 @@ async def set_market(market: str) -> dict[str, Any]:
 async def search_products(query: str, market: str | None = None, limit: int = 20) -> dict[str, Any]:
     """Search toom.de. Returns the first result page only (max ~72 hits, limited by `limit`).
 
-    `availability_code` and `low_stock` are toom's raw availability hints for the market; for a
-    reliable per-market answer add the article to the basket and read its pickup/delivery status,
-    or use compare_markets.
+    `availability` decodes toom's code for the selected market: `market_reservable` (can be reserved for
+    pickup), `market_orderable` (toom shows "Bestellbar in <Markt>": not in stock, but the market can order
+    it; this server cannot do that online, ask the market) and `home_delivery`. For real stock quantities
+    use compare_markets. Search by words: an exact article number is redirected by toom to a product page.
     """
     m = await _market(market)
     res = await _call(_session(m).search(query))
