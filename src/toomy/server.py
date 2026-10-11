@@ -9,6 +9,9 @@ needs a toom account and happens on toom.de itself; this server does not place o
 
 from __future__ import annotations
 
+import json
+import os
+from pathlib import Path
 from typing import Any
 
 import httpx
@@ -172,6 +175,40 @@ async def clear_basket(market: str | None = None) -> dict[str, Any]:
     """Remove everything from the basket of a market."""
     m = await _market(market)
     return {"market": m.name, **await _call(_session(m).clear())}
+
+
+SESSION_DIR = Path(os.environ.get("TOOMY_HOME", Path.home() / ".toomy"))
+
+
+@mcp.tool
+async def export_session(market: str | None = None) -> dict[str, Any]:
+    """Write the session cookies of a market's basket to a local file, to look at that basket in your own browser.
+
+    The basket lives in an anonymous toom.de session held by this server. Import the file into your browser
+    with a cookie manager extension (e.g. Cookie-Editor: Import), then open the basket page. This replaces
+    the toom.de cookies of that browser, including a basket it may have had. The file is readable only by you;
+    the cookies belong to an anonymous (not logged in) session but are still a session token: do not share them.
+    """
+    m = await _market(market)
+    session = _session(m)
+    basket = await _call(session.basket())  # makes sure the server has issued the session cookie
+    SESSION_DIR.mkdir(mode=0o700, parents=True, exist_ok=True)
+    path = SESSION_DIR / f"session-{m.id}.json"
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        json.dump(session.export_cookies(), f, indent=2)
+    os.chmod(path, 0o600)
+    return {
+        "market": m.name,
+        "file": str(path),
+        "basket_url": "https://toom.de/warenkorb",
+        "basket_items": basket["total_quantity"],
+        "steps": [
+            "Install a cookie manager extension in your browser (e.g. Cookie-Editor).",
+            "Open https://toom.de, click the extension, choose Import and paste the content of the file.",
+            "Reload and open https://toom.de/warenkorb; you should see this basket.",
+        ],
+    }
 
 
 # ---------------------------------------------------- cross-market features

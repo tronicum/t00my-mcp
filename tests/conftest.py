@@ -103,7 +103,8 @@ class FakeToom:
 
         base = "/shop/rest/V1/toom/basket"
         if path == base and request.method == "GET":
-            return httpx.Response(200, json=self.basket_json(market))
+            # the real server issues the session cookie on the first basket request
+            return httpx.Response(200, json=self.basket_json(market), headers={"set-cookie": "PHPSESSID=abc123; Path=/; Secure; HttpOnly"})
         if path == f"{base}/items" and request.method == "POST":
             err = self.add(market, str(body["articleId"]), body["quantity"], body["deliveryType"])
             return err or httpx.Response(200, json=self.basket_json(market))

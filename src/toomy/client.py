@@ -26,6 +26,7 @@ DELIVERY = "homeDelivery_homeDelivery"  # parcel / home delivery
 DELIVERY_TYPES = {"pickup": PICKUP, "delivery": DELIVERY}
 
 USER_AGENT = "toomy/0.1 (+https://github.com/tronicum/toomy; personal assistant, low request rate)"
+MARKET_COOKIES = ("market_id", "market_name")
 MIN_INTERVAL = 0.5  # seconds between any two requests this process makes
 
 _throttle_lock = asyncio.Lock()
@@ -187,6 +188,29 @@ class Toom:
 
     async def aclose(self) -> None:
         await self._http.aclose()
+
+    def export_cookies(self) -> list[dict[str, Any]]:
+        """The session's cookies in the JSON format browser cookie managers (e.g. Cookie-Editor) import."""
+        out = []
+        for c in self._http.cookies.jar:
+            # the site's own JavaScript reads the market cookies, so they must not be imported as HttpOnly
+            # (httpx marks cookies it sets itself as HttpOnly, which would be wrong here)
+            http_only = c.has_nonstandard_attr("HttpOnly") and c.name not in MARKET_COOKIES
+            entry: dict[str, Any] = {
+                "name": c.name,
+                "value": c.value,
+                "domain": c.domain or "toom.de",
+                "path": c.path or "/",
+                "secure": bool(c.secure),
+                "httpOnly": http_only,
+                "sameSite": "lax",
+                "hostOnly": not (c.domain or "").startswith("."),
+                "session": c.expires is None,
+            }
+            if c.expires is not None:
+                entry["expirationDate"] = c.expires
+            out.append(entry)
+        return out
 
     async def _request(self, method: str, path: str, **kw: Any) -> httpx.Response:
         await _throttle()

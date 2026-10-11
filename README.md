@@ -14,6 +14,7 @@ one market to another. Unofficial; it talks to the same web endpoints the toom.d
 | `search_products` | Search for articles (first result page, price and toom's availability hints) |
 | `add_to_basket`, `view_basket`, `set_quantity`, `remove_from_basket`, `clear_basket` | A basket **per market**; pickup (reserve and collect) or delivery |
 | `compare_markets` | Real stock per article in several markets, no basket needed |
+| `export_session` | Write a market's session cookies to a local file (mode 0600) so you can look at that basket in your own browser: import it with a cookie manager extension (e.g. Cookie-Editor), then open toom.de/warenkorb |
 | `copy_basket` | Build a basket anew in another market and report per article what is available there |
 | `plan_pickup` | Pickup plan: your primary market first, fallback markets only for what it lacks and what is small enough to transport; says when everything is at the primary market |
 
@@ -90,6 +91,7 @@ Warenkorb von einem Markt in einen anderen kopieren. Inoffiziell; er nutzt diese
 | `search_products` | Artikel suchen (erste Ergebnisseite, Preis, Verfügbarkeitshinweise von toom) |
 | `add_to_basket`, `view_basket`, `set_quantity`, `remove_from_basket`, `clear_basket` | Ein Warenkorb **pro Markt**; Abholung (reservieren) oder Lieferung |
 | `compare_markets` | Echter Bestand pro Artikel in mehreren Märkten, ohne Warenkorb |
+| `export_session` | Schreibt die Session-Cookies eines Marktes in eine lokale Datei (Rechte 0600), damit du den Warenkorb im eigenen Browser ansehen kannst: mit einer Cookie-Erweiterung (z. B. Cookie-Editor) importieren, dann toom.de/warenkorb öffnen |
 | `copy_basket` | Warenkorb in einem anderen Markt neu aufbauen und pro Artikel berichten, was dort verfügbar ist |
 | `plan_pickup` | Abholplan: zuerst der Hauptmarkt, Ausweichmärkte nur für Fehlendes, das klein genug zum Transport ist; meldet, wenn alles im Hauptmarkt liegt |
 

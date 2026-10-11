@@ -125,6 +125,32 @@ async def test_every_market_has_its_own_basket(mcp, toom):
     assert [l["sku"] for l in (await call(mcp, "view_basket", market="Weißensee"))["lines"]] == [C]
 
 
+# ---------------------------------------------------------------- session
+
+async def test_export_session_writes_importable_cookies_with_private_permissions(mcp, toom, tmp_path, monkeypatch):
+    import json
+    import stat
+    from toomy import server
+
+    monkeypatch.setattr(server, "SESSION_DIR", tmp_path / "toomy-home")
+    await call(mcp, "add_to_basket", sku=A, market="Prenzlau")
+    res = await call(mcp, "export_session", market="Prenzlau")
+    path = tmp_path / "toomy-home" / f"session-{PRENZLAU}.json"
+    assert res["file"] == str(path) and res["basket_items"] == 1 and res["basket_url"].endswith("/warenkorb")
+    assert stat.S_IMODE(path.stat().st_mode) == 0o600  # file readable only by the owner
+    assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700
+    cookies = {c["name"]: c for c in json.loads(path.read_text())}
+    assert cookies["market_id"]["value"] == str(PRENZLAU)  # the market travels with the session
+    assert cookies["market_name"]["value"] == "Prenzlau"
+    assert cookies["PHPSESSID"]["value"] == "abc123" and cookies["PHPSESSID"]["httpOnly"] and cookies["PHPSESSID"]["secure"]
+    assert not cookies["market_id"]["httpOnly"] and not cookies["market_name"]["httpOnly"]  # the site's JS reads them
+    assert all(c["domain"].endswith("toom.de") and c["path"] == "/" for c in cookies.values())
+
+
+async def test_export_session_needs_a_market(mcp, toom):
+    assert "No market selected" in await call_err(mcp, "export_session")
+
+
 # ------------------------------------------------------------ copy basket
 
 async def test_copy_basket_builds_a_new_basket_and_reports_availability(mcp, toom):
