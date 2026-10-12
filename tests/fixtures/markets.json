@@ -13,7 +13,112 @@
     "country": "DE",
     "longitude": 8.95777,
     "latitude": 47.744202
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 160,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 160,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 160,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 160,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 160,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 160,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 160,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 160,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "07732 92230",
+   "pickupPoint": "Im toom Baumarkt befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 7<br /> Haltestelle BEZ</p>",
+   "email": "Radolfzell@toombm.de"
   },
   {
    "id": 3248,
@@ -28,7 +133,114 @@
     "country": "DE",
     "longitude": 7.103,
     "latitude": 50.828499
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 195,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 195,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 195,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 195,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 195,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 195,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 195,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 195,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Handwerks&shy;service",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02241/95 18 00",
+   "pickupPoint": "Im toom Baumarkt Troisdorf befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bahn S12<br />Haltestelle Spich<br /><br />Bus 503<br />Haltestelle Vogelgesang, Straße am Parkplatz<br /><br />Bus 507<br />Haltestelle Dachsweg</p>",
+   "email": "Troisdorf@toombm.de"
   },
   {
    "id": 3340,
@@ -43,7 +255,126 @@
     "country": "Germany",
     "longitude": 9.042882,
     "latitude": 48.203476
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 377,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 377,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 377,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 377,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 377,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 377,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 377,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 377,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    },
+    {
+     "marketId": 377,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "13:00",
+      "closing": "18:00"
+     },
+     "date": "25.10.2026",
+     "type": 2
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Handwerks&shy;service",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "07431 933431-0",
+   "pickupPoint": "Im toom Baumarkt Albstadt befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bahnhof Albstadt-Ebingen<br />B463</p>",
+   "email": "albstadt@toombm.de"
   },
   {
    "id": 3373,
@@ -58,7 +389,114 @@
     "country": "",
     "longitude": 7.1237,
     "latitude": 51.475208
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 394,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 394,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 394,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 394,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 394,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 394,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 394,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 394,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Montageprofi",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02327 3079810",
+   "pickupPoint": "Im toom Baumarkt Bochum befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "",
+   "email": "bochum@toombm.de"
   },
   {
    "id": 3378,
@@ -73,7 +511,111 @@
     "country": "Germany",
     "longitude": 7.444622,
     "latitude": 51.352451
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 398,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 398,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 398,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 398,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 398,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 398,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 398,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 398,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02331 48030",
+   "pickupPoint": "Im toom Baumarkt Hagen-Haspe befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "",
+   "email": "Hagen-Haspe@toombm.de"
   },
   {
    "id": 3382,
@@ -88,7 +630,97 @@
     "country": "DE",
     "longitude": 13.458366,
     "latitude": 52.562518
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 401,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 401,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 401,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 401,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 401,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 401,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 401,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "030 39837169-0",
+   "pickupPoint": "Im toom Baumarkt Berlin-Weißensee befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Straßenbahn 12<br />Haltestelle Pasedagplatz</p>\r\n<p>Bus X54 und 156<br />Haltestelle Rennbahnstr./Gustav-Adolf-Str.</p>\r\n<p>Bus 255<br />Haltestelle Roelckestr./Nüßlerstr.</p>",
+   "email": "berlin-weissensee@toombm.de"
   },
   {
    "id": 3532,
@@ -103,7 +735,112 @@
     "country": "DE",
     "longitude": 11.6718,
     "latitude": 52.1292
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 127,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 127,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 127,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 127,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 127,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 127,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 127,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 127,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "31.10.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": false,
+   "pickupPhone": "0391 8110215",
+   "pickupPoint": "Im toom Baumarkt Magdeburg-Brückfeld befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 51<br />Haltestelle Bördelandhalle<br /><br />Straßenbahn 6<br />Haltestelle Berliner Chaussee</p>",
+   "email": "Magdeburg@toombm.de"
   },
   {
    "id": 3646,
@@ -118,7 +855,101 @@
     "country": "DE",
     "longitude": 13.4656,
     "latitude": 52.5233
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 22,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 22,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 22,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 22,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 22,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 22,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 22,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Handwerks&shy;service",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "+49 30/467 76 21-70",
+   "pickupPoint": "Im toom Baumarkt Berlin-Friedrichshain befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bahn S8, S9, S41, S42<br />Haltestelle Storkower Straße<br /><br />Bus 156, 240<br />Haltestelle S-Bf Storkower Straße<br /><br />Straßenbahn 21<br />Haltestelle Proskauer Straße</p>",
+   "email": "Berlin-Friedrichshain@toombm.de"
   },
   {
    "id": 3839,
@@ -133,7 +964,113 @@
     "country": "DE",
     "longitude": 13.8781,
     "latitude": 53.305698
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 276,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 276,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 276,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 276,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 276,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 276,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 276,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 276,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "31.10.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "03984 8327210",
+   "pickupPoint": "Im toom Baumarkt Prenzlau befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 403, 431, 432, 435, 447, 466<br /> Haltestelle Prenzlau Einkaufszentrum</p>",
+   "email": "Prenzlau@toombm.de"
   },
   {
    "id": 3073,
@@ -148,7 +1085,114 @@
     "country": "DE",
     "longitude": 8.04883,
     "latitude": 50.374802
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 45,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 45,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 45,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 45,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 45,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 45,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 45,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 45,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Projektberater",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "06432 6453310",
+   "pickupPoint": "Im toom Baumarkt befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "",
+   "email": "Diez@toombm.de"
   },
   {
    "id": 3124,
@@ -163,7 +1207,112 @@
     "country": "DE",
     "longitude": 7.58696,
     "latitude": 51.4496
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 181,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 181,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 181,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 181,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 181,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 181,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 181,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 181,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02304 942250",
+   "pickupPoint": "In Ihrem toom Baumarkt befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus R30, R50<br /> Haltestelle Paul-Hoffmann-Straße</p>",
+   "email": "Schwerte@toombm.de"
   },
   {
    "id": 3209,
@@ -178,7 +1327,112 @@
     "country": "DE",
     "longitude": 6.76063,
     "latitude": 51.439602
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 51,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 51,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 51,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 51,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 51,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 51,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 51,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 51,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02033189990",
+   "pickupPoint": "Im toom Baumarkt Duisburg-Kaßlerfeld befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 934<br /> Haltestelle Innenhafen<br /> <br /> Bus 933<br /> Haltestelle Schifferstraße<br /> <br /> Straßenbahn 901<br /> Haltestelle Scharnhorststraße</p>",
+   "email": "Duisburg-Kasslerfeld@toombm.de"
   },
   {
    "id": 3223,
@@ -193,7 +1447,112 @@
     "country": "DE",
     "longitude": 7.75991,
     "latitude": 51.663101
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 99,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 99,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 99,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 99,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 99,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 99,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 99,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 99,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02381 9720610",
+   "pickupPoint": "Im toom Baumarkt Hamm befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 7, 17, E35, E57<br />Haltestelle Schmiedestraße<br /><br />Bus 1, E35, E57, E72, E78, E79<br />Haltestelle Isenbecker Hof</p>",
+   "email": "Hamm@toombm.de"
   },
   {
    "id": 3353,
@@ -208,7 +1567,113 @@
     "country": "Deutschland",
     "longitude": 7.153893,
     "latitude": 51.602898
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 383,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 383,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 383,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 383,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 383,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 383,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 383,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 383,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Montageprofi",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02366/930311-0",
+   "pickupPoint": "Im toom Baumarkt Herten befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Buslinie 214<br /> Josefstraße</p>\r\n<p>Buslinie 249<br /> Hollenbeck</p>",
+   "email": "herten-zumaltenschacht@toombm.de"
   },
   {
    "id": 3374,
@@ -223,7 +1688,111 @@
     "country": "",
     "longitude": 6.4553,
     "latitude": 51.19707
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 395,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 395,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 395,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 395,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 395,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 395,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 395,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 395,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02161-247631-0",
+   "pickupPoint": "Im toom Baumarkt Mönchengladbach befindet sich die Abholstation für deine Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "",
+   "email": "Moenchengladbach@toombm.de"
   },
   {
    "id": 3376,
@@ -238,7 +1807,114 @@
     "country": "DE",
     "longitude": 6.173921,
     "latitude": 50.887832
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 4,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 4,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 4,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 4,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 4,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 4,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 4,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 4,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Expresslieferung",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Handwerks&shy;service",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02404 6743410",
+   "pickupPoint": "Im toom Baumarkt Alsdorf befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "",
+   "email": "Alsdorf@toombm.de"
   },
   {
    "id": 3379,
@@ -253,7 +1929,111 @@
     "country": "DE",
     "longitude": 6.70993,
     "latitude": 51.4207
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 52,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 52,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 52,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 52,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 52,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 52,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 52,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 52,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02065 904310",
+   "pickupPoint": "Im toom Baumarkt Duisburg-Rheinhausen befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 912<br />Haltestelle Einkaufszentrum</p>",
+   "email": "Duisburg-Rheinhausen@toombm.de"
   },
   {
    "id": 3381,
@@ -268,7 +2048,113 @@
     "country": "DE",
     "longitude": 7.03383,
     "latitude": 51.586201
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 85,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 85,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 85,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 85,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 85,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 85,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 85,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 85,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "0209 930810",
+   "pickupPoint": "Im toom Baumarkt Gelsenkirchen befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 255<br />Haltestelle Sperberstraße</p>",
+   "email": "Gelsenkirchen@toombm.de"
   },
   {
    "id": 3453,
@@ -283,7 +2169,117 @@
     "country": "DE",
     "longitude": 6.94721,
     "latitude": 51.442799
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 137,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 137,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 137,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 137,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 137,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 137,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 137,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 137,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Handwerks&shy;service",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Montageprofi",
+    "Nähservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst",
+    "Tapeten&shy;wechsel"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "0208 78095-0",
+   "pickupPoint": "Im toom Baumarkt Mülheim/Ruhr befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "",
+   "publicTransportation": "<p>Bus 129<br />Haltestelle Am Förderturm</p>",
+   "email": "MuelheimRuhr@toombm.de"
   },
   {
    "id": 3464,
@@ -298,7 +2294,112 @@
     "country": "DE",
     "longitude": 6.93406,
     "latitude": 50.905998
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 112,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 112,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 112,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 112,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 112,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 112,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 112,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 112,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Handwerks&shy;service",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "0221 1397581-0",
+   "pickupPoint": "Im toom Baumarkt Köln-Zollstock befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 130<br />Haltestelle Bernkasteller Straße<br /><br />Straßenbahn 12<br />Haltestelle Zollstockgürtel<br />&nbsp;</p>\r\n<p>Navigationssystem bitte<br />\"Bernkasteler Straße 77\"<br />als Ziel eingeben</p>",
+   "email": "Koeln-Zollstock@toombm.de"
   },
   {
    "id": 3466,
@@ -313,7 +2414,112 @@
     "country": "DE",
     "longitude": 6.46774,
     "latitude": 50.789101
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 54,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 54,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 54,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 54,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 54,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 54,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 54,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 54,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02421 407790",
+   "pickupPoint": "Im toom Baumarkt Düren befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 202, 286<br /> Haltestelle Rölsdorf-Dreieck</p>",
+   "email": "Dueren-Roelsdorf@toombm.de"
   },
   {
    "id": 3472,
@@ -328,7 +2534,114 @@
     "country": "DE",
     "longitude": 7.35079,
     "latitude": 51.441299
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 214,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 214,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 214,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 214,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 214,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 214,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 214,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 214,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Handwerks&shy;service",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Montageprofi",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02302 914300",
+   "pickupPoint": "Im toom Baumarkt Witten befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 320, 376<br />Haltestelle Husemann-Sporthalle<br /><br />Bus 375<br />Haltestelle Rheinische Straße</p>",
+   "email": "Witten@toombm.de"
   },
   {
    "id": 3500,
@@ -343,7 +2656,110 @@
     "country": "DE",
     "longitude": 7.79059,
     "latitude": 50.471901
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 211,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 211,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 211,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 211,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 211,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 211,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 211,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 211,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": false,
+   "pickupPhone": "02602 68754",
+   "pickupPoint": "Im toom Baumarkt Wirges befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 115, 462, 464, 485<br /> Haltestelle Wirges Mitte</p>",
+   "email": "Wirges@toombm.de"
   },
   {
    "id": 3530,
@@ -358,7 +2774,112 @@
     "country": "DE",
     "longitude": 7.23855,
     "latitude": 50.573299
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 165,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 165,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 165,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 165,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 165,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 165,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 165,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 165,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "DHL Paketshop",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": false,
+   "pickupPhone": "02642 93010",
+   "pickupPoint": "Im toom Baumarkt Remagen befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 841, 851, 852, 853<br />Haltestelle FH RheinAhrCampus</p>",
+   "email": "Remagen@toombm.de"
   },
   {
    "id": 3633,
@@ -373,7 +2894,113 @@
     "country": "DE",
     "longitude": 6.98125,
     "latitude": 51.535801
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 32,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 32,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 32,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 32,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 32,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 32,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 32,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 32,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02041/706 071-70",
+   "pickupPoint": "Im toom Baumarkt Bottrop befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 260<br />Haltestelle Am Jugendkombihaus</p>",
+   "email": "bottrop@toombm.de"
   },
   {
    "id": 3645,
@@ -388,7 +3015,111 @@
     "country": "DE",
     "longitude": 7.87037,
     "latitude": 51.230202
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 158,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 158,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 158,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 158,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 158,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 158,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 158,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 158,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02391 917610",
+   "pickupPoint": "Im toom Baumarkt Plettenberg befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 74, 90, 274, 276, R80<br /> Haltestelle Lennebrücke</p>",
+   "email": "Plettenberg@toombm.de"
   },
   {
    "id": 3655,
@@ -403,7 +3134,111 @@
     "country": "DE",
     "longitude": 7.65386,
     "latitude": 50.6945
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 6,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 6,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 6,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 6,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 6,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 6,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 6,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 6,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02681 950810",
+   "pickupPoint": "In Ihrem toom Baumarkt befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 295<br />Haltestelle Toom Baumarkt</p>",
+   "email": "Altenkirchen@toombm.de"
   },
   {
    "id": 3658,
@@ -418,7 +3253,113 @@
     "country": "DE",
     "longitude": 6.54721,
     "latitude": 51.434799
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 146,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 146,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 146,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 146,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 146,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 146,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 146,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 146,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "028459419710",
+   "pickupPoint": "Im toom Baumarkt Neukirchen-Vluyn befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 912<br />Haltestelle Diesterwegschule</p>",
+   "email": "Neukirchen-Vluyn@toombm.de"
   },
   {
    "id": 3660,
@@ -433,7 +3374,114 @@
     "country": "DE",
     "longitude": 6.96451,
     "latitude": 51.116699
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 221,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 221,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 221,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 221,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 221,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 221,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 221,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 221,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Handwerks&shy;service",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02173 394611-0",
+   "pickupPoint": "Im toom Baumarkt Langenfeld befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 254, 777, 791<br />Haltestelle Gladbacher Straße</p>",
+   "email": "Langenfeld@toombm.de"
   },
   {
    "id": 3661,
@@ -448,7 +3496,113 @@
     "country": "DE",
     "longitude": 6.28669,
     "latitude": 51.311501
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 143,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 143,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 143,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 143,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 143,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 143,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 143,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 143,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst",
+    "Tapeten&shy;wechsel"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "021539108110",
+   "pickupPoint": "Im toom Baumarkt Nettetal-Lobberich befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 93<br /> Haltestelle Florastraße</p>",
+   "email": "Nettetal@toombm.de"
   },
   {
    "id": 3668,
@@ -463,7 +3617,114 @@
     "country": "DE",
     "longitude": 6.635861,
     "latitude": 50.943081
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 344,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 344,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 344,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 344,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 344,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 344,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 344,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 344,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Handwerks&shy;service",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02271 9832910",
+   "pickupPoint": "Im toom Baumarkt Bergheim-Zieverich befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bahn RB38<br />Haltestelle Zieverich Bf<br /><br />Bus 922, 923, 939, 940, 963<br />Haltestelle Gutenbergstraße</p>",
+   "email": "Bergheim@toombm.de"
   },
   {
    "id": 3686,
@@ -478,7 +3739,113 @@
     "country": "DE",
     "longitude": 6.35247,
     "latitude": 50.936001
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 357,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 357,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 357,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 357,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 357,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 357,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 357,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 357,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02461 6218010",
+   "pickupPoint": "Im toom Baumarkt Jülich befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "",
+   "email": "Juelich@toombm.de"
   },
   {
    "id": 3692,
@@ -493,7 +3860,112 @@
     "country": "DE",
     "longitude": 7.55744,
     "latitude": 50.990501
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 361,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 361,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 361,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 361,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 361,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 361,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 361,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 361,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02261 911801-70",
+   "pickupPoint": "Im toom Baumarkt Gummersbach befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "",
+   "email": "gummersbach@toombm.de"
   },
   {
    "id": 3711,
@@ -508,7 +3980,111 @@
     "country": "DE",
     "longitude": 7.72552,
     "latitude": 50.776699
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 213,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 213,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 213,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 213,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 213,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 213,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 213,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 213,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02742/93 21-70",
+   "pickupPoint": "Im toom Baumarkt Wissen/Sieg befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 295<br />Haltestelle Hüttensiedlung</p>",
+   "email": "WissenSieg@toombm.de"
   },
   {
    "id": 3793,
@@ -523,7 +4099,112 @@
     "country": "DE",
     "longitude": 6.60792,
     "latitude": 51.095798
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 299,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 299,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 299,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 299,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 299,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 299,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 299,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 299,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02181 475710",
+   "pickupPoint": "Im toom Baumarkt Grevenbroich befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 858, 869, 877, 893<br /> Haltestelle Zuckerfabrik</p>",
+   "email": "Grevenbroich@toombm.de"
   },
   {
    "id": 3819,
@@ -538,7 +4219,112 @@
     "country": "DE",
     "longitude": 7.49484,
     "latitude": 51.604301
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 274,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 274,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 274,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 274,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 274,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 274,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "07:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 274,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 274,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02306 2028410",
+   "pickupPoint": "Im toom Baumarkt Lünen befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 116<br /> Haltestelle Buchenberg</p>",
+   "email": "Luenen@toombm.de"
   },
   {
    "id": 3823,
@@ -553,7 +4339,114 @@
     "country": "DE",
     "longitude": 7.08414,
     "latitude": 51.6661
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 275,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 275,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 275,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 275,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 275,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 275,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 275,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 275,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Montageprofi",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02365 207190",
+   "pickupPoint": "Im toom Baumarkt Marl befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus SB26<br />Haltestelle Lippestraße</p>",
+   "email": "Marl@toombm.de"
   },
   {
    "id": 3848,
@@ -568,7 +4461,112 @@
     "country": "DE",
     "longitude": 8.08564,
     "latitude": 51.559601
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 293,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 293,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 293,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 293,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 293,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 293,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 293,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 293,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Bepflanzungs&shy;service",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02921 9830",
+   "pickupPoint": "Im toom Baumarkt Soest befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "",
+   "publicTransportation": "<p>Bus C 4<br />Haltestelle Schüttweg</p>",
+   "email": "Soest@toombm.de"
   },
   {
    "id": 3875,
@@ -583,7 +4581,112 @@
     "country": "DE",
     "longitude": 6.67437,
     "latitude": 51.618198
-   }
+   },
+   "openingTimes": [
+    {
+     "marketId": 278,
+     "isodate": 1,
+     "label": "Montag",
+     "value": {
+      "dayofweek": 0,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 278,
+     "isodate": 2,
+     "label": "Dienstag",
+     "value": {
+      "dayofweek": 1,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 278,
+     "isodate": 3,
+     "label": "Mittwoch",
+     "value": {
+      "dayofweek": 2,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 278,
+     "isodate": 4,
+     "label": "Donnerstag",
+     "value": {
+      "dayofweek": 3,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 278,
+     "isodate": 5,
+     "label": "Freitag",
+     "value": {
+      "dayofweek": 4,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 278,
+     "isodate": 6,
+     "label": "Samstag",
+     "value": {
+      "dayofweek": 5,
+      "opening": "08:00",
+      "closing": "20:00"
+     }
+    },
+    {
+     "marketId": 278,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6
+     }
+    }
+   ],
+   "specialOpeningTimes": [
+    {
+     "marketId": 278,
+     "isodate": 0,
+     "label": "Sonntag",
+     "value": {
+      "dayofweek": 6,
+      "opening": "00:00",
+      "closing": "00:00"
+     },
+     "date": "01.11.2026",
+     "type": 1
+    }
+   ],
+   "services": [
+    "Abholservice: online bestellen, im Markt abholen",
+    "Anhängerverleih",
+    "Einlade&shy;service",
+    "Entsorgungs&shy;service",
+    "Farbmisch&shy;service",
+    "Finanzierung",
+    "Gasflaschen&shy;austausch",
+    "Holz&shy;zuschnitt",
+    "Lieferservice",
+    "Mietgeräte&shy;service",
+    "Miettranspor&shy;terservice",
+    "Schärfdienst",
+    "Schlüssel&shy;dienst"
+   ],
+   "clickAndCollectEnabled": true,
+   "pickupPhone": "02855 96350",
+   "pickupPoint": "Im toom Baumarkt Voerde befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
+   "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
+   "publicTransportation": "<p>Bus 16<br /> Haltestelle Heideweg</p>",
+   "email": "Voerde@toombm.de"
   }
  ]
 }

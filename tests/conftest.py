@@ -75,6 +75,11 @@ class FakeToom:
         self.stock: dict[int, dict[str, int]] = {}  # market_id -> sku -> qty; missing sku = 10 everywhere
         self.baskets: dict[int, list[dict[str, Any]]] = {}  # market_id -> [{line_id, sku, quantity, delivery}]
         self.next_line = 100
+        self.shipping_cost = 39.95
+        self.freight_skus = {DOOR}
+        self.free_shipping_from = 59
+        self.recommendations = json.loads((FIX / "recommendations_110013.json").read_text(encoding="utf-8"))
+        self.api_requests: list[tuple[str, dict[str, str], dict[str, str]]] = []  # path, query, headers
         self.requests: list[tuple[str, str, int | None]] = []
         self.queries: list[tuple[str, int | None]] = []
         self.search_qs: list[str] = []  # raw query string of each search request (filter/sort params)
@@ -101,12 +106,26 @@ class FakeToom:
             li["reserveBuyBox"]["status"] = "Verfügbar" if self.stock_of(market, row["sku"]) >= row["quantity"] else "Eingeschränkt"
             total += line_total
             lines.append(li)
-        b.update(lineItems=lines, totalQuantity=sum(r["quantity"] for r in self.baskets.get(market, [])), totalCost=euro(total))
+        shipping = 0.0
+        delivered = [r for r in self.baskets.get(market, []) if r["delivery"] == "homeDelivery_homeDelivery"]
+        # the free-shipping limit is for parcels; bulky goods (the door) ship by freight and always pay
+        if delivered and (total < self.free_shipping_from or any(r["sku"] in self.freight_skus for r in delivered)):
+            shipping = self.shipping_cost
+        b["settings"] = {"delivery": {"parcelFreeShippingThreshold": self.free_shipping_from}}
+        b.update(
+            lineItems=lines,
+            totalQuantity=sum(r["quantity"] for r in self.baskets.get(market, [])),
+            totalShippingCost=euro(shipping),
+            totalCost=euro(total + shipping),
+        )
+        for li in b["lineItems"]:  # text of the delivery buy box, as the real site words it
+            li["deliverBuyBox"] = {**li.get("deliverBuyBox", {}), "text": "Lieferzeit: ca. 4-8 Werktage", "status": "Verfügbar"}
         return b
 
     def add(self, market: int, sku: str, qty: int, delivery: str) -> httpx.Response | None:
         have = self.stock_of(market, sku)
-        if sku not in self.catalog or have == 0:
+        deliverable = delivery == "homeDelivery_homeDelivery" and sku in self.catalog  # real site: out of stock is fine
+        if sku not in self.catalog or (have == 0 and not deliverable):
             return httpx.Response(404, json=[{"type": "error", "message": {"header": "", "body": "Product that you are trying to add is not available."}}])
         rows = self.baskets.setdefault(market, [])
         row = next((r for r in rows if r["sku"] == sku and r["delivery"] == delivery), None)
@@ -127,6 +146,14 @@ class FakeToom:
         self.requests.append((request.method, path, market))
         body = json.loads(request.content) if request.content else None
 
+        if path.startswith("/public/api/recommendations/"):
+            self.api_requests.append((path, dict(request.url.params), dict(request.headers)))
+            if request.headers.get("x-client-id") != "pdp-browser" or request.url.host != "api.toom.de":
+                return httpx.Response(404, text="404 page not found")
+            kind = path.rsplit("/", 1)[-1]
+            if kind not in ("also-bought", "similar"):
+                return httpx.Response(404, text="404 page not found")
+            return httpx.Response(200, json=self.recommendations[kind], headers={"x-recommendation-source": "Bondaten"} if kind == "also-bought" else {})
         if path == "/public/api/markets":
             return httpx.Response(200, json=self.markets)
         if path.startswith("/s/"):

@@ -12,14 +12,17 @@ from __future__ import annotations
 import json
 import math
 import os
+import re
+from datetime import datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import httpx
 from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError
 
-from toomy import geo, planner
+from toomy import fit, geo, hours, planner
 from toomy.client import (
     AVAILABILITY_FILTERS,
     DELIVERY_TYPES,
@@ -27,6 +30,7 @@ from toomy.client import (
     FILTER_PRICE,
     MAX_PRICE,
     PICKUP,
+    RELATED_KINDS,
     SORTS,
     Market,
     Toom,
@@ -85,12 +89,50 @@ async def _resolve(query: str | int) -> Market:
     raise ToolError(f'"{query}" is ambiguous: {names}. Use the market id or a more specific name.')
 
 
+def _env_list(name: str) -> list[str]:
+    raw = os.environ.get(name, "")
+    return [x.strip() for x in re.split(r"[;\n]", raw) if x.strip()]
+
+
 async def _market(market: str | int | None) -> Market:
+    """The market to work with: explicit, else the one chosen with set_market, else TOOMY_DEFAULT_MARKET."""
     if market is not None:
         return await _resolve(market)
-    if _current is None:
-        raise ToolError("No market selected. Use find_markets, then set_market (or pass market=...).")
-    return _current
+    if _current is not None:
+        return _current
+    default = os.environ.get("TOOMY_DEFAULT_MARKET", "").strip()
+    if default:
+        return await _resolve(default)
+    raise ToolError(
+        "No market selected. Use find_markets, then set_market (or pass market=..., or set TOOMY_DEFAULT_MARKET)."
+    )
+
+
+async def _home_markets(exclude: Market | None = None) -> list[Market]:
+    """Markets from TOOMY_HOME_MARKETS (names or ids, separated by ';'), without `exclude`."""
+    out: list[Market] = []
+    for q in _env_list("TOOMY_HOME_MARKETS"):
+        m = await _resolve(q)
+        if (exclude is None or m.id != exclude.id) and all(m.id != x.id for x in out):
+            out.append(m)
+    return out
+
+
+async def _article_session(market: str | None) -> Toom:
+    """A session for market-independent lookups (an article page reads the same everywhere)."""
+    try:
+        return _session(await _market(market))
+    except ToolError:
+        if market is not None:
+            raise
+        markets = await _all_markets()
+        if not markets:
+            raise ToolError("toom returned no markets.") from None
+        return _session(markets[0])
+
+
+def _now() -> datetime:
+    return datetime.now(ZoneInfo("Europe/Berlin"))
 
 
 def _session(m: Market) -> Toom:
@@ -136,6 +178,25 @@ AVAILABILITY_CHOICES = {"in_market": "1", "orderable": "2", "home_delivery": "0"
 def _num(x: float) -> str:
     """50 -> '50', 150.5 -> '150.5', 1000000 -> '1000000' (never an exponent: it would put a '+' in the URL)."""
     return f"{x:.2f}".rstrip("0").rstrip(".")
+
+
+RATING_PRIOR = 3.5  # what an article with no evidence is assumed to be worth (out of 5)
+RATING_PRIOR_WEIGHT = 10  # "as if every article already had 10 reviews at that value"
+
+
+def _rank_by_rating(products: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Order by a Bayesian average so that few reviews count for little: a 5.0 from one review ranks below a 4.8
+    from 200. The prior is fixed, not the page's mean (a page of excellent articles would lift the lone 5.0)."""
+    m = RATING_PRIOR_WEIGHT
+    out = []
+    for p in products:
+        rating, v = p.get("rating"), p.get("reviews") or 0
+        if isinstance(rating, (int, float)) and not isinstance(rating, bool) and v > 0:
+            score = round((v / (v + m)) * rating + (m / (v + m)) * RATING_PRIOR, 3)
+        else:
+            score = None
+        out.append({**p, "rating_score": score})
+    return sorted(out, key=lambda p: (p["rating_score"] is None, -(p["rating_score"] or 0)))
 
 
 def _search_filters(
@@ -196,6 +257,7 @@ async def search_products(
     limit: int = 20,
     offers_only: bool = False,
     sort: str = "relevance",
+    min_reviews: int = 0,
     min_price: float | None = None,
     max_price: float | None = None,
     brands: list[str] | None = None,
@@ -208,7 +270,10 @@ async def search_products(
     screwdriver in stock here" -> query="akkuschrauber", availability="in_market", sort="price_asc".
     "Bosch or Makita under 150 EUR" -> brands=["Bosch","Makita"], max_price=150.
 
-    offers_only: toom's "Nur Angebote anzeigen". sort: relevance | price_asc | price_desc | offers | rating.
+    offers_only: toom's "Nur Angebote anzeigen". sort: relevance | price_asc | price_desc | offers | rating
+    (toom's own, raw rating) | best_rated (re-ranks the hits of this page by a score that discounts articles
+    with few reviews: a 5.0 from one review does not beat a 4.8 from 200). min_reviews drops hits with fewer
+    reviews (unrated ones too).
     availability: in_market (in stock in the selected market) | orderable (not in stock, the market can order
     it) | home_delivery. `filters` takes toom's own filter params and values as listed by search_filters
     (e.g. {"attr.mca_akkuinklusive": ["Ja"]}); different filters are combined with AND, values of one filter
@@ -219,8 +284,10 @@ async def search_products(
     inquiry is done by the user on the product page) and `home_delivery`. For stock quantities use
     compare_markets. Search by words: an exact article number is redirected by toom to a product page.
     """
-    if sort not in SORTS:
-        raise ToolError(f"sort must be one of {sorted(SORTS)}")
+    if sort not in SORTS and sort != "best_rated":
+        raise ToolError(f"sort must be one of {sorted([*SORTS, 'best_rated'])}")
+    if not isinstance(min_reviews, int) or isinstance(min_reviews, bool) or min_reviews < 0:
+        raise ToolError("min_reviews must be a whole number >= 0")
     if not query.strip():
         raise ToolError("query must not be empty")
     _check_limit(limit)
@@ -229,14 +296,22 @@ async def search_products(
             raise ToolError(f"{name} must be a number >= 0")
     m = await _market(market)
     toom_filters, summary = _search_filters(m, offers_only, min_price, max_price, brands, availability, filters)
-    res = await _call(_session(m).search(query, toom_filters, SORTS[sort]))
+    res = await _call(_session(m).search(query, toom_filters, SORTS.get(sort)))
     products = res["products"]
     if offers_only:  # every hit of toom's offers filter is an offer, even without an offer flag in the card
         products = [{**p, "on_offer": True} for p in products]
+    dropped = 0
+    if min_reviews:
+        kept = [p for p in products if (p.get("reviews") or 0) >= min_reviews]
+        dropped, products = len(products) - len(kept), kept
+        summary.append(f"at least {min_reviews} reviews")
+    if sort == "best_rated":
+        products = _rank_by_rating(products)
     return {
         "market": m.name,
         "total_hits": res["count"],
         "shown": min(limit, len(products)),
+        "dropped_for_few_reviews": dropped,
         "applied": {"filters": summary, "sort": sort},
         "products": products[:limit],
     }
@@ -463,7 +538,7 @@ async def get_article(
 # ----------------------------------------------------------------- nearby
 
 @mcp.tool
-async def markets_nearby(near: str, radius_km: float = 50, limit: int = 30) -> dict[str, Any]:
+async def markets_nearby(near: str | None = None, radius_km: float = 50, limit: int = 30) -> dict[str, Any]:
     """toom markets within a radius (straight-line distance, nearest first).
 
     `near` can be a market name or id, a postal code (a prefix works), words in a market's name or city
@@ -474,6 +549,8 @@ async def markets_nearby(near: str, radius_km: float = 50, limit: int = 30) -> d
         raise ToolError("radius_km must be between 0 and 300")
     _check_limit(limit)
     markets = await _all_markets()
+    if not near:  # default: around the selected / default market
+        near = str((await _market(None)).id)
     try:
         lat, lon, label = geo.resolve_center(markets, near)
     except ValueError as e:
@@ -489,7 +566,7 @@ async def markets_nearby(near: str, radius_km: float = 50, limit: int = 30) -> d
 
 @mcp.tool
 async def find_article_nearby(
-    near: str,
+    near: str | None = None,
     sku: str | None = None,
     quantity: int = 1,
     items: list[dict[str, Any]] | None = None,
@@ -517,6 +594,8 @@ async def find_article_nearby(
         raise ToolError("Give sku or items.")
 
     markets = await _all_markets()
+    if not near:  # default: around the selected / default market
+        near = str((await _market(None)).id)
     try:
         lat, lon, label = geo.resolve_center(markets, near)
     except ValueError as e:
@@ -534,7 +613,14 @@ async def find_article_nearby(
 
     rows = []
     for dist, m in checked:
-        row: dict[str, Any] = {**m.public(), "distance_km": round(dist, 1)}
+        st = hours.status(m, _now())
+        row: dict[str, Any] = {
+            **m.public(),
+            "distance_km": round(dist, 1),
+            "open_now": st["open_now"],
+            "closes_at": st["closes_at"],
+            "today": st["today"],
+        }
         try:
             got = await _session(m).stock(wanted)
         except ToomError as e:
@@ -557,6 +643,222 @@ async def find_article_nearby(
         "not_checked": [f"{m.name} ({d:.0f} km)" for d, m in skipped],
         "nearest_complete": complete[0] if complete else None,
         "markets": rows,
+    }
+
+
+# ------------------------------------------------------- market, articles
+
+@mcp.tool
+async def market_info(market: str | None = None) -> dict[str, Any]:
+    """Everything useful for a visit: open now?, opening hours, upcoming closed days, services, pickup details.
+
+    Hours come from toom's market list, including its "special days" (a 00:00-00:00 entry is a closed day,
+    e.g. a holiday). A holiday toom did not enter is not known here. `has` flags services that matter for
+    transport: rental van (Miettransporter), trailer rental (Anhängerverleih), wood cutting (Holzzuschnitt),
+    tool rental, delivery and pickup service.
+    """
+    m = await _market(market)
+    now = _now()
+    svc = " | ".join(m.services).casefold()
+    return {
+        "market": m.public(),
+        "now": now.strftime("%Y-%m-%d %H:%M"),
+        "status": hours.status(m, now),
+        "week": hours.week(m),
+        "special_days": hours.upcoming_special_days(m, now.date()),
+        "services": list(m.services),
+        "has": {
+            "rental_van": "miettransporter" in svc,
+            "trailer_rental": "anhänger" in svc,
+            "wood_cutting": "zuschnitt" in svc,
+            "tool_rental": "mietgeräte" in svc,
+            "delivery_service": "lieferservice" in svc,
+            "pickup_service": "abholservice" in svc,
+        },
+        "pickup": {
+            "phone": m.pickup_phone or m.phone,
+            "where_in_the_market": m.pickup_point or None,
+            "parking": m.parking or None,
+            "public_transport": m.transit or None,
+            "click_and_collect": m.click_and_collect,
+        },
+        "contact": {"phone": m.phone, "email": m.email or None},
+        "note": "Opening hours are what toom's data says; call the market for holidays or special cases.",
+    }
+
+
+@mcp.tool
+async def compare_articles(
+    skus: list[str], market: str | None = None, also_check: list[str] | None = None
+) -> dict[str, Any]:
+    """Compare 2 to 6 articles side by side: price, brand, dimensions (cm/kg), stock and every characteristic.
+
+    `characteristics` lists each label with the value per article and whether they differ, so what
+    distinguishes the articles is visible at a glance. Dimensions are numbers taken from what toom states;
+    a missing one is simply absent. Stock is for the selected market and for each market in `also_check`.
+    """
+    if not isinstance(skus, list) or not 2 <= len(skus) <= 6:
+        raise ToolError("Give 2 to 6 article numbers.")
+    wanted = list(dict.fromkeys(str(x).strip() for x in skus if str(x).strip()))
+    if len(wanted) < 2:
+        raise ToolError("Give 2 to 6 different article numbers.")
+    if len(also_check or []) > MAX_ALSO_CHECK:
+        raise ToolError(f"also_check takes at most {MAX_ALSO_CHECK} markets")
+    m = await _market(market)
+    others = [await _resolve(q) for q in (also_check or [])]
+    targets = [m] + [x for x in others if x.id != m.id]
+    arts = [await _call(_session(m).article(x)) for x in wanted]
+    stock: dict[str, dict[str, Any]] = {}
+    items = [{"sku": a["sku"], "quantity": 1} for a in arts]
+    for t in targets:
+        try:
+            got = await _session(t).stock(items)
+            stock[t.name] = {a["sku"]: got.get(a["sku"], 0) for a in arts}
+        except ToomError as e:
+            stock[t.name] = {a["sku"]: f"unknown ({e})" for a in arts}
+    labels: dict[str, dict[str, Any]] = {}
+    for a in arts:
+        for group in a["characteristics"].values():
+            for label, value in group.items():
+                labels.setdefault(label, {})[a["sku"]] = value
+    chars = [
+        {"label": label, "values": {a["sku"]: vals.get(a["sku"]) for a in arts}, "differs": len({str(v) for v in vals.values()}) > 1 or len(vals) < len(arts)}
+        for label, vals in labels.items()
+    ]
+    chars.sort(key=lambda c: (not c["differs"], c["label"]))
+    return {
+        "market": m.name,
+        "articles": [
+            {k: a[k] for k in ("sku", "title", "brand", "price_eur", "ean", "url", "dimensions", "summary")} for a in arts
+        ],
+        "stock": stock,
+        "characteristics": chars,
+    }
+
+
+@mcp.tool
+async def fits_space(
+    sku: str,
+    max_width_cm: float,
+    max_height_cm: float,
+    max_depth_cm: float | None = None,
+    allow_rotation: bool = True,
+    market: str | None = None,
+) -> dict[str, Any]:
+    """Does an article fit into a space (a car's load area, a doorway, a shelf)? Uses the dimensions toom states.
+
+    Give the free space in cm. Without max_depth_cm that axis is treated as unlimited. The answer is
+    `fits` true only if it fits however unknown dimensions turn out, false only if it cannot fit whatever they
+    are, otherwise null ("unklar"): a dimension toom does not state is never guessed. Dimensions are those
+    of the article as listed (for a door: the leaf, not the wall opening, and without frame or packaging);
+    leave margin. The weight is returned for your own judgement.
+    """
+    art = await _call((await _article_session(market)).article(sku))
+    try:
+        res = fit.check(art["dimensions"], max_width_cm, max_height_cm, max_depth_cm, allow_rotation)
+    except ValueError as e:
+        raise ToolError(str(e)) from e
+    return {"article": {"sku": art["sku"], "title": art["title"], "url": art["url"]}, **res}
+
+
+@mcp.tool
+async def delivery_info(sku: str, quantity: int = 1, market: str | None = None) -> dict[str, Any]:
+    """Pick up or have it delivered? Costs, lead times and stock for both, side by side.
+
+    toom shows shipping costs only in a basket, so this uses a short-lived throw-away basket (a separate
+    anonymous session): your real baskets are not touched. Free shipping starts at the threshold toom reports.
+    Nothing is ordered or reserved.
+    """
+    quantity = _int_quantity(quantity)
+    m = await _market(market)
+    art = await _call(_session(m).article(sku))
+    stock = (await _call(_session(m).stock([{"sku": art["sku"], "quantity": quantity}]))).get(art["sku"], 0)
+    scratch = Toom(m, transport=_transport)
+    try:
+        try:
+            basket = await scratch.add(art["sku"], quantity, DELIVERY_TYPES["delivery"])
+        except ToomError as e:
+            basket, delivery_error = None, str(e)
+        else:
+            delivery_error = None
+    finally:
+        await scratch.aclose()
+    line = basket["lines"][0] if basket and basket["lines"] else None
+    delivery: dict[str, Any] = {"possible": line is not None}
+    if line:
+        shipping = basket["shipping_eur"]
+        goods = round((line["unit_price_eur"] or 0) * quantity, 2) if line["unit_price_eur"] is not None else None
+        threshold = basket["free_shipping_threshold_eur"]
+        delivery.update(
+            lead_time=line["delivery"]["text"],
+            status=line["delivery"]["status"],
+            shipping_eur=shipping,
+            free_shipping_from_eur=threshold,
+            goods_eur=goods,
+            total_eur=basket["total_eur"],
+            shipping_free=bool(shipping is not None and shipping == 0),
+            free_shipping_note=(
+                "toom's free-shipping limit applies to parcel shipments; bulky goods (freight) are charged "
+                "their own shipping cost, so look at shipping_eur, not at the limit."
+            ),
+        )
+    else:
+        delivery["reason"] = delivery_error or "toom did not accept the article for delivery."
+    return {
+        "article": {"sku": art["sku"], "title": art["title"], "price_eur": art["price_eur"], "url": art["url"]},
+        "market": m.name,
+        "quantity": quantity,
+        "pickup": {
+            "in_stock": stock,
+            "enough": stock >= quantity,
+            "status": line["pickup"]["status"] if line else None,
+            "hint": line["pickup"]["hint"] if line else None,
+            "note": line["pickup"]["note"] if line else None,
+            "extra_cost_eur": 0.0,
+        },
+        "delivery": delivery,
+        "note": "Shipping costs are read from a throw-away basket and can depend on size and address.",
+    }
+
+
+@mcp.tool
+async def get_related(
+    sku: str,
+    kind: str = "also_bought",
+    market: str | None = None,
+    limit: int = 8,
+    only_other_categories: bool = False,
+) -> dict[str, Any]:
+    """Accessories and alternatives as toom itself shows them on the product page.
+
+    kind="also_bought": "Häufig dazu gekauft" (real purchase data: screws, foam, fittings, batteries, ...).
+    kind="similar": "Ähnliche Produkte" (same kind of article: other sizes, brands). It is not a curated
+    accessory list, so also_bought can contain other sizes of the same article; `same_category` marks them,
+    and only_other_categories=True drops them. `selling_points` often says what an accessory fits
+    ("passend für ..."). Nothing is added to a basket.
+    """
+    _check_limit(limit)
+    if kind not in RELATED_KINDS:
+        raise ToolError(f"kind must be one of {sorted(RELATED_KINDS)}")
+    m = await _market(market)
+    session = _session(m)
+    art = await _call(session.article(sku))
+    rel = await _call(session.related(art["sku"], kind, limit))
+    own = (art.get("categories") or [None])[-1]
+    items = []
+    for it in rel["items"]:
+        deepest = it["category"].split(" > ")[-1] if it.get("category") else None
+        item = {**it, "same_category": bool(own and deepest == own)}
+        if only_other_categories and item["same_category"]:
+            continue
+        items.append(item)
+    return {
+        "article": {"sku": art["sku"], "title": art["title"], "category": own},
+        "kind": kind,
+        "market": m.name,
+        "source": rel["source"],  # e.g. "Bondaten": derived from purchases
+        "count": len(items),
+        "items": items,
     }
 
 
@@ -700,9 +1002,11 @@ async def _stock_matrix(lines: list[dict[str, Any]], markets: list[Market]) -> d
 
 @mcp.tool
 async def compare_markets(
-    markets: list[str], from_market: str | None = None, items: list[dict[str, Any]] | None = None
+    markets: list[str] | None = None, from_market: str | None = None, items: list[dict[str, Any]] | None = None
 ) -> dict[str, Any]:
     """Check articles against several markets without touching any basket.
+
+    `markets` defaults to the markets in TOOMY_HOME_MARKETS.
 
     Articles come from `items` ([{"sku": "...", "quantity": 2}]) or, if omitted, from the basket of
     from_market / the current market.
@@ -711,12 +1015,17 @@ async def compare_markets(
     you want). Markets are listed best first (complete before partial).
     """
     src, lines = await _lines(from_market, items)
-    targets = [await _resolve(q) for q in markets]
+    if markets:
+        targets = [await _resolve(q) for q in markets]
+    else:
+        targets = await _home_markets()
+        if not targets:
+            raise ToolError("Give `markets` or set TOOMY_HOME_MARKETS.")
     stock = await _stock_matrix(lines, targets)
     rows = []
     for m in targets:
         short = [
-            {"sku": l["sku"], "title": l["title"], "wanted": l["quantity"], "available": stock[m.id].get(l["sku"], 0)}
+            {"sku": l["sku"], "title": l.get("title") or l["sku"], "wanted": l["quantity"], "available": stock[m.id].get(l["sku"], 0)}
             for l in lines if stock[m.id].get(l["sku"], 0) < l["quantity"]
         ]
         rows.append({"market": m.name, "complete": not short, "available_items": len(lines) - len(short), "short": short})
@@ -726,7 +1035,7 @@ async def compare_markets(
 
 @mcp.tool
 async def plan_pickup(
-    primary_market: str,
+    primary_market: str | None = None,
     fallback_markets: list[str] | None = None,
     bulky_skus: list[str] | None = None,
     from_market: str | None = None,
@@ -744,10 +1053,16 @@ async def plan_pickup(
     `all_at_primary_market` in the result is true when one stop at the primary market covers everything,
     i.e. no trip to a fallback market and no own transport are needed. With apply=True the planned pickups
     are built as (replaced) baskets in each stop's market, ready to be reserved on toom.de.
+
+    Defaults: the primary market is the selected one (set_market / TOOMY_DEFAULT_MARKET) and the fallbacks
+    are TOOMY_HOME_MARKETS without it.
     """
     _, lines = await _lines(from_market, items)
-    primary = await _resolve(primary_market)
-    fallbacks = [await _resolve(q) for q in (fallback_markets or [])]
+    primary = await _market(primary_market)
+    if fallback_markets is None:
+        fallbacks = await _home_markets(exclude=primary)  # TOOMY_HOME_MARKETS, if set
+    else:
+        fallbacks = [await _resolve(q) for q in fallback_markets]
     bulky = {str(b) for b in (bulky_skus or [])}
     unknown = bulky - {l["sku"] for l in lines}
     if unknown:

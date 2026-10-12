@@ -16,7 +16,8 @@ import json
 import math
 import re
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import date
 from typing import Any
 from urllib.parse import quote, unquote
 
@@ -26,6 +27,10 @@ BASE_URL = "https://toom.de"
 PICKUP = "marketPickup_marketPickup"  # reserve online, collect in the market
 DELIVERY = "homeDelivery_homeDelivery"  # parcel / home delivery
 DELIVERY_TYPES = {"pickup": PICKUP, "delivery": DELIVERY}
+
+API_URL = "https://api.toom.de"  # the host toom's own pages use for recommendations
+API_CLIENT_ID = "pdp-browser"  # the X-Client-Id the product page sends there
+RELATED_KINDS = {"also_bought": "also-bought", "similar": "similar"}
 
 USER_AGENT = "toomy/0.1 (+https://github.com/tronicum/toomy; personal assistant, low request rate)"
 MARKET_COOKIES = ("market_id", "market_name")
@@ -77,6 +82,15 @@ class Market:
     link: str
     lat: float | None = None
     lon: float | None = None
+    hours: tuple[tuple[str, str] | None, ...] = (None,) * 7
+    special: tuple[tuple[date, str | None, str | None], ...] = ()
+    services: tuple[str, ...] = ()
+    click_and_collect: bool | None = None
+    pickup_phone: str = ""
+    pickup_point: str = ""
+    parking: str = ""
+    transit: str = ""
+    email: str = ""
 
     @classmethod
     def from_api(cls, m: dict[str, Any]) -> "Market":
@@ -92,10 +106,26 @@ class Market:
             link=f"{BASE_URL}/{_text(m.get('link')).lstrip('/')}",
             lat=lat,
             lon=lon,
+            hours=_hours(m.get("openingTimes")),
+            special=_special_days(m.get("specialOpeningTimes")),
+            services=tuple(x for x in (clean_html(i) for i in (m.get("services") or []) if isinstance(i, str)) if x),
+            click_and_collect=m.get("clickAndCollectEnabled") if isinstance(m.get("clickAndCollectEnabled"), bool) else None,
+            pickup_phone=_text(m.get("pickupPhone")),
+            pickup_point=clean_html(m.get("pickupPoint")),
+            parking=clean_html(m.get("pickupParking")),
+            transit=clean_html(m.get("publicTransportation")),
+            email=_text(m.get("email")),
         )
 
     def public(self) -> dict[str, Any]:
-        return {"id": self.id, "name": self.name, "address": f"{self.street}, {self.zip} {self.city}", "phone": self.phone, "url": self.link}
+        return {
+            "id": self.id,
+            "name": self.name,
+            "address": f"{self.street}, {self.zip} {self.city}",
+            "phone": self.phone,
+            "url": self.link,
+            "click_and_collect": self.click_and_collect,
+        }
 
 
 def _to_float(v: Any) -> float | None:
@@ -116,6 +146,42 @@ def _coordinates(lat: Any, lon: Any) -> tuple[float | None, float | None]:
 
 def _text(v: Any) -> str:
     return "" if v is None else str(v)
+
+
+def clean_html(v: Any) -> str:
+    """toom ships some texts as HTML fragments with soft hyphens: plain text, single spaces."""
+    t = _text(v)
+    t = re.sub(r"<br\s*/?>|</p>|</li>", "\n", t, flags=re.I)
+    t = re.sub(r"<[^>]+>", "", t)  # tags first: an escaped "&lt;" must survive as a character
+    t = html.unescape(t).replace("\xad", "").replace("\xa0", " ")
+    t = re.sub(r"[ \t]+", " ", t)
+    return re.sub(r"\s*\n\s*", "\n", t).strip()
+
+
+def _hours(raw: Any) -> tuple[tuple[str, str] | None, ...]:
+    """Weekly hours Monday..Sunday; toom's isodate is 1..6 for Mon..Sat and 0 for Sunday."""
+    days: list[tuple[str, str] | None] = [None] * 7
+    for e in raw if isinstance(raw, list) else []:
+        try:
+            idx = (int(e["isodate"]) - 1) % 7
+            v = e["value"]
+            o, c = v.get("opening"), v.get("closing")
+        except (KeyError, TypeError, ValueError, AttributeError):
+            continue
+        days[idx] = (o, c) if o and c and o != c else None
+    return tuple(days)
+
+
+def _special_days(raw: Any) -> tuple[tuple[date, str | None, str | None], ...]:
+    out = []
+    for e in raw if isinstance(raw, list) else []:
+        try:
+            d, mth, y = (int(x) for x in str(e["date"]).split("."))
+            v = e.get("value") or {}
+            out.append((date(y, mth, d), v.get("opening"), v.get("closing")))
+        except (KeyError, TypeError, ValueError, AttributeError):
+            continue
+    return tuple(out)
 
 
 def _price_to_float(text: str | None) -> float | None:
@@ -187,6 +253,75 @@ def parse_filters(raw_filters: list[dict[str, Any]] | None) -> list[dict[str, An
     return out
 
 
+_NUMBER = r"\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+(?:[.,]\d+)?"
+_MEASURE = re.compile(rf"^\s*({_NUMBER})\s*(mm|cm|m|kg|g)\b", re.I)
+_LENGTH_TO_CM = {"mm": 0.1, "cm": 1.0, "m": 100.0}
+_MASS_TO_KG = {"g": 0.001, "kg": 1.0}
+_DIMENSION_LABELS = {
+    "breite": "width_cm", "höhe": "height_cm", "hoehe": "height_cm", "länge": "length_cm", "laenge": "length_cm",
+    "tiefe": "depth_cm", "stärke": "thickness_cm", "staerke": "thickness_cm", "dicke": "thickness_cm",
+    "durchmesser": "diameter_cm", "gewicht": "weight_kg",
+}
+
+
+def _german_number(token: str) -> float | None:
+    """"87,5" -> 87.5; "1.200" is ambiguous (1200 or 1.2) and gives None; "1.200,5" and "1.234.567" are thousands."""
+    if re.fullmatch(r"\d{1,3}\.\d{3}", token):
+        return None
+    if "." in token and "," in token or token.count(".") > 1:
+        token = token.replace(".", "")
+    return float(token.replace(",", "."))
+
+
+def parse_measure(text: Any, default_unit: str | None = None) -> tuple[str, float] | None:
+    """"87,5 cm" -> ("length", 87.5); "2,5 kg" -> ("mass", 2.5); lengths in cm, masses in kg. None if unclear."""
+    if isinstance(text, (int, float)) and not isinstance(text, bool):
+        text = f"{text} {default_unit or ''}"
+    if not isinstance(text, str):
+        return None
+    m = _MEASURE.match(text if re.search(r"[a-zA-Z]", text) else f"{text} {default_unit or ''}")
+    if not m:
+        return None
+    value, unit = _german_number(m.group(1)), m.group(2).lower()
+    if value is None:
+        return None
+    if unit in _LENGTH_TO_CM:
+        return "length", round(value * _LENGTH_TO_CM[unit], 3)
+    return "mass", round(value * _MASS_TO_KG[unit], 4)
+
+
+_LABEL_SUFFIX = re.compile(r"\s*(?:\((mm|cm|m|kg|g)\)|\bin (mm|cm|m|kg|g))\s*$", re.I)
+
+
+def extract_dimensions(characteristics: dict[str, dict[str, Any]]) -> dict[str, float]:
+    """Numeric dimensions (cm) and weight (kg) out of an article's characteristics. Only what is stated.
+
+    Only exact labels count ("Breite", "Höhe (cm)", "Gewicht in kg"): "Länge Kabel" or "Höhe verstellbar" are
+    other measures, and anything under a packaging group is not the article's own size.
+    """
+    out: dict[str, float] = {}
+    groups = sorted(characteristics.items(), key=lambda kv: kv[0] != "masse-gewicht")  # the size group first
+    for group_name, group in groups:
+        if re.search(r"verpack|versand|paket", group_name, re.I):
+            continue
+        for label, value in group.items():
+            if isinstance(value, list):
+                continue
+            m = _LABEL_SUFFIX.search(label.strip())
+            base = _LABEL_SUFFIX.sub("", label.strip()).strip().lower()
+            key = _DIMENSION_LABELS.get(base)
+            if not key:
+                continue
+            hint = (m.group(1) or m.group(2)) if m else None
+            parsed = parse_measure(value, hint)
+            if not parsed:
+                continue
+            kind, number = parsed
+            if (key == "weight_kg") == (kind == "mass"):
+                out.setdefault(key, number)
+    return out
+
+
 def _split_values(value: Any) -> Any:
     """toom joins multi-valued attributes with '|' ("Grau|Weiß")."""
     return value.split("|") if isinstance(value, str) and "|" in value else value
@@ -229,6 +364,7 @@ def _article_from_state(state: dict[str, Any]) -> dict[str, Any]:
     return {
         "sku": basic.get("sku"),
         "title": html.unescape(basic.get("name") or meta.get("title") or ""),
+        "dimensions": extract_dimensions(groups),
         "brand": (details.get("brand") or {}).get("name") if isinstance(details.get("brand"), dict) else None,
         "price_eur": meta.get("meta_price"),
         "ean": meta.get("ean") or None,
@@ -244,6 +380,42 @@ def _article_from_state(state: dict[str, Any]) -> dict[str, Any]:
         "documents": c.get("documents") or [],
         "variants": c.get("variants"),
     }
+
+
+def parse_recommendations(data: Any) -> list[dict[str, Any]]:
+    """Hits of toom's recommendation endpoints ("Häufig dazu gekauft", "Ähnliche Produkte")."""
+    hits = data.get("hits") if isinstance(data, dict) else None
+    out = []
+    for h in hits if isinstance(hits, list) else []:
+        v = h.get("values") if isinstance(h, dict) else None
+        if not isinstance(v, dict):
+            continue
+        sku = str(v.get("productNumber") or h.get("id") or "").strip()
+        if not sku:
+            continue
+        avail = v.get("Availability")
+        path = v.get("categoryPath")
+        chain = path[0] if isinstance(path, list) and path and isinstance(path[0], list) else []
+        was = _to_float(v.get("wasPrice"))
+        points = [p.strip() for p in str(v.get("sellingPoints") or "").split("|") if p.strip()]
+        out.append({
+            "sku": sku,
+            "title": v.get("productName"),
+            "brand": v.get("manufacturer") or None,
+            "price_eur": _to_float(v.get("price")),
+            "was_price_eur": was if was and was > 0 else None,
+            "offer": (v.get("offerName") or None) if v.get("offerName") else None,
+            "offer_period": v.get("offerDate") or None,
+            "promotion": v.get("mmPromotionLabel") or None,
+            "unit_price": v.get("finePrint") or None,
+            "rating": _to_float(v.get("ratingOverallMark")) or None,
+            "reviews": int(_to_float(v.get("ratingTotalReviewsCount")) or 0),
+            "category": " > ".join(str(c) for c in chain) or None,
+            "availability": decode_availability("|".join(avail) if isinstance(avail, list) else avail),
+            "selling_points": points[:5],
+            "url": f"{BASE_URL}{v['deeplink']}" if str(v.get("deeplink") or "").startswith("/") else None,
+        })
+    return out
 
 
 def _undefined(v: Any) -> Any:
@@ -266,12 +438,18 @@ def parse_search_payload(html: str) -> dict[str, Any]:
         brand = p.get("brand") or {}
         link = (p.get("link") or {}).get("url") or ""
         rating = p.get("ratingData") or {}
+        pcard = p.get("price") or {}
+        special = _undefined(pcard.get("special")) or None  # struck-through price: `value` is the OLD price
+        saving = _undefined(pcard.get("saving")) or None
         products.append({
             "sku": p["sku"],
             "title": p.get("headline"),
             "brand": brand.get("text") if isinstance(brand, dict) else None,
-            "price": price,
-            "price_eur": _price_to_float(price),
+            "price": special or price,
+            "price_eur": _price_to_float(special or price),
+            "was_price": price if special else None,
+            "was_price_eur": _price_to_float(price) if special else None,
+            "saving": saving if special else None,
             "url": f"{BASE_URL}{link}" if link.startswith("/") else link,
             "rating": _undefined(rating.get("rating")) if isinstance(rating, dict) else None,
             "reviews": rating.get("reviewsCount") if isinstance(rating, dict) else None,
@@ -288,7 +466,14 @@ def parse_search_payload(html: str) -> dict[str, Any]:
     }
 
 
-def parse_basket(b: dict[str, Any]) -> dict[str, Any]:
+def parse_basket(b: Any) -> dict[str, Any]:
+    try:
+        return _parse_basket(b)
+    except (KeyError, TypeError, AttributeError, ValueError) as e:
+        raise ToomError("toom.de's basket answer had an unexpected shape.") from e
+
+
+def _parse_basket(b: dict[str, Any]) -> dict[str, Any]:
     lines = []
     for li in b.get("lineItems", []):
         prod = li.get("product", {})
@@ -305,7 +490,12 @@ def parse_basket(b: dict[str, Any]) -> dict[str, Any]:
             "unit_price": (prod.get("price") or {}).get("value"),
             "unit_price_eur": _price_to_float((prod.get("price") or {}).get("value")),
             "line_total": li.get("sum"),
-            "pickup": {"status": res.get("status"), "text": res.get("text"), "hint": res.get("tooltip")},
+            "pickup": {
+                "status": res.get("status"),
+                "text": res.get("text"),
+                "hint": res.get("tooltip"),
+                "note": res.get("notification"),
+            },
             "delivery": {"status": dlv.get("status"), "text": dlv.get("text")},
         })
     return {
@@ -314,6 +504,10 @@ def parse_basket(b: dict[str, Any]) -> dict[str, Any]:
         "total": b.get("totalCost"),
         "total_eur": _price_to_float(b.get("totalCost")),
         "shipping": b.get("totalShippingCost"),
+        "free_shipping_threshold_eur": _to_float(
+            ((b.get("settings") or {}).get("delivery") or {}).get("parcelFreeShippingThreshold")
+        ),
+        "shipping_eur": _price_to_float(b.get("totalShippingCost")),
         "can_checkout": b.get("canCheckout"),
         "messages": b.get("messages", []),
         "changed_stock": b.get("changedStock", {}),
@@ -333,6 +527,12 @@ class Toom:
             follow_redirects=True,
             transport=transport,
         )
+        self._api = httpx.AsyncClient(
+            base_url=API_URL,
+            headers={"User-Agent": USER_AGENT, "Accept": "application/json", "X-Client-Id": API_CLIENT_ID},
+            timeout=20,
+            transport=transport,
+        )
 
     @staticmethod
     def _market_cookies(m: Market) -> httpx.Cookies:
@@ -344,6 +544,7 @@ class Toom:
 
     async def aclose(self) -> None:
         await self._http.aclose()
+        await self._api.aclose()
 
     def export_cookies(self) -> list[dict[str, Any]]:
         """The session's cookies in the JSON format browser cookie managers (e.g. Cookie-Editor) import."""
@@ -392,6 +593,22 @@ class Toom:
                 f"toom.de answered with something that is not JSON (HTTP {r.status_code}); it may be blocking "
                 "requests or under maintenance."
             ) from e
+
+    async def related(self, sku: str, kind: str = "also_bought", limit: int = 8) -> dict[str, Any]:
+        """toom's recommendations for an article: "also_bought" (Häufig dazu gekauft) or "similar"."""
+        if kind not in RELATED_KINDS:
+            raise ToomError(f"kind must be one of {sorted(RELATED_KINDS)}")
+        await _throttle()
+        try:
+            r = await self._api.get(
+                f"/public/api/recommendations/{RELATED_KINDS[kind]}",
+                params={"sku": str(sku), "limit": limit, "market_id": self.market.id},
+            )
+        except httpx.HTTPError as e:
+            raise ToomError(f"toom.de recommendations failed: {e}") from e
+        if r.status_code >= 400:
+            raise ToomError(f"toom.de recommendations -> HTTP {r.status_code}")
+        return {"source": r.headers.get("x-recommendation-source"), "items": parse_recommendations(self._json(r))}
 
     # ------------------------------------------------------------------ search
     async def search(

@@ -11,12 +11,17 @@ one market to another. Unofficial; it talks to the same web endpoints the toom.d
 | Tool | What it does |
 |---|---|
 | `find_markets`, `set_market` | Find a toom market ("Markt") by city, name, postal code or id and select it |
-| `search_products` | Search for articles, optionally narrowed down: `offers_only`, `sort` (relevance, price, offers, rating), `min_price`/`max_price`, `brands`, `availability` (in stock here / orderable / delivery) or toom's own `filters`. Each hit has `on_offer`/`promotion` and the decoded availability |
+| `search_products` | Search for articles, optionally narrowed down: `offers_only`, `sort` (relevance, price, offers, rating, `best_rated`), `min_reviews`, `min_price`/`max_price`, `brands`, `availability` (in stock here / orderable / delivery) or toom's own `filters`. Each hit has `on_offer`/`promotion` and the decoded availability |
 | `search_filters` | Which filters toom offers for a search term (brand, cordless/corded, battery included, ...) with hit counts, to narrow a broad search down |
 | `add_to_basket`, `view_basket`, `set_quantity`, `remove_from_basket`, `clear_basket` | A basket **per market**; pickup (reserve and collect) or delivery |
 | `get_article` | Details of one article by number: brand, price, EAN, characteristics (dimensions, scope of delivery, ...), categories, images, manufacturer, plus stock in one or more markets |
 | `markets_nearby` | toom markets within a radius of a place (straight-line distance, nearest first) |
 | `find_article_nearby` | Where within a radius can an article (or several) be picked up right now? Real stock per market, nearest first, with phone numbers |
+| `market_info` | Open now?, opening hours, upcoming closed days (holidays), services (rental van, trailer, wood cutting, ...), where the pickup point is, phone |
+| `compare_articles` | 2–6 articles side by side: price, dimensions in cm/kg, stock, and every characteristic with what differs first |
+| `fits_space` | Does an article fit into a space (car load area, doorway)? Honest: *fits*, *does not fit* or *unclear* when toom does not state a dimension. A side you leave out is unlimited (a door goes through a narrow opening edge-on), so give all three for a car |
+| `delivery_info` | Pick up or delivery? Stock, lead time and the shipping cost actually charged side by side (toom's free-shipping limit is for parcels; bulky goods ship as freight and always pay). Uses a throw-away basket, yours is untouched |
+| `get_related` | toom's own accessory and alternative suggestions: "Häufig dazu gekauft" (from purchases) and "Ähnliche Produkte" |
 | `compare_markets` | Real stock per article in several markets, no basket needed |
 | `export_session` | Write a market's session cookies to a local file (mode 0600) so you can look at that basket in your own browser: import it with a cookie manager extension (e.g. Cookie-Editor), then open toom.de/warenkorb. **Asks for confirmation first**: importing replaces the browser's toom.de cookies |
 | `prepare_article_request` | For an article that is not in stock in a market ("Auf Anfrage bestellbar"): stock, product link, the market's phone number and a ready-made text for "Artikel anfragen" or a call. Sends nothing |
@@ -40,6 +45,15 @@ claude mcp add toomy -- uv --directory /path/to/toomy run toomy
 ```
 
 stdio transport, no port. Any MCP client can launch `uv run toomy` the same way.
+
+## Configuration (optional)
+
+| Variable | Meaning |
+|---|---|
+| `TOOMY_DEFAULT_MARKET` | Market used when none is selected (name or id), so `set_market` is not needed |
+| `TOOMY_HOME_MARKETS` | Your markets, separated by `;` (e.g. `Berlin-Friedrichshain;Berlin-Weißensee`): the default for `compare_markets` and the fallbacks of `plan_pickup` |
+
+With these set, `markets_nearby` and `find_article_nearby` also work without `near` (around the default market).
 
 ## Examples
 
@@ -68,6 +82,10 @@ stdio transport, no port. Any MCP client can launch `uv run toomy` the same way.
 - **Distances are straight-line**, not driving distances, and no geocoder is used: `near` is a market name or id,
   a postal code, words in a market's name or city, or coordinates `lat,lon`. Stock is live and can change; the
   phone number of each market is included so you can call before a long drive.
+- **Prices:** `price_eur` is what you pay. For struck-through prices toom shows, `was_price_eur` and `saving` give the
+  old price and the saving. Offers (Aktion) carry no old price; their offer period is in `get_related`.
+- **Accessories are toom's suggestions, not a catalogue**: "Häufig dazu gekauft" comes from purchase data, so it can
+  contain other sizes of the same article (marked `same_category`) and unrelated things.
 - **Unofficial and undocumented.** toom.de can change its endpoints any time; the live contract tests
   (`TOOMY_LIVE=1 uv run pytest -m live`) are there to notice that.
 - **Polite by design:** requests are throttled (0.5 s apart), search reads only the first result page (toom's
@@ -107,12 +125,17 @@ Warenkorb von einem Markt in einen anderen kopieren. Inoffiziell; er nutzt diese
 | Tool | Funktion |
 |---|---|
 | `find_markets`, `set_market` | Markt per Stadt, Name, PLZ oder ID finden und auswählen |
-| `search_products` | Artikel suchen, optional eingegrenzt: `offers_only`, `sort` (Relevanz, Preis, Angebote, Bewertung), `min_price`/`max_price`, `brands`, `availability` (hier vorrätig / bestellbar / Lieferung) oder toom's eigene `filters`. Jeder Treffer hat `on_offer`/`promotion` und die dekodierte Verfügbarkeit |
+| `search_products` | Artikel suchen, optional eingegrenzt: `offers_only`, `sort` (Relevanz, Preis, Angebote, Bewertung, `best_rated`), `min_reviews`, `min_price`/`max_price`, `brands`, `availability` (hier vorrätig / bestellbar / Lieferung) oder toom's eigene `filters`. Jeder Treffer hat `on_offer`/`promotion` und die dekodierte Verfügbarkeit |
 | `search_filters` | Welche Filter toom für einen Suchbegriff anbietet (Marke, Akku/Netz, Akku inklusive, ...) mit Trefferzahlen, um eine breite Suche einzugrenzen |
 | `add_to_basket`, `view_basket`, `set_quantity`, `remove_from_basket`, `clear_basket` | Ein Warenkorb **pro Markt**; Abholung (reservieren) oder Lieferung |
 | `get_article` | Details zu einem Artikel per Nummer: Marke, Preis, EAN, Merkmale (Maße, Lieferumfang, ...), Kategorien, Bilder, Hersteller, dazu der Bestand in einem oder mehreren Märkten |
 | `markets_nearby` | toom-Märkte im Umkreis eines Ortes (Luftlinie, nächster zuerst) |
 | `find_article_nearby` | Wo im Umkreis gibt es einen Artikel (oder mehrere) jetzt zum Abholen? Echter Bestand je Markt, nächster zuerst, mit Telefonnummer |
+| `market_info` | Jetzt geöffnet?, Öffnungszeiten, kommende Schließtage (Feiertage), Services (Miettransporter, Anhänger, Holzzuschnitt, ...), wo die Abholstation ist, Telefon |
+| `compare_articles` | 2–6 Artikel nebeneinander: Preis, Maße in cm/kg, Bestand und alle Merkmale, Unterschiede zuerst |
+| `fits_space` | Passt ein Artikel in einen Raum (Laderaum, Durchgang)? Ehrlich: *passt*, *passt nicht* oder *unklar*, wenn toom ein Maß nicht nennt. Eine weggelassene Seite gilt als unbegrenzt (eine Tür geht hochkant durch eine schmale Öffnung), für ein Auto also alle drei angeben |
+| `delivery_info` | Abholen oder liefern lassen? Bestand, Lieferzeit und die tatsächlich berechneten Versandkosten nebeneinander (die Freigrenze von toom gilt für Pakete; Sperrgut geht per Spedition und zahlt immer). Wegwerf-Warenkorb, deiner bleibt unberührt |
+| `get_related` | toom's eigene Zubehör- und Alternativvorschläge: „Häufig dazu gekauft“ (aus Käufen) und „Ähnliche Produkte“ |
 | `compare_markets` | Echter Bestand pro Artikel in mehreren Märkten, ohne Warenkorb |
 | `export_session` | Schreibt die Session-Cookies eines Marktes in eine lokale Datei (Rechte 0600), damit du den Warenkorb im eigenen Browser ansehen kannst: mit einer Cookie-Erweiterung (z. B. Cookie-Editor) importieren, dann toom.de/warenkorb öffnen. **Fragt vorher nach**: der Import ersetzt die toom.de-Cookies des Browsers |
 | `prepare_article_request` | Für Artikel, die im Markt nicht vorrätig sind („Auf Anfrage bestellbar“): Bestand, Produktlink, Telefonnummer des Marktes und ein fertiger Text für „Artikel anfragen“ oder einen Anruf. Sendet nichts |
@@ -150,6 +173,10 @@ stdio, kein Port. Andere MCP-Clients starten einfach `uv run toomy`.
   Marktname oder eine ID, eine PLZ, Wörter aus Name oder Stadt eines Marktes oder Koordinaten `lat,lon`. Der
   Bestand ist live und kann sich ändern; die Telefonnummer jedes Marktes steht dabei, damit du vor einer langen
   Fahrt anrufen kannst.
+- **Preise:** `price_eur` ist, was du zahlst. Bei durchgestrichenen Preisen stehen `was_price_eur` und `saving` für
+  den alten Preis und die Ersparnis. Angebote (Aktion) haben keinen alten Preis; ihr Zeitraum steht in `get_related`.
+- **Zubehör sind Vorschläge von toom, kein Katalog**: „Häufig dazu gekauft“ stammt aus Kaufdaten und kann andere
+  Größen desselben Artikels (`same_category`) oder Unzusammenhängendes enthalten.
 - **Inoffiziell und undokumentiert.** toom.de kann die Endpunkte jederzeit ändern; die Live-Tests
   (`TOOMY_LIVE=1 uv run pytest -m live`) sind dafür da, das zu bemerken.
 - **Höflich gebaut:** gedrosselte Requests (0,5 s Abstand), die Suche liest nur die erste Ergebnisseite (die

@@ -360,7 +360,7 @@ async def test_compare_markets_from_items_touches_no_basket(mcp, toom):
     res = await call(mcp, "compare_markets", markets=["Friedrichshain", "Weißensee", "Prenzlau"], items=items)
     rows = {r["market"]: r for r in res["markets"]}
     assert rows["Berlin-Friedrichshain"]["complete"]
-    assert rows["Berlin-Weißensee"]["short"] == [{"sku": A, "title": None, "wanted": 2, "available": 1}]
+    assert rows["Berlin-Weißensee"]["short"] == [{"sku": A, "title": A, "wanted": 2, "available": 1}]
     assert rows["Prenzlau"]["short"][0]["sku"] == C
     assert res["markets"][0]["market"] == "Berlin-Friedrichshain"  # complete markets first
     assert mutations(toom) == []

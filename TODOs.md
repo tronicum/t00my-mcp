@@ -22,12 +22,15 @@ Live-Contract-Test (`TOOMY_LIVE=1`).
 - [x] Härtung nach Review: fremde/kaputte Antworten werden zu `ToolError`, Eingaben geprüft (Mengen, Limits,
       höchstens 10 Artikel je Aufruf), "50667 Köln" und mehrdeutige Orte werden sauber behandelt
 
+## Neu seit dem letzten Stand
+- [x] `market_info` (Öffnungszeiten, Feiertage, Services, Abholstation), `open_now` in `find_article_nearby`
+- [x] Standardmarkt und Heimatmärkte per Umgebungsvariable
+- [x] `compare_articles`, `fits_space` ("passt in den Raum", ehrlich bei fehlenden Maßen)
+- [x] Bewertungs-Rangfolge (`best_rated`, `min_reviews`)
+- [x] `delivery_info` (Abholen oder liefern), `get_related` (Zubehör und Ähnliches von toom)
+
 ## Als Nächstes (klein, hoher Nutzen)
 
-- [ ] **Standardmarkt / Heimatmärkte per Umgebungsvariable** (`TOOMY_DEFAULT_MARKET`, `TOOMY_HOME_MARKETS`),
-      damit `set_market` nicht jede Sitzung nötig ist und `compare_markets`/`plan_pickup` ohne Liste auskommen.
-- [ ] **`market_hours(market)`**: Öffnungszeiten stehen schon in der Marktliste (`openingTimes`); "hat der Markt
-      jetzt auf / bis wann" für die Abholfahrt. Auch als Feld in `find_article_nearby`.
 - [ ] **Wiederholung bei HTTP 5xx** für lesende Aufrufe und den Bestandsendpunkt (mit kurzem Backoff, max. 1–2×).
       Der Bestandsendpunkt hat zweimal vereinzelt 500 geliefert; Ursache unbekannt, erst reproduzieren.
 - [ ] **`offers_overview(market)`**: alle Angebote eines Marktes über Kategorien/Marken zerlegt und
@@ -35,13 +38,19 @@ Live-Contract-Test (`TOOMY_LIVE=1`).
 
 ## Entscheidungshilfe
 
-- [ ] **`compare_articles([sku, …])`**: Merkmale nebeneinander (Maße, Material, Preis, Bestand), z. B. mehrere
-      Türgrößen oder Bohrmaschinen.
 - [ ] **Varianten**: `variantsEndpoint` der Produktseite auslesen (andere Größen/Farben desselben Artikels),
       `get_article` zeigt bisher `variants` nur roh.
-- [ ] **Passt es ins Fahrzeug?** Fahrzeugprofil (Laderaum/Maße) als Konfiguration und `fits_vehicle(sku)` aus
-      den Merkmalen (Breite, Höhe, Länge, Gewicht), damit `bulky_skus` für `plan_pickup` nicht von Hand kommt.
-      Unbekannte Maße = "unklar", nie "passt".
+- [ ] **"Passt ins Auto" als Zwischending**: `fits_space` gibt es schon (Maße des Platzes von Hand). Offen:
+      Fahrzeugprofil (Laderaum, Rückbank umgeklappt, Dachlast) als Konfiguration, damit `fits_vehicle(sku)` ohne
+      Maße auskommt und `plan_pickup` das `bulky_skus` selbst ableitet. Unbekannte Maße = "unklar", nie "passt".
+- [ ] **Zubehör gezielt suchen**: `get_related` liefert toom's Vorschläge (Kaufdaten). Offen: nach Kategorie
+      filtern ("nur Befestigung"), `selling_points` ("passend für …") gegen den Artikel abgleichen und eine
+      Zubehörliste direkt in `plan_pickup`/Warenkorb übernehmen.
+- [ ] **Angebotszeitraum sichtbar machen**: `offer_period` steht in `get_related`; in `search_products` fehlt er.
+- [ ] **Rabattarten einzeln filtern**: Set-Angebote und Mengenrabatte stehen als Werte des Filters `offers`
+      (`search_filters` zeigt sie); mit `filters` übergebbar, aber für diese Werte noch nicht einzeln getestet.
+- [ ] **Vorteilskartenpreis**: das Feld `loyaltyCardPrice` war in allen Stichproben leer; erst belegen, dann ausgeben.
+- [ ] **Gutscheincodes im Warenkorb** (`voucherConfig`) lesen.
 - [ ] **`find_article_nearby` mit Fahrzeit**: Luftlinie ist nur ein Näherungswert. Optional (opt-in, externer
       Routing-Dienst, kein Standard): Fahrstrecke/-zeit. Ohne Opt-in bleibt alles lokal.
 - [ ] **Geocoding für Orte ohne toom-Markt** (opt-in): bisher nur Markt, PLZ oder Koordinaten. "Köln" meint
