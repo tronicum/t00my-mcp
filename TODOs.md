@@ -19,6 +19,8 @@ Live-Contract-Test (`TOOMY_LIVE=1`).
 - [x] `export_session` (mit Rückbestätigung)
 - [x] `get_article`: Details, Merkmale, EAN, Bestand in einem oder mehreren Märkten
 - [x] `markets_nearby`, `find_article_nearby`: Umkreissuche (Luftlinie) mit Bestand je Markt
+- [x] Härtung nach Review: fremde/kaputte Antworten werden zu `ToolError`, Eingaben geprüft (Mengen, Limits,
+      höchstens 10 Artikel je Aufruf), "50667 Köln" und mehrdeutige Orte werden sauber behandelt
 
 ## Als Nächstes (klein, hoher Nutzen)
 
@@ -42,7 +44,8 @@ Live-Contract-Test (`TOOMY_LIVE=1`).
       Unbekannte Maße = "unklar", nie "passt".
 - [ ] **`find_article_nearby` mit Fahrzeit**: Luftlinie ist nur ein Näherungswert. Optional (opt-in, externer
       Routing-Dienst, kein Standard): Fahrstrecke/-zeit. Ohne Opt-in bleibt alles lokal.
-- [ ] **Geocoding für Orte ohne toom-Markt** (opt-in): bisher nur Markt, PLZ oder Koordinaten.
+- [ ] **Geocoding für Orte ohne toom-Markt** (opt-in): bisher nur Markt, PLZ oder Koordinaten. "Köln" meint
+      derzeit den Standort des einzigen Kölner Marktes, nicht die Stadtmitte; für Bonn etc. Koordinaten angeben.
 
 ## Beobachten und erinnern
 

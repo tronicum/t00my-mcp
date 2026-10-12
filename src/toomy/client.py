@@ -13,6 +13,7 @@ from __future__ import annotations
 import asyncio
 import html
 import json
+import math
 import re
 import time
 from dataclasses import dataclass
@@ -80,16 +81,17 @@ class Market:
     @classmethod
     def from_api(cls, m: dict[str, Any]) -> "Market":
         a = m.get("address") or {}
+        lat, lon = _coordinates(a.get("latitude"), a.get("longitude"))
         return cls(
             id=int(m["id"]),
-            name=m["name"],
-            city=a.get("city", ""),
-            zip=a.get("zip", ""),
-            street=a.get("street", ""),
-            phone=m.get("phone", ""),
-            link=f"{BASE_URL}/{m.get('link', '').lstrip('/')}",
-            lat=_to_float(a.get("latitude")),
-            lon=_to_float(a.get("longitude")),
+            name=_text(m["name"]),
+            city=_text(a.get("city")),
+            zip=_text(a.get("zip")),
+            street=_text(a.get("street")),
+            phone=_text(m.get("phone")),
+            link=f"{BASE_URL}/{_text(m.get('link')).lstrip('/')}",
+            lat=lat,
+            lon=lon,
         )
 
     def public(self) -> dict[str, Any]:
@@ -98,9 +100,22 @@ class Market:
 
 def _to_float(v: Any) -> float | None:
     try:
-        return float(v)
+        f = float(v)
     except (TypeError, ValueError):
         return None
+    return f if math.isfinite(f) else None
+
+
+def _coordinates(lat: Any, lon: Any) -> tuple[float | None, float | None]:
+    """Valid coordinates or (None, None); 0,0 is a placeholder, not a place in Germany."""
+    la, lo = _to_float(lat), _to_float(lon)
+    if la is None or lo is None or not (-90 <= la <= 90 and -180 <= lo <= 180) or (la == 0 and lo == 0):
+        return None, None
+    return la, lo
+
+
+def _text(v: Any) -> str:
+    return "" if v is None else str(v)
 
 
 def _price_to_float(text: str | None) -> float | None:
@@ -183,34 +198,49 @@ def parse_article_state(html_text: str) -> dict[str, Any]:
     if not m:
         raise ToomError("Product page has no embedded data; toom.de may have changed its frontend.")
     try:
-        state = json.loads(unquote(m.group(1)))
-        c = state["content"]
-    except (ValueError, KeyError) as e:
+        return _article_from_state(json.loads(unquote(m.group(1))))
+    except (ValueError, KeyError, TypeError, AttributeError) as e:
         raise ToomError("Product page data could not be read; toom.de may have changed its frontend.") from e
-    basic, details, meta = c.get("basic_info") or {}, c.get("details") or {}, c.get("meta_data") or {}
-    chars = c.get("characteristics") or {}
+
+
+def _article_from_state(state: dict[str, Any]) -> dict[str, Any]:
+    c = state["content"]
+    if not isinstance(c, dict) or not isinstance(c.get("basic_info"), dict):
+        raise KeyError("content.basic_info")
+    basic = c["basic_info"]
+    details = c.get("details") if isinstance(c.get("details"), dict) else {}
+    meta = c.get("meta_data") if isinstance(c.get("meta_data"), dict) else {}
+    if not (basic.get("sku") or basic.get("name") or meta.get("title")):
+        raise KeyError("article has neither sku nor title")
+    chars = c.get("characteristics") if isinstance(c.get("characteristics"), dict) else {}
     groups: dict[str, dict[str, Any]] = {}
     for group, items in chars.items():
         if group in ("produktdetails", "herstellerinformationen") or not isinstance(items, list):
             continue  # produktdetails repeats technische-details
-        pairs = {i["label"]: _split_values(i["value"]) for i in items if i.get("label") and i.get("value") not in (None, "")}
+        pairs = {
+            i["label"]: _split_values(i["value"])
+            for i in items
+            if isinstance(i, dict) and i.get("label") and i.get("value") not in (None, "")
+        }
         if pairs:
             groups[group] = pairs
-    maker = chars.get("herstellerinformationen") or {}
-    manufacturer = {k: (maker.get(k) or {}).get("value") for k in ("name", "street", "phone", "email")}
+    maker = chars.get("herstellerinformationen") if isinstance(chars.get("herstellerinformationen"), dict) else {}
+    manufacturer = {k: (maker.get(k) or {}).get("value") if isinstance(maker.get(k), dict) else None for k in ("name", "street", "phone", "email")}
     return {
         "sku": basic.get("sku"),
         "title": html.unescape(basic.get("name") or meta.get("title") or ""),
-        "brand": (details.get("brand") or {}).get("name") or None,
+        "brand": (details.get("brand") or {}).get("name") if isinstance(details.get("brand"), dict) else None,
         "price_eur": meta.get("meta_price"),
         "ean": meta.get("ean") or None,
         "url": meta.get("canonical_url") or None,
-        "summary": list((details.get("selling_points") or {}).get("items") or []),
+        "summary": [str(x) for x in ((details.get("selling_points") or {}).get("items") or [])]
+        if isinstance(details.get("selling_points"), dict)
+        else [],
         "description": basic.get("description") or None,
         "characteristics": groups,
         "manufacturer": manufacturer if any(manufacturer.values()) else None,
-        "categories": [b["name"] for b in c.get("breadcrumb") or [] if b.get("name")],
-        "images": [g["src"] for g in c.get("gallery") or [] if g.get("src")][:6],
+        "categories": [b["name"] for b in c.get("breadcrumb") or [] if isinstance(b, dict) and b.get("name")],
+        "images": [g["src"] for g in c.get("gallery") or [] if isinstance(g, dict) and g.get("src")][:6],
         "documents": c.get("documents") or [],
         "variants": c.get("variants"),
     }
@@ -353,6 +383,16 @@ class Toom:
             raise ToomError(f"toom.de {method} {path} -> HTTP {r.status_code}: {detail}")
         return r
 
+    @staticmethod
+    def _json(r: httpx.Response) -> Any:
+        try:
+            return r.json()
+        except ValueError as e:  # an HTML bot-check or maintenance page with status 200
+            raise ToomError(
+                f"toom.de answered with something that is not JSON (HTTP {r.status_code}); it may be blocking "
+                "requests or under maintenance."
+            ) from e
+
     # ------------------------------------------------------------------ search
     async def search(
         self, query: str, filters: dict[str, list[str]] | None = None, sort: str | None = None
@@ -381,29 +421,29 @@ class Toom:
         if not r.url.path.startswith("/p/"):
             raise ToomError(f"No article with the number '{sku}' found on toom.de.")
         art = parse_article_state(r.text)
-        art["sku"] = art.get("sku") or str(sku).strip()
+        art["sku"] = str(art.get("sku") or sku).strip()
         art["url"] = art.get("url") or str(r.url)
         return art
 
     # ------------------------------------------------------------------ basket
     async def basket(self) -> dict[str, Any]:
-        return parse_basket((await self._request("GET", "/shop/rest/V1/toom/basket")).json())
+        return parse_basket(self._json(await self._request("GET", "/shop/rest/V1/toom/basket")))
 
     async def add(self, sku: str, quantity: int = 1, delivery_type: str = PICKUP) -> dict[str, Any]:
         body = {"articleId": sku, "quantity": quantity, "deliveryType": delivery_type}
-        return parse_basket((await self._request("POST", "/shop/rest/V1/toom/basket/items", json=body)).json())
+        return parse_basket(self._json(await self._request("POST", "/shop/rest/V1/toom/basket/items", json=body)))
 
     async def add_many(self, items: list[dict[str, Any]]) -> dict[str, Any]:
         """Adds to whatever is already in the basket (does not replace)."""
         body = [{"articleId": i["sku"], "quantity": i["quantity"], "deliveryType": i["delivery_type"]} for i in items]
-        return parse_basket((await self._request("POST", "/shop/rest/V1/toom/basket/multiple-items", json=body)).json())
+        return parse_basket(self._json(await self._request("POST", "/shop/rest/V1/toom/basket/multiple-items", json=body)))
 
     async def set_quantity(self, line_id: int, quantity: int) -> dict[str, Any]:
         body = {"quantity": quantity}
-        return parse_basket((await self._request("POST", f"/shop/rest/V1/toom/basket/items/update/{line_id}", json=body)).json())
+        return parse_basket(self._json(await self._request("POST", f"/shop/rest/V1/toom/basket/items/update/{line_id}", json=body)))
 
     async def remove(self, line_id: int) -> dict[str, Any]:
-        return parse_basket((await self._request("DELETE", f"/shop/rest/V1/toom/basket/items/{line_id}")).json())
+        return parse_basket(self._json(await self._request("DELETE", f"/shop/rest/V1/toom/basket/items/{line_id}")))
 
     async def stock(self, items: list[dict[str, Any]]) -> dict[str, int]:
         """Stock of the session's market per article: {sku: availableQuantity} (capped at the asked quantity).
@@ -414,7 +454,11 @@ class Toom:
             return {}
         body = [{"articleId": i["sku"], "quantity": i["quantity"], "deliveryType": PICKUP} for i in items]
         r = await self._request("POST", "/shop/rest/V1/toom/stocks/availability", json=body)
-        return {str(x["articleId"]): int(x.get("availableQuantity") or 0) for x in r.json()}
+        data = self._json(r)
+        try:
+            return {str(x["articleId"]): int(x.get("availableQuantity") or 0) for x in data}
+        except (TypeError, KeyError, ValueError, AttributeError) as e:
+            raise ToomError("toom.de's stock answer had an unexpected shape.") from e
 
     async def clear(self) -> dict[str, Any]:
         basket = await self.basket()
@@ -431,7 +475,18 @@ async def fetch_markets(transport: httpx.AsyncBaseTransport | None = None) -> li
             r.raise_for_status()
         except httpx.HTTPError as e:
             raise ToomError(f"Could not load the market list: {e}") from e
-    return [Market.from_api(m) for m in r.json()["markets"]]
+    try:
+        raw = r.json()["markets"]
+        assert isinstance(raw, list)
+    except (ValueError, KeyError, TypeError, AssertionError) as e:
+        raise ToomError("The market list had an unexpected shape.") from e
+    out = []
+    for m in raw:  # one malformed entry must not take every market-based tool down
+        try:
+            out.append(Market.from_api(m))
+        except (KeyError, TypeError, ValueError, AttributeError):
+            continue
+    return out
 
 
 def _fold(s: str) -> str:

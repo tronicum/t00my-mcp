@@ -13,7 +13,9 @@ if TYPE_CHECKING:  # pragma: no cover
     from toomy.client import Market
 
 EARTH_RADIUS_KM = 6371.0088
-_LATLON = re.compile(r"^\s*(-?\d{1,2}(?:\.\d+)?)\s*[,;]\s*(-?\d{1,3}(?:\.\d+)?)\s*$")
+# both numbers need a decimal point: "50,94" is a German decimal number, not latitude 50 / longitude 94
+_LATLON = re.compile(r"^\s*(-?\d{1,2}\.\d+)\s*[,;]\s*(-?\d{1,3}\.\d+)\s*$")
+MAX_SPREAD_KM = 60  # word matches farther apart than this are ambiguous ("Hagen" vs "Hagenow")
 
 
 def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -25,6 +27,10 @@ def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
 
 def _fold(s: str) -> str:
     return s.casefold().replace("ß", "ss").replace("ä", "a").replace("ö", "o").replace("ü", "u")
+
+
+def _tokens(market: Market) -> set[str]:
+    return {t for t in re.split(r"[^a-z0-9]+", _fold(f"{market.name} {market.city}")) if t}
 
 
 def _centroid(markets: list[Market]) -> tuple[float, float]:
@@ -50,7 +56,13 @@ def resolve_center(markets: list[Market], query: str) -> tuple[float, float, str
             raise ValueError(f"'{query}' is not a valid latitude,longitude")
         return lat, lon, f"coordinates {lat:.4f}, {lon:.4f}"
 
+    zips = [t for t in q.split() if t.isdigit() and len(t) == 5]
+    if zips and len(q.split()) > 1:  # "50667 Köln" / "Köln 50667": the postal code is the precise part
+        return resolve_center(markets, zips[0])
+
     if q.isdigit():
+        if len(q) < 2:
+            raise ValueError("A postal code needs at least 2 digits; or give a market name or coordinates 'lat,lon'.")
         by_id = [m for m in located if str(m.id) == q]
         if by_id:
             return by_id[0].lat, by_id[0].lon, f"market {by_id[0].name}"  # type: ignore[return-value]
@@ -68,9 +80,15 @@ def resolve_center(markets: list[Market], query: str) -> tuple[float, float, str
     if exact:
         return exact[0].lat, exact[0].lon, f"market {exact[0].name}"  # type: ignore[return-value]
     words = _fold(q).split()
-    hits = [m for m in located if all(w in _fold(f"{m.name} {m.city}") for w in words)]
+    hits = [m for m in located if all(w in _tokens(m) for w in words)]  # whole words first ...
+    if not hits:  # ... then parts of words
+        hits = [m for m in located if all(w in _fold(f"{m.name} {m.city}") for w in words)]
     if hits:
         lat, lon = _centroid(hits)
+        far = [m for m in hits if haversine_km(lat, lon, m.lat, m.lon) > MAX_SPREAD_KM]  # type: ignore[arg-type]
+        if far:
+            names = ", ".join(f"{m.name} ({m.zip})" for m in hits[:6])
+            raise ValueError(f"'{query}' matches markets far apart: {names}. Use a postal code or a full market name.")
         names = ", ".join(m.name for m in hits[:3]) + ("…" if len(hits) > 3 else "")
         return lat, lon, f"centre of {len(hits)} market(s) matching '{query}' ({names})"
     raise ValueError(

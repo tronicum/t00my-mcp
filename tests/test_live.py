@@ -85,3 +85,19 @@ async def test_basket_roundtrip_in_an_anonymous_session(session):
 
 async def test_search_is_throttled_and_polite():
     assert client.MIN_INTERVAL >= 0.5 and "toomy" in client.USER_AGENT
+
+
+async def test_markets_have_coordinates_and_radius_search_finds_the_cologne_area(markets):
+    from toomy import geo
+
+    assert sum(1 for m in markets if m.lat is not None) > 250
+    lat, lon, _ = geo.resolve_center(markets, "Köln")
+    near = geo.within(markets, lat, lon, 50)
+    assert len(near) >= 5 and near[0][1].name.startswith("Köln")
+
+
+async def test_product_page_state_still_has_what_get_article_reads(session):
+    art = await session.article("110013")
+    assert art["sku"] == "110013" and art["title"] and art["price_eur"] and art["ean"]
+    assert art["categories"] and art["characteristics"]
+    assert any("Breite" in group for group in art["characteristics"].values())

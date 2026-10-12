@@ -10,6 +10,7 @@ needs a toom account and happens on toom.de itself; this server does not place o
 from __future__ import annotations
 
 import json
+import math
 import os
 from pathlib import Path
 from typing import Any
@@ -172,6 +173,8 @@ def _search_filters(
             if bad:
                 raise ToolError(f"availability values must be one of {sorted(AVAILABILITY_FILTERS)}, got {bad}")
             avail_codes.extend(values)
+        elif param in AVAILABILITY_FILTERS.values():
+            raise ToolError(f'use availability=... (or the "availability" filter) instead of "{param}"')
         elif param in out:
             raise ToolError(f'"{param}" is set twice (by a named argument and in filters)')
         else:
@@ -218,6 +221,12 @@ async def search_products(
     """
     if sort not in SORTS:
         raise ToolError(f"sort must be one of {sorted(SORTS)}")
+    if not query.strip():
+        raise ToolError("query must not be empty")
+    _check_limit(limit)
+    for name, val in (("min_price", min_price), ("max_price", max_price)):
+        if val is not None and (not math.isfinite(val) or val < 0):
+            raise ToolError(f"{name} must be a number >= 0")
     m = await _market(market)
     toom_filters, summary = _search_filters(m, offers_only, min_price, max_price, brands, availability, filters)
     res = await _call(_session(m).search(query, toom_filters, SORTS[sort]))
@@ -242,6 +251,8 @@ async def search_filters(query: str, market: str | None = None) -> dict[str, Any
     Range filters (price, voltage, weight, ...) show their min and max; price has its own arguments
     min_price/max_price. The category tree is not included.
     """
+    if not query.strip():
+        raise ToolError("query must not be empty")
     m = await _market(market)
     res = await _call(_session(m).search(query))
     return {"market": m.name, "total_hits": res["count"], "filters": res["filters"], "sorts": sorted(SORTS)}
@@ -425,12 +436,14 @@ async def get_article(
     market of `also_check`; `availability` decodes toom's code for the selected market ("Auf Anfrage
     bestellbar" = `market_orderable`). Nothing is added to a basket.
     """
-    if quantity < 1:
-        raise ToolError("quantity must be >= 1")
+    quantity = _int_quantity(quantity)
+    if len(also_check or []) > MAX_ALSO_CHECK:
+        raise ToolError(f"also_check takes at most {MAX_ALSO_CHECK} markets")
     m = await _market(market)
+    others = [await _resolve(q) for q in (also_check or [])]  # resolved before any article request is made
     session = _session(m)
     art = await _call(session.article(sku))
-    targets = [m] + [x for x in [await _resolve(q) for q in (also_check or [])] if x.id != m.id]
+    targets = [m] + [x for x in others if x.id != m.id]
     stock: dict[str, int | str] = {}
     for t in targets:
         try:
@@ -459,6 +472,7 @@ async def markets_nearby(near: str, radius_km: float = 50, limit: int = 30) -> d
     """
     if not 0 < radius_km <= 300:
         raise ToolError("radius_km must be between 0 and 300")
+    _check_limit(limit)
     markets = await _all_markets()
     try:
         lat, lon, label = geo.resolve_center(markets, near)
@@ -496,15 +510,11 @@ async def find_article_nearby(
     if not 1 <= max_markets <= 40:
         raise ToolError("max_markets must be between 1 and 40")
     if items:
-        wanted = [{"sku": str(i["sku"]), "quantity": int(i.get("quantity", 1))} for i in items if "sku" in i]
-        if len(wanted) != len(items):
-            raise ToolError('each item needs "sku"')
+        wanted = _merge_items(items)
     elif sku:
-        wanted = [{"sku": str(sku), "quantity": quantity}]
+        wanted = [{"sku": str(sku).strip(), "quantity": _int_quantity(quantity)}]
     else:
         raise ToolError("Give sku or items.")
-    if any(w["quantity"] < 1 for w in wanted):
-        raise ToolError("quantity must be >= 1")
 
     markets = await _all_markets()
     try:
@@ -623,6 +633,45 @@ async def copy_basket(from_market: str | None = None, to_market: str = "", repla
     }
 
 
+MAX_ITEMS = 10  # articles per multi-article call: every article costs requests
+MAX_ALSO_CHECK = 10
+MAX_LIMIT = 100
+
+
+def _int_quantity(value: Any, default: int = 1) -> int:
+    """A whole number >= 1 from tool input, else a ToolError (never a raw TypeError/ValueError)."""
+    v = default if value is None else value
+    if isinstance(v, bool):
+        raise ToolError("quantity must be a whole number >= 1")
+    if isinstance(v, float) and v.is_integer():
+        v = int(v)
+    if isinstance(v, str) and v.strip().isdigit():
+        v = int(v.strip())
+    if not isinstance(v, int) or v < 1:
+        raise ToolError("quantity must be a whole number >= 1")
+    return v
+
+
+def _check_limit(limit: int, name: str = "limit") -> int:
+    if not isinstance(limit, int) or isinstance(limit, bool) or not 1 <= limit <= MAX_LIMIT:
+        raise ToolError(f"{name} must be between 1 and {MAX_LIMIT}")
+    return limit
+
+
+def _merge_items(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """[{"sku","quantity"}] -> one entry per article (quantities of duplicates are summed)."""
+    if len(items) > MAX_ITEMS:
+        raise ToolError(f"At most {MAX_ITEMS} articles per call (got {len(items)}).")
+    merged: dict[str, dict[str, Any]] = {}
+    for i in items:
+        if not isinstance(i, dict) or not str(i.get("sku", "")).strip():
+            raise ToolError('each item needs "sku"')
+        sku = str(i["sku"]).strip()
+        entry = merged.setdefault(sku, {"sku": sku, "quantity": 0, "title": i.get("title")})
+        entry["quantity"] += _int_quantity(i.get("quantity"))
+    return list(merged.values())
+
+
 async def _availability(session: Toom, sku: str, title: str) -> dict[str, bool] | None:
     """Best effort: decode toom's availability code for the session's market from a search of the title."""
     try:
@@ -635,10 +684,7 @@ async def _availability(session: Toom, sku: str, title: str) -> dict[str, bool] 
 async def _lines(src_market: str | None, items: list[dict[str, Any]] | None) -> tuple[Market | None, list[dict[str, Any]]]:
     """Articles to work with: explicit `items` ([{"sku","quantity"}]) or else the basket of a market."""
     if items:
-        for i in items:
-            if "sku" not in i or int(i.get("quantity", 1)) < 1:
-                raise ToolError('each item needs "sku" and quantity >= 1')
-        return None, [{"sku": str(i["sku"]), "title": i.get("title"), "quantity": int(i.get("quantity", 1))} for i in items]
+        return None, _merge_items(items)
     src = await _market(src_market)
     lines = (await _call(_session(src).basket()))["lines"]
     if not lines:

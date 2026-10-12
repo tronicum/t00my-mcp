@@ -127,8 +127,8 @@ async def test_get_article_unknown_number(mcp, toom):
 
 
 async def test_get_article_quantity_must_be_positive(mcp, toom):
-    assert "quantity must be >= 1" in await call_err(mcp, "get_article", sku=DOOR, market="Prenzlau", quantity=0)
-    assert "quantity must be >= 1" in await call_err(mcp, "get_article", sku=DOOR, market="Prenzlau", quantity=-2)
+    assert "quantity must be a whole number >= 1" in await call_err(mcp, "get_article", sku=DOOR, market="Prenzlau", quantity=0)
+    assert "quantity must be a whole number >= 1" in await call_err(mcp, "get_article", sku=DOOR, market="Prenzlau", quantity=-2)
     assert stock_requests(toom) == []
 
 
@@ -198,7 +198,7 @@ async def test_markets_nearby_errors(mcp, toom):
 async def test_markets_nearby_empty_radius_is_not_an_error(mcp, toom):
     res = await call(mcp, "markets_nearby", near="Prenzlau", radius_km=1)
     assert [m["name"] for m in res["markets"]] == ["Prenzlau"]
-    res = await call(mcp, "markets_nearby", near="0,0", radius_km=5)
+    res = await call(mcp, "markets_nearby", near="0.0,0.0", radius_km=5)
     assert res["total"] == 0 and res["markets"] == []
 
 
@@ -321,8 +321,8 @@ async def test_find_article_unplaceable_near(mcp, toom):
 
 async def test_find_article_validation_errors(mcp, toom):
     assert "Give sku or items" in await call_err(mcp, "find_article_nearby", near="Köln")
-    assert "quantity must be >= 1" in await call_err(mcp, "find_article_nearby", near="Köln", sku=DOOR, quantity=0)
-    assert "quantity must be >= 1" in await call_err(
+    assert "quantity must be a whole number >= 1" in await call_err(mcp, "find_article_nearby", near="Köln", sku=DOOR, quantity=0)
+    assert "quantity must be a whole number >= 1" in await call_err(
         mcp, "find_article_nearby", near="Köln", items=[{"sku": A, "quantity": 0}])
     assert 'each item needs "sku"' in await call_err(mcp, "find_article_nearby", near="Köln", items=[{"quantity": 2}])
     for bad in (0, 41, -1):
