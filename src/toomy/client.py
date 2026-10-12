@@ -28,6 +28,24 @@ DELIVERY_TYPES = {"pickup": PICKUP, "delivery": DELIVERY}
 
 USER_AGENT = "toomy/0.1 (+https://github.com/tronicum/toomy; personal assistant, low request rate)"
 MARKET_COOKIES = ("market_id", "market_name")
+
+# --- search filters/sorting, as the toom.de search page itself puts them into the URL (observed) -------------
+OR_SEPARATOR = "~~~"  # several values of one filter: brands:Bosch~~~Makita
+FILTER_OFFERS = "inv(attr.dp_angebot)"  # "Nur Angebote anzeigen"
+FILTER_PRICE = "inv(price)"  # price slider, value "[min,max]" (both bounds are required)
+AVAILABILITY_FILTERS = {  # the page's "Verfügbarkeit" options 0/1/2, each filtered by market id
+    "0": "customFulfillment1",  # home delivery
+    "1": "pickupInStore",  # in stock in the market
+    "2": "shipToStore",  # not in stock, orderable by the market ("Artikel anfragen")
+}
+SORTS = {
+    "relevance": None,
+    "price_asc": "inv(price)",
+    "price_desc": "inv(price):desc",
+    "offers": "inv(attr.dp_angebot)",  # offers first
+    "rating": "rating:desc",  # best rated first (toom's plain "rating" sorts worst first)
+}
+MAX_PRICE = 1_000_000
 MIN_INTERVAL = 0.5  # seconds between any two requests this process makes
 
 _throttle_lock = asyncio.Lock()
@@ -108,6 +126,41 @@ def parse_product_page(html_text: str) -> str | None:
     return None
 
 
+def build_search_query(filters: dict[str, list[str]] | None = None, sort: str | None = None) -> str:
+    """Query string for /s/<term>: one `filter=<param>:<values>` per filter (AND), `sort=<key>`.
+
+    Built by hand with %20 and never "+": toom's robots.txt disallows `/s/*+`. `page` is never set.
+    Values that look like a range ("[50,150]") are passed verbatim; several values are OR-ed.
+    """
+    parts = []
+    for param, values in (filters or {}).items():
+        vals = [str(v) for v in values if str(v) != ""]
+        if not vals:
+            continue
+        joined = vals[0] if (len(vals) == 1 and vals[0].startswith("[") and vals[0].endswith("]")) else OR_SEPARATOR.join(vals)
+        parts.append("filter=" + quote(f"{param}:{joined}", safe=""))
+    if sort:
+        parts.append("sort=" + quote(sort, safe=""))
+    return "&".join(parts)
+
+
+def parse_filters(raw_filters: list[dict[str, Any]] | None) -> list[dict[str, Any]]:
+    """Normalise the filters toom offers for a search (the category tree is left out)."""
+    out: list[dict[str, Any]] = []
+    for f in raw_filters or []:
+        style, param = f.get("style"), f.get("paramName")
+        if style == "MULTISELECT":
+            values = [
+                {"value": v["name"], "label": v.get("displayName") or v["name"], "count": v.get("productsCount", 0)}
+                for v in f.get("multiselectValues", [])
+            ]
+            out.append({"name": f["name"], "param": param, "type": "choice", "values": values})
+        elif style == "SLIDER":
+            sv = f.get("sliderValues") or {}
+            out.append({"name": f["name"], "param": param, "type": "range", "min": sv.get("absoluteMin"), "max": sv.get("absoluteMax"), "unit": f.get("unit", "")})
+    return out
+
+
 def _undefined(v: Any) -> Any:
     return None if v == "$undefined" else v
 
@@ -120,7 +173,7 @@ def parse_search_payload(html: str) -> dict[str, Any]:
     text = "".join(json.loads(f'"{c}"') for c in chunks)
     start = text.find('{"products":{"list":')
     if start < 0:
-        return {"count": 0, "products": []}
+        return {"count": 0, "products": [], "filters": []}
     obj, _ = json.JSONDecoder().raw_decode(text[start:])
     products = []
     for p in obj["products"]["list"]:
@@ -137,12 +190,17 @@ def parse_search_payload(html: str) -> dict[str, Any]:
             "url": f"{BASE_URL}{link}" if link.startswith("/") else link,
             "rating": _undefined(rating.get("rating")) if isinstance(rating, dict) else None,
             "reviews": rating.get("reviewsCount") if isinstance(rating, dict) else None,
-            "on_offer": bool((p.get("flags") or {}).get("aktion")),
+            "on_offer": bool((p.get("flags") or {}).get("aktion") or _undefined((p.get("flags") or {}).get("promotionLabel"))),
+            "promotion": _undefined((p.get("flags") or {}).get("promotionLabel")),  # e.g. "Gratis Beigabe"
             "availability_code": p.get("availabilityCode"),  # raw, as toom sends it
             "availability": decode_availability(p.get("availabilityCode")),
             "low_stock": p.get("lowStockAvailability"),
         })
-    return {"count": obj["products"].get("count", len(products)), "products": products}
+    return {
+        "count": obj["products"].get("count", len(products)),
+        "products": products,
+        "filters": parse_filters(obj.get("filters")),
+    }
 
 
 def parse_basket(b: dict[str, Any]) -> dict[str, Any]:
@@ -241,9 +299,13 @@ class Toom:
         return r
 
     # ------------------------------------------------------------------ search
-    async def search(self, query: str) -> dict[str, Any]:
-        """First result page only (up to ~72 hits) for the session's market."""
-        r = await self._request("GET", f"/s/{quote(query.strip(), safe='')}", headers={"Accept": "text/html"})
+    async def search(
+        self, query: str, filters: dict[str, list[str]] | None = None, sort: str | None = None
+    ) -> dict[str, Any]:
+        """First result page only (up to ~72 hits) for the session's market, optionally filtered/sorted."""
+        qs = build_search_query(filters, sort)
+        path = f"/s/{quote(query.strip(), safe='')}" + (f"?{qs}" if qs else "")
+        r = await self._request("GET", path, headers={"Accept": "text/html"})
         if r.url.path.startswith("/p/"):  # an exact article number redirects to the product page
             raise ToomError(f"'{query}' matched exactly one article and toom.de sent its product page ({r.url}); search by words instead.")
         return parse_search_payload(r.text)

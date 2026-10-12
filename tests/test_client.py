@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from toomy.client import Market, ToomError, _price_to_float, decode_availability, match_markets, parse_basket, parse_product_page, parse_search_payload
+from toomy.client import Market, ToomError, _price_to_float, build_search_query, decode_availability, match_markets, parse_basket, parse_filters, parse_product_page, parse_search_payload
 
 FIX = Path(__file__).parent / "fixtures"
 
@@ -41,7 +41,7 @@ def test_search_payload_without_embedded_data_fails_loudly():
 
 def test_search_payload_without_products_is_just_empty():
     html = '<script>self.__next_f.push([1,"{\\"nothing\\":true}"])</script>'
-    assert parse_search_payload(html) == {"count": 0, "products": []}
+    assert parse_search_payload(html) == {"count": 0, "products": [], "filters": []}
 
 
 def test_basket_parsing_from_a_real_basket():
@@ -115,3 +115,54 @@ def test_product_page_title_falls_back_to_og_title_then_title_tag():
     assert parse_product_page('<meta property="og:title" content="Akku &amp; Co">') == "Akku & Co"
     assert parse_product_page("<title>Hammer 500 g | toom Baumarkt</title>") == "Hammer 500 g"
     assert parse_product_page("<html>nothing</html>") is None
+
+
+# ---------------------------------------------------------- filters, sorting, offers
+
+def test_search_query_for_the_offers_filter_matches_what_toom_uses():
+    assert build_search_query({"inv(attr.dp_angebot)": ["true"]}) == "filter=inv%28attr.dp_angebot%29%3Atrue"
+
+
+def test_search_query_combines_filters_sort_and_or_values():
+    qs = build_search_query({"brands": ["Bosch", "Makita"], "inv(price)": ["[50,150]"], "pickupInStore": ["3839"]}, "inv(price):desc")
+    parts = qs.split("&")
+    assert parts == [
+        "filter=brands%3ABosch~~~Makita",  # values of one filter are OR-ed with '~~~'
+        "filter=inv%28price%29%3A%5B50%2C150%5D",  # range passed verbatim
+        "filter=pickupInStore%3A3839",  # a separate filter= per filter: they are AND-ed
+        "sort=inv%28price%29%3Adesc",
+    ]
+
+
+def test_search_query_never_uses_plus_or_page_because_of_robots_txt():
+    qs = build_search_query({"attr.mca_einsatzbereich": ["Bohr- und Schraubarbeiten"]}, "rating:desc")
+    assert "+" not in qs and "%20" in qs and "page" not in qs
+    assert build_search_query() == "" and build_search_query({"brands": []}) == ""
+
+
+def test_filters_are_parsed_from_the_real_payload_shape():
+    res = parse_search_payload((FIX / "search.html").read_text(encoding="utf-8"))
+    by_param = {f["param"]: f for f in res["filters"]}
+    assert "category" not in by_param  # the category tree is left out
+    assert by_param["inv(attr.dp_angebot)"]["name"] == "Nur Angebote anzeigen"
+    assert by_param["inv(attr.dp_angebot)"]["values"][0] == {"value": "true", "label": "Angebote", "count": by_param["inv(attr.dp_angebot)"]["values"][0]["count"]}
+    price = by_param["inv(price)"]
+    assert price["type"] == "range" and price["min"] <= price["max"] and price["unit"] == "€"
+    assert by_param["brands"]["type"] == "choice" and all({"value", "label", "count"} == set(v) for v in by_param["brands"]["values"])
+    assert len(by_param["brands"]["values"]) <= 4  # fixture trims long value lists
+
+
+def test_parse_filters_handles_missing_input():
+    assert parse_filters(None) == [] and parse_filters([]) == []
+
+
+def test_promotions_count_as_offers():
+    products = parse_search_payload((FIX / "search.html").read_text(encoding="utf-8"))["products"]
+    by_sku = {p["sku"]: p for p in products}
+    assert by_sku["10458992"]["on_offer"] is True and by_sku["10458992"]["promotion"] is None  # price offer ("aktion")
+    assert by_sku["1501938"]["on_offer"] is True and by_sku["1501938"]["promotion"] == "Gratis Beigabe"
+    assert by_sku["1490300"]["on_offer"] is False
+
+
+def test_slashes_and_other_reserved_characters_in_values_are_percent_encoded():
+    assert build_search_query({"attr.x": ["Ø 4/6 mm & Co"]}) == "filter=attr.x%3A%C3%98%204%2F6%20mm%20%26%20Co"

@@ -11,7 +11,8 @@ one market to another. Unofficial; it talks to the same web endpoints the toom.d
 | Tool | What it does |
 |---|---|
 | `find_markets`, `set_market` | Find a toom market ("Markt") by city, name, postal code or id and select it |
-| `search_products` | Search for articles (first result page, price and toom's availability hints) |
+| `search_products` | Search for articles, optionally narrowed down: `offers_only`, `sort` (relevance, price, offers, rating), `min_price`/`max_price`, `brands`, `availability` (in stock here / orderable / delivery) or toom's own `filters`. Each hit has `on_offer`/`promotion` and the decoded availability |
+| `search_filters` | Which filters toom offers for a search term (brand, cordless/corded, battery included, ...) with hit counts, to narrow a broad search down |
 | `add_to_basket`, `view_basket`, `set_quantity`, `remove_from_basket`, `clear_basket` | A basket **per market**; pickup (reserve and collect) or delivery |
 | `compare_markets` | Real stock per article in several markets, no basket needed |
 | `export_session` | Write a market's session cookies to a local file (mode 0600) so you can look at that basket in your own browser: import it with a cookie manager extension (e.g. Cookie-Editor), then open toom.de/warenkorb. **Asks for confirmation first**: importing replaces the browser's toom.de cookies |
@@ -40,6 +41,9 @@ stdio transport, no port. Any MCP client can launch `uv run toomy` the same way.
 ## Examples
 
 - *"Find the toom markets in Berlin."* → `find_markets("berlin")`
+- *"Which drills are on offer?"* → `search_products("bohrmaschine", offers_only=True, sort="price_asc")`
+- *"Cordless screwdrivers from Bosch or Makita, under 150 €, in stock in Prenzlau."* →
+  `search_products("akkuschrauber", brands=["Bosch","Makita"], max_price=150, availability="in_market")`
 - *"Search for cordless drills in Prenzlau."* → `set_market("Prenzlau")`, `search_products("akkuschrauber")`
 - *"Which of these has all three articles in stock: Friedrichshain, Weißensee, Prenzlau?"*
   → `compare_markets(["Friedrichshain", "Weißensee", "Prenzlau"], items=[{"sku": "1490300", "quantity": 2}, ...])`
@@ -58,7 +62,7 @@ stdio transport, no port. Any MCP client can launch `uv run toomy` the same way.
 - **Unofficial and undocumented.** toom.de can change its endpoints any time; the live contract tests
   (`TOOMY_LIVE=1 uv run pytest -m live`) are there to notice that.
 - **Polite by design:** requests are throttled (0.5 s apart), search reads only the first result page (toom's
-  `robots.txt` disallows `?page=`), and the client identifies itself. Personal use, please.
+  `robots.txt` disallows `?page=`; filters and sorting narrow a search down instead, and no `+` is ever put in a URL), and the client identifies itself. Personal use, please.
 - Search results decode toom's `availability_code` the way the product page does: `market_reservable` (reserve for
   pickup), `market_orderable` ("Bestellbar in <Markt>": not in stock, but on the product page toom offers "Artikel
   anfragen" and the market orders it for you, possibly plus transport costs; this server does not send that
@@ -92,7 +96,8 @@ Warenkorb von einem Markt in einen anderen kopieren. Inoffiziell; er nutzt diese
 | Tool | Funktion |
 |---|---|
 | `find_markets`, `set_market` | Markt per Stadt, Name, PLZ oder ID finden und auswählen |
-| `search_products` | Artikel suchen (erste Ergebnisseite, Preis, Verfügbarkeitshinweise von toom) |
+| `search_products` | Artikel suchen, optional eingegrenzt: `offers_only`, `sort` (Relevanz, Preis, Angebote, Bewertung), `min_price`/`max_price`, `brands`, `availability` (hier vorrätig / bestellbar / Lieferung) oder toom's eigene `filters`. Jeder Treffer hat `on_offer`/`promotion` und die dekodierte Verfügbarkeit |
+| `search_filters` | Welche Filter toom für einen Suchbegriff anbietet (Marke, Akku/Netz, Akku inklusive, ...) mit Trefferzahlen, um eine breite Suche einzugrenzen |
 | `add_to_basket`, `view_basket`, `set_quantity`, `remove_from_basket`, `clear_basket` | Ein Warenkorb **pro Markt**; Abholung (reservieren) oder Lieferung |
 | `compare_markets` | Echter Bestand pro Artikel in mehreren Märkten, ohne Warenkorb |
 | `export_session` | Schreibt die Session-Cookies eines Marktes in eine lokale Datei (Rechte 0600), damit du den Warenkorb im eigenen Browser ansehen kannst: mit einer Cookie-Erweiterung (z. B. Cookie-Editor) importieren, dann toom.de/warenkorb öffnen. **Fragt vorher nach**: der Import ersetzt die toom.de-Cookies des Browsers |

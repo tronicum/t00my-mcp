@@ -40,6 +40,7 @@ class FakeToom:
         self.next_line = 100
         self.requests: list[tuple[str, str, int | None]] = []
         self.queries: list[tuple[str, int | None]] = []
+        self.search_qs: list[str] = []  # raw query string of each search request (filter/sort params)
 
     # ------------------------------------------------------------ helpers
     def stock_of(self, market: int, sku: str) -> int:
@@ -93,6 +94,7 @@ class FakeToom:
             return httpx.Response(200, json=self.markets)
         if path.startswith("/s/"):
             self.queries.append((unquote(path[3:]), market))
+            self.search_qs.append(request.url.query.decode())
             if unquote(path[3:]) in self.catalog:  # real site: an exact article number redirects to the product page
                 return httpx.Response(302, headers={"location": self.catalog[unquote(path[3:])]["url"]})
             return httpx.Response(200, text=self.search_html)

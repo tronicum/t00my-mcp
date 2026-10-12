@@ -19,7 +19,20 @@ from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError
 
 from toomy import planner
-from toomy.client import DELIVERY_TYPES, PICKUP, Market, Toom, ToomError, fetch_markets, match_markets
+from toomy.client import (
+    AVAILABILITY_FILTERS,
+    DELIVERY_TYPES,
+    FILTER_OFFERS,
+    FILTER_PRICE,
+    MAX_PRICE,
+    PICKUP,
+    SORTS,
+    Market,
+    Toom,
+    ToomError,
+    fetch_markets,
+    match_markets,
+)
 
 mcp = FastMCP(
     "toomy",
@@ -114,24 +127,122 @@ async def set_market(market: str) -> dict[str, Any]:
 
 # ------------------------------------------------------------------- search
 
-@mcp.tool
-async def search_products(query: str, market: str | None = None, limit: int = 20) -> dict[str, Any]:
-    """Search toom.de. Returns the first result page only (max ~72 hits, limited by `limit`).
+AVAILABILITY_CHOICES = {"in_market": "1", "orderable": "2", "home_delivery": "0"}
 
-    `availability` decodes toom's code for the selected market: `market_reservable` (can be reserved for
-    pickup), `market_orderable` (toom shows "Bestellbar in <Markt>": not in stock; on the product page "Artikel
-    anfragen" asks the market to order it, possibly plus transport costs. This server cannot send that
-    inquiry: give the user the product `url` so they can do it on toom.de) and `home_delivery`. For real stock quantities
-    use compare_markets. Search by words: an exact article number is redirected by toom to a product page.
+
+def _num(x: float) -> str:
+    """50 -> '50', 150.5 -> '150.5', 1000000 -> '1000000' (never an exponent: it would put a '+' in the URL)."""
+    return f"{x:.2f}".rstrip("0").rstrip(".")
+
+
+def _search_filters(
+    market: Market,
+    offers_only: bool,
+    min_price: float | None,
+    max_price: float | None,
+    brands: list[str] | None,
+    availability: str | None,
+    filters: dict[str, list[str]] | None,
+) -> tuple[dict[str, list[str]], list[str]]:
+    """Translate the tool arguments into toom filter params, plus a human-readable summary."""
+    out: dict[str, list[str]] = {}
+    summary: list[str] = []
+    if offers_only:
+        out[FILTER_OFFERS] = ["true"]
+        summary.append("only offers")
+    if min_price is not None or max_price is not None:
+        lo, hi = (min_price or 0), (max_price if max_price is not None else MAX_PRICE)
+        if lo > hi:
+            raise ToolError("min_price must not be greater than max_price")
+        out[FILTER_PRICE] = [f"[{_num(lo)},{_num(hi)}]"]
+        summary.append(f"price {_num(lo)}–{'∞' if max_price is None else _num(hi)} EUR")
+    if brands:
+        out["brands"] = list(brands)
+        summary.append("brand " + " or ".join(brands))
+    avail_codes: list[str] = []
+    if availability:
+        if availability not in AVAILABILITY_CHOICES:
+            raise ToolError(f"availability must be one of {sorted(AVAILABILITY_CHOICES)}")
+        avail_codes.append(AVAILABILITY_CHOICES[availability])
+    for param, values in (filters or {}).items():
+        if param == "availability":  # as listed by search_filters: "0"/"1"/"2"
+            bad = [v for v in values if v not in AVAILABILITY_FILTERS]
+            if bad:
+                raise ToolError(f"availability values must be one of {sorted(AVAILABILITY_FILTERS)}, got {bad}")
+            avail_codes.extend(values)
+        elif param in out:
+            raise ToolError(f'"{param}" is set twice (by a named argument and in filters)')
+        else:
+            out[param] = [str(v) for v in values]
+            summary.append(f"{param}={' or '.join(map(str, values))}")
+    if len(set(avail_codes)) > 1:
+        raise ToolError("toom can filter by one availability option at a time (in_market, orderable or home_delivery)")
+    if avail_codes:
+        code = avail_codes[0]
+        out[AVAILABILITY_FILTERS[code]] = [str(market.id)]
+        summary.append({"1": f"in stock in {market.name}", "2": f"orderable in {market.name}", "0": "home delivery"}[code])
+    return out, summary
+
+
+@mcp.tool
+async def search_products(
+    query: str,
+    market: str | None = None,
+    limit: int = 20,
+    offers_only: bool = False,
+    sort: str = "relevance",
+    min_price: float | None = None,
+    max_price: float | None = None,
+    brands: list[str] | None = None,
+    availability: str | None = None,
+    filters: dict[str, list[str]] | None = None,
+) -> dict[str, Any]:
+    """Search toom.de, optionally narrowed down. First result page only (max ~72 hits, shown up to `limit`).
+
+    Examples: "a drill that is on offer" -> query="bohrmaschine", offers_only=True. "cheapest cordless
+    screwdriver in stock here" -> query="akkuschrauber", availability="in_market", sort="price_asc".
+    "Bosch or Makita under 150 EUR" -> brands=["Bosch","Makita"], max_price=150.
+
+    offers_only: toom's "Nur Angebote anzeigen". sort: relevance | price_asc | price_desc | offers | rating.
+    availability: in_market (in stock in the selected market) | orderable (not in stock, the market can order
+    it) | home_delivery. `filters` takes toom's own filter params and values as listed by search_filters
+    (e.g. {"attr.mca_akkuinklusive": ["Ja"]}); different filters are combined with AND, values of one filter
+    with OR.
+
+    Each hit has `on_offer` (toom's offer flag or a promotion such as "Gratis Beigabe", see `promotion`) and
+    `availability` for the market: `market_reservable`, `market_orderable` ("Auf Anfrage bestellbar": the
+    inquiry is done by the user on the product page) and `home_delivery`. For stock quantities use
+    compare_markets. Search by words: an exact article number is redirected by toom to a product page.
     """
+    if sort not in SORTS:
+        raise ToolError(f"sort must be one of {sorted(SORTS)}")
     m = await _market(market)
-    res = await _call(_session(m).search(query))
+    toom_filters, summary = _search_filters(m, offers_only, min_price, max_price, brands, availability, filters)
+    res = await _call(_session(m).search(query, toom_filters, SORTS[sort]))
+    products = res["products"]
+    if offers_only:  # every hit of toom's offers filter is an offer, even without an offer flag in the card
+        products = [{**p, "on_offer": True} for p in products]
     return {
         "market": m.name,
         "total_hits": res["count"],
-        "shown": min(limit, len(res["products"])),
-        "products": res["products"][:limit],
+        "shown": min(limit, len(products)),
+        "applied": {"filters": summary, "sort": sort},
+        "products": products[:limit],
     }
+
+
+@mcp.tool
+async def search_filters(query: str, market: str | None = None) -> dict[str, Any]:
+    """Which filters toom offers for a search term, with the number of hits per value.
+
+    Use it to narrow a broad search down (brand, cordless or corded, battery included, ...). The result lists
+    each filter's `param` and its values; pass them on in search_products(filters={param: [value, ...]}).
+    Range filters (price, voltage, weight, ...) show their min and max; price has its own arguments
+    min_price/max_price. The category tree is not included.
+    """
+    m = await _market(market)
+    res = await _call(_session(m).search(query))
+    return {"market": m.name, "total_hits": res["count"], "filters": res["filters"], "sorts": sorted(SORTS)}
 
 
 # ------------------------------------------------------------------- basket

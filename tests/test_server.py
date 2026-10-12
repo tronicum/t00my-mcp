@@ -75,6 +75,114 @@ async def test_search_reads_only_the_first_page(mcp, toom):
     assert [r[1] for r in toom.requests if r[1].startswith("/s/")] == ["/s/akkuschrauber"]  # robots.txt: no ?page=
 
 
+# ------------------------------------------------- offers, filters, sorting
+
+def last_qs(toom) -> list[str]:
+    """Decoded filter/sort parameters of the last search request, as a list of 'key=value'."""
+    from urllib.parse import unquote
+    return [unquote(p) for p in toom.search_qs[-1].split("&") if p]
+
+
+async def test_offers_only_sends_toom_offers_filter_and_marks_hits_as_offers(mcp, toom):
+    await call(mcp, "set_market", market="Prenzlau")
+    res = await call(mcp, "search_products", query="bohrmaschine", offers_only=True)
+    assert last_qs(toom) == ["filter=inv(attr.dp_angebot):true"]
+    assert res["applied"] == {"filters": ["only offers"], "sort": "relevance"}
+    assert all(p["on_offer"] for p in res["products"])  # every hit of the offers filter is an offer
+
+
+async def test_without_the_offers_filter_on_offer_comes_from_the_hit_itself(mcp, toom):
+    await call(mcp, "set_market", market="Prenzlau")
+    res = await call(mcp, "search_products", query="akkuschrauber")
+    assert toom.search_qs[-1] == ""  # plain search: no params at all
+    flags = {p["sku"]: (p["on_offer"], p["promotion"]) for p in res["products"]}
+    assert flags[A] == (False, None) and flags[B] == (True, None) and flags[C] == (True, "Gratis Beigabe")
+
+
+async def test_search_combines_price_brand_availability_and_sort(mcp, toom):
+    await call(mcp, "set_market", market="Prenzlau")
+    res = await call(
+        mcp, "search_products", query="akkuschrauber", brands=["Bosch", "Makita"], min_price=50, max_price=150.5,
+        availability="in_market", sort="price_desc", offers_only=True,
+    )
+    assert last_qs(toom) == [
+        "filter=inv(attr.dp_angebot):true",
+        "filter=inv(price):[50,150.5]",
+        "filter=brands:Bosch~~~Makita",
+        f"filter=pickupInStore:{PRENZLAU}",  # availability is filtered per market id
+        "sort=inv(price):desc",
+    ]
+    assert res["applied"]["sort"] == "price_desc"
+    assert res["applied"]["filters"] == ["only offers", "price 50–150.5 EUR", "brand Bosch or Makita", "in stock in Prenzlau"]
+
+
+async def test_one_sided_price_ranges_get_a_default_bound(mcp, toom):
+    await call(mcp, "set_market", market="Prenzlau")
+    await call(mcp, "search_products", query="x", max_price=100)
+    assert "filter=inv(price):[0,100]" in last_qs(toom)
+    await call(mcp, "search_products", query="x", min_price=50)
+    assert "filter=inv(price):[50,1000000]" in last_qs(toom)  # toom needs both bounds
+
+
+async def test_every_sort_maps_to_toom_sort_key(mcp, toom):
+    await call(mcp, "set_market", market="Prenzlau")
+    expected = {"price_asc": "sort=inv(price)", "price_desc": "sort=inv(price):desc", "offers": "sort=inv(attr.dp_angebot)", "rating": "sort=rating:desc"}
+    for name, qs in expected.items():
+        await call(mcp, "search_products", query="x", sort=name)
+        assert last_qs(toom) == [qs]
+    await call(mcp, "search_products", query="x", sort="relevance")
+    assert toom.search_qs[-1] == ""
+
+
+async def test_availability_choices_map_to_toom_filter_keys(mcp, toom):
+    await call(mcp, "set_market", market="Weißensee")
+    for choice, key in (("in_market", "pickupInStore"), ("orderable", "shipToStore"), ("home_delivery", "customFulfillment1")):
+        await call(mcp, "search_products", query="x", availability=choice)
+        assert last_qs(toom) == [f"filter={key}:{WEISSENSEE}"]
+
+
+async def test_raw_filters_from_search_filters_can_be_passed_back(mcp, toom):
+    await call(mcp, "set_market", market="Prenzlau")
+    await call(mcp, "search_products", query="x", filters={"attr.mca_akkuinklusive": ["Ja"], "availability": ["2"]})
+    assert last_qs(toom) == ["filter=attr.mca_akkuinklusive:Ja", f"filter=shipToStore:{PRENZLAU}"]
+
+
+async def test_search_argument_validation(mcp, toom):
+    await call(mcp, "set_market", market="Prenzlau")
+    assert "sort must be one of" in await call_err(mcp, "search_products", query="x", sort="cheapest")
+    assert "availability must be one of" in await call_err(mcp, "search_products", query="x", availability="soon")
+    assert "min_price" in await call_err(mcp, "search_products", query="x", min_price=10, max_price=5)
+    assert "one availability option" in await call_err(mcp, "search_products", query="x", availability="in_market", filters={"availability": ["0"]})
+    assert "set twice" in await call_err(mcp, "search_products", query="x", brands=["Bosch"], filters={"brands": ["Makita"]})
+    assert "availability values must be" in await call_err(mcp, "search_products", query="x", filters={"availability": ["9"]})
+
+
+async def test_filter_arguments_never_put_plus_or_page_in_the_url(mcp, toom):
+    await call(mcp, "set_market", market="Prenzlau")
+    await call(mcp, "search_products", query="bohr maschine", filters={"attr.mca_einsatzbereich": ["Bohr- und Schraubarbeiten"]}, sort="rating")
+    raw = toom.search_qs[-1]
+    assert "+" not in raw and "page" not in raw
+    assert all("+" not in r[1] for r in toom.requests if r[1].startswith("/s/"))
+
+
+async def test_search_filters_lists_what_can_be_narrowed_down(mcp, toom):
+    await call(mcp, "set_market", market="Prenzlau")
+    res = await call(mcp, "search_filters", query="akkuschrauber")
+    params = {f["param"]: f for f in res["filters"]}
+    assert {"brands", "inv(price)", "inv(attr.dp_angebot)", "attr.mca_akkuinklusive"} <= set(params)
+    assert params["inv(price)"]["type"] == "range"
+    assert params["brands"]["values"] and {"value", "label", "count"} == set(params["brands"]["values"][0])
+    assert res["total_hits"] == 488 and "price_asc" in res["sorts"]
+    assert toom.search_qs[-1] == ""  # asking for the filters is a plain search
+
+
+async def test_searches_do_not_touch_any_basket(mcp, toom):
+    await call(mcp, "set_market", market="Prenzlau")
+    await call(mcp, "search_products", query="x", offers_only=True, sort="offers")
+    await call(mcp, "search_filters", query="x")
+    assert mutations(toom) == []
+
+
 # ----------------------------------------------------------------- basket
 
 async def test_basket_lifecycle(mcp, toom):

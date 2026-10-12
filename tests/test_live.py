@@ -44,6 +44,28 @@ async def test_search_page_still_embeds_the_product_list(session):
     assert p["sku"] and p["title"] and p["price_eur"] and p["url"].startswith("https://toom.de/p/")
 
 
+async def test_offers_filter_sorting_and_price_range_work_on_the_search_page(session):
+    from toomy.client import FILTER_OFFERS, FILTER_PRICE, SORTS
+
+    plain = await session.search("bohrmaschine")
+    offers = await session.search("bohrmaschine", {FILTER_OFFERS: ["true"]})
+    assert 0 < offers["count"] < plain["count"]
+    cheap = await session.search("bohrmaschine", {FILTER_PRICE: ["[0,50]"]}, SORTS["price_desc"])
+    prices = [p["price_eur"] for p in cheap["products"] if p["price_eur"] is not None]
+    assert prices and max(prices) <= 50 and prices == sorted(prices, reverse=True)
+    brands = next(f for f in plain["filters"] if f["param"] == "brands")
+    assert brands["type"] == "choice" and brands["values"][0]["count"] > 0
+
+
+async def test_availability_filter_is_per_market(session):
+    from toomy.client import AVAILABILITY_FILTERS
+
+    plain = await session.search("bohrmaschine")
+    in_market = await session.search("bohrmaschine", {AVAILABILITY_FILTERS["1"]: [str(session.market.id)]})
+    assert 0 < in_market["count"] < plain["count"]
+    assert all(p["availability"]["market_reservable"] for p in in_market["products"])
+
+
 async def test_stock_endpoint_answers_per_article(session):
     sku = (await session.search("akkuschrauber"))["products"][0]["sku"]
     stock = await session.stock([{"sku": sku, "quantity": 1}])
