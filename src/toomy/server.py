@@ -18,7 +18,7 @@ import httpx
 from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError
 
-from toomy import planner
+from toomy import geo, planner
 from toomy.client import (
     AVAILABILITY_FILTERS,
     DELIVERY_TYPES,
@@ -41,6 +41,8 @@ mcp = FastMCP(
         "add_to_basket -> view_basket. Prices and availability depend on the market, so always know which "
         "market you are talking about. To check another store use compare_markets or copy_basket: a market "
         "switch means building a new basket there, and the per-item availability shows what the store has. "
+        "For \"where can I get X near <place>\" use find_article_nearby (straight-line radius, stock per market); "
+        "get_article shows an article's details. "
         "This server cannot check out, pay or send inquiries; give the user the basket summary and links. "
         "export_session replaces the toom.de cookies in the user's browser: explain that and get the "
         "user's explicit OK before calling it with confirm=True."
@@ -363,12 +365,7 @@ async def prepare_article_request(
     session = _session(m)
     product = await _call(session.product(sku))
     stock = (await _call(session.stock([{"sku": product["sku"], "quantity": quantity}]))).get(product["sku"], 0)
-    availability = None
-    try:  # best effort: decode toom's availability for this market from a search of the title
-        hits = (await session.search(product["title"]))["products"]
-        availability = next((h["availability"] for h in hits if h["sku"] == product["sku"]), None)
-    except ToomError:
-        pass
+    availability = await _availability(session, product["sku"], product["title"])
     if stock >= quantity:
         status = "in_stock"
     elif stock > 0:
@@ -408,6 +405,148 @@ async def prepare_article_request(
         "steps": steps,
         "draft_text": "\n".join(lines),
         "note": "Nothing was sent. The request form needs your contact data and a captcha; do it on toom.de.",
+    }
+
+
+# ------------------------------------------------------------ article details
+
+@mcp.tool
+async def get_article(
+    sku: str,
+    market: str | None = None,
+    quantity: int = 1,
+    also_check: list[str] | None = None,
+) -> dict[str, Any]:
+    """Details of one article by its toom article number, plus stock in the market(s).
+
+    Gives title, brand, price, EAN, selling points, characteristics (dimensions, technical details, scope of
+    delivery, ...), categories, images, documents and manufacturer contact, all as toom's product page
+    shows them. `stock` is the available quantity (capped at `quantity`) in the selected market and in each
+    market of `also_check`; `availability` decodes toom's code for the selected market ("Auf Anfrage
+    bestellbar" = `market_orderable`). Nothing is added to a basket.
+    """
+    if quantity < 1:
+        raise ToolError("quantity must be >= 1")
+    m = await _market(market)
+    session = _session(m)
+    art = await _call(session.article(sku))
+    targets = [m] + [x for x in [await _resolve(q) for q in (also_check or [])] if x.id != m.id]
+    stock: dict[str, int | str] = {}
+    for t in targets:
+        try:
+            got = await _session(t).stock([{"sku": art["sku"], "quantity": quantity}])
+            stock[t.name] = got.get(art["sku"], 0)
+        except ToomError as e:
+            stock[t.name] = f"unknown ({e})"
+    return {
+        "article": art,
+        "market": m.name,
+        "quantity_asked": quantity,
+        "stock": stock,
+        "availability": await _availability(session, art["sku"], art["title"]),
+    }
+
+
+# ----------------------------------------------------------------- nearby
+
+@mcp.tool
+async def markets_nearby(near: str, radius_km: float = 50, limit: int = 30) -> dict[str, Any]:
+    """toom markets within a radius (straight-line distance, nearest first).
+
+    `near` can be a market name or id, a postal code (a prefix works), words in a market's name or city
+    ("Köln"), or coordinates "50.94,6.96". No geocoder is used: a place without a toom market is given as a
+    postal code of a nearby market or as coordinates.
+    """
+    if not 0 < radius_km <= 300:
+        raise ToolError("radius_km must be between 0 and 300")
+    markets = await _all_markets()
+    try:
+        lat, lon, label = geo.resolve_center(markets, near)
+    except ValueError as e:
+        raise ToolError(str(e)) from e
+    found = geo.within(markets, lat, lon, radius_km)
+    return {
+        "centre": {"lat": round(lat, 4), "lon": round(lon, 4), "understood_as": label},
+        "radius_km": radius_km,
+        "total": len(found),
+        "markets": [{**m.public(), "distance_km": round(d, 1)} for d, m in found[:limit]],
+    }
+
+
+@mcp.tool
+async def find_article_nearby(
+    near: str,
+    sku: str | None = None,
+    quantity: int = 1,
+    items: list[dict[str, Any]] | None = None,
+    radius_km: float = 50,
+    max_markets: int = 25,
+) -> dict[str, Any]:
+    """Where in the radius around a place can an article (or several) be picked up right now?
+
+    Checks the real stock of every toom market within `radius_km` (straight-line, nearest first; at most
+    `max_markets` markets, one request each) and returns them nearest first with the stock per article.
+    Give one article via `sku` + `quantity`, or several via `items=[{"sku": "...", "quantity": 2}]`.
+    `near` is understood as in markets_nearby. Markets that have everything are marked `complete`;
+    `nearest_complete` is the one to drive to. Stock is live and can change, so call the market before a
+    long drive (the phone number is included). Nothing is reserved or put in a basket.
+    """
+    if not 0 < radius_km <= 300:
+        raise ToolError("radius_km must be between 0 and 300")
+    if not 1 <= max_markets <= 40:
+        raise ToolError("max_markets must be between 1 and 40")
+    if items:
+        wanted = [{"sku": str(i["sku"]), "quantity": int(i.get("quantity", 1))} for i in items if "sku" in i]
+        if len(wanted) != len(items):
+            raise ToolError('each item needs "sku"')
+    elif sku:
+        wanted = [{"sku": str(sku), "quantity": quantity}]
+    else:
+        raise ToolError("Give sku or items.")
+    if any(w["quantity"] < 1 for w in wanted):
+        raise ToolError("quantity must be >= 1")
+
+    markets = await _all_markets()
+    try:
+        lat, lon, label = geo.resolve_center(markets, near)
+    except ValueError as e:
+        raise ToolError(str(e)) from e
+    found = geo.within(markets, lat, lon, radius_km)
+    if not found:
+        raise ToolError(f"No toom market within {radius_km:g} km of '{near}' ({label}).")
+    checked, skipped = found[:max_markets], found[max_markets:]
+
+    titles: dict[str, str] = {}
+    for w in wanted:  # also validates the article numbers before any stock request is made
+        art = await _call(_session(checked[0][1]).article(w["sku"]))
+        w["sku"] = art["sku"]
+        titles[art["sku"]] = art["title"]
+
+    rows = []
+    for dist, m in checked:
+        row: dict[str, Any] = {**m.public(), "distance_km": round(dist, 1)}
+        try:
+            got = await _session(m).stock(wanted)
+        except ToomError as e:
+            rows.append({**row, "complete": False, "error": str(e)})
+            continue
+        stock = {w["sku"]: got.get(w["sku"], 0) for w in wanted}
+        short = [
+            {"sku": w["sku"], "title": titles[w["sku"]], "wanted": w["quantity"], "available": stock[w["sku"]]}
+            for w in wanted if stock[w["sku"]] < w["quantity"]
+        ]
+        rows.append({**row, "complete": not short, "stock": stock, "short": short})
+    rows.sort(key=lambda r: (not r.get("complete"), r["distance_km"]))  # complete markets first, nearest first
+    complete = [r for r in rows if r.get("complete")]
+    return {
+        "centre": {"lat": round(lat, 4), "lon": round(lon, 4), "understood_as": label},
+        "radius_km": radius_km,
+        "articles": [{"sku": w["sku"], "title": titles[w["sku"]], "quantity": w["quantity"]} for w in wanted],
+        "markets_in_radius": len(found),
+        "checked": len(checked),
+        "not_checked": [f"{m.name} ({d:.0f} km)" for d, m in skipped],
+        "nearest_complete": complete[0] if complete else None,
+        "markets": rows,
     }
 
 
@@ -482,6 +621,15 @@ async def copy_basket(from_market: str | None = None, to_market: str = "", repla
         "total_to": target["total"],
         "basket": target,
     }
+
+
+async def _availability(session: Toom, sku: str, title: str) -> dict[str, bool] | None:
+    """Best effort: decode toom's availability code for the session's market from a search of the title."""
+    try:
+        hits = (await session.search(title))["products"]
+    except ToomError:
+        return None
+    return next((h["availability"] for h in hits if h["sku"] == sku), None)
 
 
 async def _lines(src_market: str | None, items: list[dict[str, Any]] | None) -> tuple[Market | None, list[dict[str, Any]]]:

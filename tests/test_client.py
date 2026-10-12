@@ -74,7 +74,7 @@ def test_match_markets_returns_all_candidates_for_a_vague_query():
 
 def test_match_markets_falls_back_to_street_names_only_when_name_and_city_match_nothing():
     ms = markets()
-    assert [m.name for m in match_markets(ms, "zeppelinstrasse")] == ["Radolfzell"]  # street: Zeppelinstraße 6
+    assert {m.name for m in match_markets(ms, "zeppelinstrasse")} == {"Radolfzell", "Remagen"}  # both on a Zeppelinstraße
     assert match_markets(ms, "radolfzell")[0].name == "Radolfzell"  # name still wins when it matches
 
 

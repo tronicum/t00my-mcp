@@ -14,6 +14,9 @@ one market to another. Unofficial; it talks to the same web endpoints the toom.d
 | `search_products` | Search for articles, optionally narrowed down: `offers_only`, `sort` (relevance, price, offers, rating), `min_price`/`max_price`, `brands`, `availability` (in stock here / orderable / delivery) or toom's own `filters`. Each hit has `on_offer`/`promotion` and the decoded availability |
 | `search_filters` | Which filters toom offers for a search term (brand, cordless/corded, battery included, ...) with hit counts, to narrow a broad search down |
 | `add_to_basket`, `view_basket`, `set_quantity`, `remove_from_basket`, `clear_basket` | A basket **per market**; pickup (reserve and collect) or delivery |
+| `get_article` | Details of one article by number: brand, price, EAN, characteristics (dimensions, scope of delivery, ...), categories, images, manufacturer, plus stock in one or more markets |
+| `markets_nearby` | toom markets within a radius of a place (straight-line distance, nearest first) |
+| `find_article_nearby` | Where within a radius can an article (or several) be picked up right now? Real stock per market, nearest first, with phone numbers |
 | `compare_markets` | Real stock per article in several markets, no basket needed |
 | `export_session` | Write a market's session cookies to a local file (mode 0600) so you can look at that basket in your own browser: import it with a cookie manager extension (e.g. Cookie-Editor), then open toom.de/warenkorb. **Asks for confirmation first**: importing replaces the browser's toom.de cookies |
 | `prepare_article_request` | For an article that is not in stock in a market ("Auf Anfrage bestellbar"): stock, product link, the market's phone number and a ready-made text for "Artikel anfragen" or a call. Sends nothing |
@@ -44,6 +47,9 @@ stdio transport, no port. Any MCP client can launch `uv run toomy` the same way.
 - *"Which drills are on offer?"* → `search_products("bohrmaschine", offers_only=True, sort="price_asc")`
 - *"Cordless screwdrivers from Bosch or Makita, under 150 €, in stock in Prenzlau."* →
   `search_products("akkuschrauber", brands=["Bosch","Makita"], max_price=150, availability="in_market")`
+- *"Where within 50 km of Cologne can I pick up this article right now?"* →
+  `find_article_nearby(near="Köln", sku="<article number>", radius_km=50)`
+- *"What are the dimensions and what is in the box?"* → `get_article("<article number>")`
 - *"Search for cordless drills in Prenzlau."* → `set_market("Prenzlau")`, `search_products("akkuschrauber")`
 - *"Which of these has all three articles in stock: Friedrichshain, Weißensee, Prenzlau?"*
   → `compare_markets(["Friedrichshain", "Weißensee", "Prenzlau"], items=[{"sku": "1490300", "quantity": 2}, ...])`
@@ -59,6 +65,9 @@ stdio transport, no port. Any MCP client can launch `uv run toomy` the same way.
 - **Article inquiries are yours to send.** For articles that are only "Auf Anfrage bestellbar" in a market, toom.de
   offers "Artikel anfragen" on the product page. The form carries your contact data and sits behind a captcha, so
   `toomy` prepares everything (`prepare_article_request`) but does not send it and does not try to get past the captcha.
+- **Distances are straight-line**, not driving distances, and no geocoder is used: `near` is a market name or id,
+  a postal code, words in a market's name or city, or coordinates `lat,lon`. Stock is live and can change; the
+  phone number of each market is included so you can call before a long drive.
 - **Unofficial and undocumented.** toom.de can change its endpoints any time; the live contract tests
   (`TOOMY_LIVE=1 uv run pytest -m live`) are there to notice that.
 - **Polite by design:** requests are throttled (0.5 s apart), search reads only the first result page (toom's
@@ -68,6 +77,8 @@ stdio transport, no port. Any MCP client can launch `uv run toomy` the same way.
   anfragen" and the market orders it for you, possibly plus transport costs; this server does not send that
   inquiry, do it on toom.de) and `home_delivery`. For real stock quantities use `compare_markets`
   (capped at the quantity you ask for). Search by words: toom redirects an exact article number to its product page.
+
+Planned tools and decisions are in [TODOs.md](TODOs.md).
 
 ## Development
 
@@ -99,6 +110,9 @@ Warenkorb von einem Markt in einen anderen kopieren. Inoffiziell; er nutzt diese
 | `search_products` | Artikel suchen, optional eingegrenzt: `offers_only`, `sort` (Relevanz, Preis, Angebote, Bewertung), `min_price`/`max_price`, `brands`, `availability` (hier vorrätig / bestellbar / Lieferung) oder toom's eigene `filters`. Jeder Treffer hat `on_offer`/`promotion` und die dekodierte Verfügbarkeit |
 | `search_filters` | Welche Filter toom für einen Suchbegriff anbietet (Marke, Akku/Netz, Akku inklusive, ...) mit Trefferzahlen, um eine breite Suche einzugrenzen |
 | `add_to_basket`, `view_basket`, `set_quantity`, `remove_from_basket`, `clear_basket` | Ein Warenkorb **pro Markt**; Abholung (reservieren) oder Lieferung |
+| `get_article` | Details zu einem Artikel per Nummer: Marke, Preis, EAN, Merkmale (Maße, Lieferumfang, ...), Kategorien, Bilder, Hersteller, dazu der Bestand in einem oder mehreren Märkten |
+| `markets_nearby` | toom-Märkte im Umkreis eines Ortes (Luftlinie, nächster zuerst) |
+| `find_article_nearby` | Wo im Umkreis gibt es einen Artikel (oder mehrere) jetzt zum Abholen? Echter Bestand je Markt, nächster zuerst, mit Telefonnummer |
 | `compare_markets` | Echter Bestand pro Artikel in mehreren Märkten, ohne Warenkorb |
 | `export_session` | Schreibt die Session-Cookies eines Marktes in eine lokale Datei (Rechte 0600), damit du den Warenkorb im eigenen Browser ansehen kannst: mit einer Cookie-Erweiterung (z. B. Cookie-Editor) importieren, dann toom.de/warenkorb öffnen. **Fragt vorher nach**: der Import ersetzt die toom.de-Cookies des Browsers |
 | `prepare_article_request` | Für Artikel, die im Markt nicht vorrätig sind („Auf Anfrage bestellbar“): Bestand, Produktlink, Telefonnummer des Marktes und ein fertiger Text für „Artikel anfragen“ oder einen Anruf. Sendet nichts |
@@ -132,6 +146,10 @@ stdio, kein Port. Andere MCP-Clients starten einfach `uv run toomy`.
 - **Artikelanfragen schickst du selbst ab.** Für Artikel, die in einem Markt nur „Auf Anfrage bestellbar“ sind, bietet
   toom.de auf der Produktseite „Artikel anfragen“ an. Das Formular enthält deine Kontaktdaten und liegt hinter einem
   Captcha; `toomy` bereitet alles vor (`prepare_article_request`), schickt es aber nicht ab und umgeht das Captcha nicht.
+- **Entfernungen sind Luftlinie**, keine Fahrstrecke, und es wird kein Geocoder benutzt: `near` ist ein
+  Marktname oder eine ID, eine PLZ, Wörter aus Name oder Stadt eines Marktes oder Koordinaten `lat,lon`. Der
+  Bestand ist live und kann sich ändern; die Telefonnummer jedes Marktes steht dabei, damit du vor einer langen
+  Fahrt anrufen kannst.
 - **Inoffiziell und undokumentiert.** toom.de kann die Endpunkte jederzeit ändern; die Live-Tests
   (`TOOMY_LIVE=1 uv run pytest -m live`) sind dafür da, das zu bemerken.
 - **Höflich gebaut:** gedrosselte Requests (0,5 s Abstand), die Suche liest nur die erste Ergebnisseite (die

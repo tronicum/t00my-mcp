@@ -26,6 +26,35 @@ FIX = Path(__file__).parent / "fixtures"
 TEMPLATE = json.loads((FIX / "basket_template.json").read_text(encoding="utf-8"))
 
 
+def _article_state() -> dict[str, Any]:
+    """The real product-page state of the door 110013, decoded from the recorded page."""
+    import re
+    from urllib.parse import unquote
+
+    page = (FIX / "article_110013.html").read_text(encoding="utf-8")
+    return json.loads(unquote(re.search(r'data-props="([^"]+)"', page).group(1)))
+
+
+ARTICLE_STATE = _article_state()
+DOOR = "110013"
+
+
+def article_page(sku: str, title: str, price: float, url: str) -> str:
+    """A product page like toom.de's: <title>, <h1> and the URL-encoded `data-props` state."""
+    from urllib.parse import quote
+
+    state = copy.deepcopy(ARTICLE_STATE)
+    if sku != DOOR:  # other articles: same shape, own identity
+        state["content"]["basic_info"].update(sku=sku, name=title)
+        state["content"]["meta_data"].update(meta_price=price, canonical_url=url, title=title)
+    enc = quote(json.dumps(state, ensure_ascii=False, separators=(",", ":")), safe="-_.!~*'()")
+    safe_title = title.replace("&", "&amp;").replace("'", "&#039;")
+    return (
+        f"<html><head><title>Marke {safe_title} | toom Baumarkt</title></head><body>"
+        f'<div id="root" data-props="{enc}"></div><h1>{safe_title}</h1></body></html>'
+    )
+
+
 def euro(v: float) -> str:
     return f"{v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") + "\xa0€"
 
@@ -35,6 +64,14 @@ class FakeToom:
         self.markets = json.loads((FIX / "markets.json").read_text(encoding="utf-8"))
         self.search_html = (FIX / "search.html").read_text(encoding="utf-8")
         self.catalog = {p["sku"]: p for p in toom_client.parse_search_payload(self.search_html)["products"]}
+        meta = ARTICLE_STATE["content"]["meta_data"]  # the door is orderable like any catalog article
+        self.catalog[DOOR] = {
+            "sku": DOOR,
+            "title": ARTICLE_STATE["content"]["basic_info"]["name"],
+            "price": "249,99\xa0€",
+            "price_eur": meta["meta_price"],
+            "url": meta["canonical_url"],
+        }
         self.stock: dict[int, dict[str, int]] = {}  # market_id -> sku -> qty; missing sku = 10 everywhere
         self.baskets: dict[int, list[dict[str, Any]]] = {}  # market_id -> [{line_id, sku, quantity, delivery}]
         self.next_line = 100
@@ -100,11 +137,10 @@ class FakeToom:
             return httpx.Response(200, text=self.search_html)
         if path.startswith("/p/"):
             sku = path.rstrip("/").rsplit("/", 1)[-1]
-            title = self.catalog[sku]["title"].replace("'", "&#039;") if sku in self.catalog else "Unknown"
-            return httpx.Response(
-                200,
-                text=f"<html><head><title>Marke {title} | toom Baumarkt</title></head><body><h1>{title}</h1></body></html>",
-            )
+            p = self.catalog.get(sku)
+            if p is None:
+                return httpx.Response(404, text="not found")
+            return httpx.Response(200, text=article_page(sku, p["title"], p["price_eur"], p["url"]))
         if market is None:
             return httpx.Response(400, text="no market cookie")
 

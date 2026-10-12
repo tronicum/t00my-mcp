@@ -17,7 +17,7 @@ import re
 import time
 from dataclasses import dataclass
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 
 import httpx
 
@@ -74,6 +74,8 @@ class Market:
     street: str
     phone: str
     link: str
+    lat: float | None = None
+    lon: float | None = None
 
     @classmethod
     def from_api(cls, m: dict[str, Any]) -> "Market":
@@ -86,10 +88,19 @@ class Market:
             street=a.get("street", ""),
             phone=m.get("phone", ""),
             link=f"{BASE_URL}/{m.get('link', '').lstrip('/')}",
+            lat=_to_float(a.get("latitude")),
+            lon=_to_float(a.get("longitude")),
         )
 
     def public(self) -> dict[str, Any]:
         return {"id": self.id, "name": self.name, "address": f"{self.street}, {self.zip} {self.city}", "phone": self.phone, "url": self.link}
+
+
+def _to_float(v: Any) -> float | None:
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
 
 
 def _price_to_float(text: str | None) -> float | None:
@@ -159,6 +170,50 @@ def parse_filters(raw_filters: list[dict[str, Any]] | None) -> list[dict[str, An
             sv = f.get("sliderValues") or {}
             out.append({"name": f["name"], "param": param, "type": "range", "min": sv.get("absoluteMin"), "max": sv.get("absoluteMax"), "unit": f.get("unit", "")})
     return out
+
+
+def _split_values(value: Any) -> Any:
+    """toom joins multi-valued attributes with '|' ("Grau|Weiß")."""
+    return value.split("|") if isinstance(value, str) and "|" in value else value
+
+
+def parse_article_state(html_text: str) -> dict[str, Any]:
+    """Details of an article from the state a toom.de product page embeds (`data-props`, URL-encoded JSON)."""
+    m = re.search(r'<div id="root" data-props="([^"]+)"', html_text)
+    if not m:
+        raise ToomError("Product page has no embedded data; toom.de may have changed its frontend.")
+    try:
+        state = json.loads(unquote(m.group(1)))
+        c = state["content"]
+    except (ValueError, KeyError) as e:
+        raise ToomError("Product page data could not be read; toom.de may have changed its frontend.") from e
+    basic, details, meta = c.get("basic_info") or {}, c.get("details") or {}, c.get("meta_data") or {}
+    chars = c.get("characteristics") or {}
+    groups: dict[str, dict[str, Any]] = {}
+    for group, items in chars.items():
+        if group in ("produktdetails", "herstellerinformationen") or not isinstance(items, list):
+            continue  # produktdetails repeats technische-details
+        pairs = {i["label"]: _split_values(i["value"]) for i in items if i.get("label") and i.get("value") not in (None, "")}
+        if pairs:
+            groups[group] = pairs
+    maker = chars.get("herstellerinformationen") or {}
+    manufacturer = {k: (maker.get(k) or {}).get("value") for k in ("name", "street", "phone", "email")}
+    return {
+        "sku": basic.get("sku"),
+        "title": html.unescape(basic.get("name") or meta.get("title") or ""),
+        "brand": (details.get("brand") or {}).get("name") or None,
+        "price_eur": meta.get("meta_price"),
+        "ean": meta.get("ean") or None,
+        "url": meta.get("canonical_url") or None,
+        "summary": list((details.get("selling_points") or {}).get("items") or []),
+        "description": basic.get("description") or None,
+        "characteristics": groups,
+        "manufacturer": manufacturer if any(manufacturer.values()) else None,
+        "categories": [b["name"] for b in c.get("breadcrumb") or [] if b.get("name")],
+        "images": [g["src"] for g in c.get("gallery") or [] if g.get("src")][:6],
+        "documents": c.get("documents") or [],
+        "variants": c.get("variants"),
+    }
 
 
 def _undefined(v: Any) -> Any:
@@ -319,6 +374,16 @@ class Toom:
         if not title:
             raise ToomError(f"Found the product page for '{sku}' but could not read its title.")
         return {"sku": str(sku).strip(), "title": title, "url": str(r.url)}
+
+    async def article(self, sku: str) -> dict[str, Any]:
+        """All details of an article by number (one product page request)."""
+        r = await self._request("GET", f"/s/{quote(str(sku).strip(), safe='')}", headers={"Accept": "text/html"})
+        if not r.url.path.startswith("/p/"):
+            raise ToomError(f"No article with the number '{sku}' found on toom.de.")
+        art = parse_article_state(r.text)
+        art["sku"] = art.get("sku") or str(sku).strip()
+        art["url"] = art.get("url") or str(r.url)
+        return art
 
     # ------------------------------------------------------------------ basket
     async def basket(self) -> dict[str, Any]:
