@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from toomy.client import Market, ToomError, _price_to_float, decode_availability, match_markets, parse_basket, parse_search_payload
+from toomy.client import Market, ToomError, _price_to_float, decode_availability, match_markets, parse_basket, parse_product_page, parse_search_payload
 
 FIX = Path(__file__).parent / "fixtures"
 
@@ -104,3 +104,14 @@ def test_search_results_carry_the_decoded_availability():
     first = parse_search_payload((FIX / "search.html").read_text(encoding="utf-8"))["products"][0]
     assert first["availability_code"] == "0|1"
     assert first["availability"] == {"home_delivery": True, "market_reservable": True, "market_orderable": False}
+
+
+def test_product_page_title_prefers_h1_and_decodes_entities():
+    html_text = "<title>Hörmann Tür &#039;T30&#039; | toom Baumarkt</title><h1 class=x>Tür &#039;T30&#039; <b>87,5</b> x 200 cm</h1>"
+    assert parse_product_page(html_text) == "Tür 'T30' 87,5 x 200 cm"
+
+
+def test_product_page_title_falls_back_to_og_title_then_title_tag():
+    assert parse_product_page('<meta property="og:title" content="Akku &amp; Co">') == "Akku & Co"
+    assert parse_product_page("<title>Hammer 500 g | toom Baumarkt</title>") == "Hammer 500 g"
+    assert parse_product_page("<html>nothing</html>") is None

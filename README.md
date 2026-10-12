@@ -14,7 +14,8 @@ one market to another. Unofficial; it talks to the same web endpoints the toom.d
 | `search_products` | Search for articles (first result page, price and toom's availability hints) |
 | `add_to_basket`, `view_basket`, `set_quantity`, `remove_from_basket`, `clear_basket` | A basket **per market**; pickup (reserve and collect) or delivery |
 | `compare_markets` | Real stock per article in several markets, no basket needed |
-| `export_session` | Write a market's session cookies to a local file (mode 0600) so you can look at that basket in your own browser: import it with a cookie manager extension (e.g. Cookie-Editor), then open toom.de/warenkorb |
+| `export_session` | Write a market's session cookies to a local file (mode 0600) so you can look at that basket in your own browser: import it with a cookie manager extension (e.g. Cookie-Editor), then open toom.de/warenkorb. **Asks for confirmation first**: importing replaces the browser's toom.de cookies |
+| `prepare_article_request` | For an article that is not in stock in a market ("Auf Anfrage bestellbar"): stock, product link, the market's phone number and a ready-made text for "Artikel anfragen" or a call. Sends nothing |
 | `copy_basket` | Build a basket anew in another market and report per article what is available there |
 | `plan_pickup` | Pickup plan: your primary market first, fallback markets only for what it lacks and what is small enough to transport; says when everything is at the primary market |
 
@@ -51,6 +52,9 @@ stdio transport, no port. Any MCP client can launch `uv run toomy` the same way.
 - **No checkout.** The basket is an anonymous session held by the server process, not your toom account, so it does
   not show up in your browser. Reserving and paying happens on toom.de; the tools give you the article numbers,
   quantities and product links to do that.
+- **Article inquiries are yours to send.** For articles that are only "Auf Anfrage bestellbar" in a market, toom.de
+  offers "Artikel anfragen" on the product page. The form carries your contact data and sits behind a captcha, so
+  `toomy` prepares everything (`prepare_article_request`) but does not send it and does not try to get past the captcha.
 - **Unofficial and undocumented.** toom.de can change its endpoints any time; the live contract tests
   (`TOOMY_LIVE=1 uv run pytest -m live`) are there to notice that.
 - **Polite by design:** requests are throttled (0.5 s apart), search reads only the first result page (toom's
@@ -91,7 +95,8 @@ Warenkorb von einem Markt in einen anderen kopieren. Inoffiziell; er nutzt diese
 | `search_products` | Artikel suchen (erste Ergebnisseite, Preis, Verfügbarkeitshinweise von toom) |
 | `add_to_basket`, `view_basket`, `set_quantity`, `remove_from_basket`, `clear_basket` | Ein Warenkorb **pro Markt**; Abholung (reservieren) oder Lieferung |
 | `compare_markets` | Echter Bestand pro Artikel in mehreren Märkten, ohne Warenkorb |
-| `export_session` | Schreibt die Session-Cookies eines Marktes in eine lokale Datei (Rechte 0600), damit du den Warenkorb im eigenen Browser ansehen kannst: mit einer Cookie-Erweiterung (z. B. Cookie-Editor) importieren, dann toom.de/warenkorb öffnen |
+| `export_session` | Schreibt die Session-Cookies eines Marktes in eine lokale Datei (Rechte 0600), damit du den Warenkorb im eigenen Browser ansehen kannst: mit einer Cookie-Erweiterung (z. B. Cookie-Editor) importieren, dann toom.de/warenkorb öffnen. **Fragt vorher nach**: der Import ersetzt die toom.de-Cookies des Browsers |
+| `prepare_article_request` | Für Artikel, die im Markt nicht vorrätig sind („Auf Anfrage bestellbar“): Bestand, Produktlink, Telefonnummer des Marktes und ein fertiger Text für „Artikel anfragen“ oder einen Anruf. Sendet nichts |
 | `copy_basket` | Warenkorb in einem anderen Markt neu aufbauen und pro Artikel berichten, was dort verfügbar ist |
 | `plan_pickup` | Abholplan: zuerst der Hauptmarkt, Ausweichmärkte nur für Fehlendes, das klein genug zum Transport ist; meldet, wenn alles im Hauptmarkt liegt |
 
@@ -119,6 +124,9 @@ stdio, kein Port. Andere MCP-Clients starten einfach `uv run toomy`.
 - **Kein Checkout.** Der Warenkorb ist eine anonyme Session im Serverprozess, nicht dein toom-Konto, und taucht
   daher nicht in deinem Browser auf. Reservieren und Bezahlen passiert auf toom.de; die Tools liefern dir
   Artikelnummern, Mengen und Produktlinks dafür.
+- **Artikelanfragen schickst du selbst ab.** Für Artikel, die in einem Markt nur „Auf Anfrage bestellbar“ sind, bietet
+  toom.de auf der Produktseite „Artikel anfragen“ an. Das Formular enthält deine Kontaktdaten und liegt hinter einem
+  Captcha; `toomy` bereitet alles vor (`prepare_article_request`), schickt es aber nicht ab und umgeht das Captcha nicht.
 - **Inoffiziell und undokumentiert.** toom.de kann die Endpunkte jederzeit ändern; die Live-Tests
   (`TOOMY_LIVE=1 uv run pytest -m live`) sind dafür da, das zu bemerken.
 - **Höflich gebaut:** gedrosselte Requests (0,5 s Abstand), die Suche liest nur die erste Ergebnisseite (die

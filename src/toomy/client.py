@@ -11,6 +11,7 @@ robots.txt disallows `/s/*?page=`).
 from __future__ import annotations
 
 import asyncio
+import html
 import json
 import re
 import time
@@ -93,6 +94,18 @@ def decode_availability(code: Any) -> dict[str, bool]:
         "market_reservable": "1" in digits,
         "market_orderable": "2" in digits,
     }
+
+
+def parse_product_page(html_text: str) -> str | None:
+    """Article title from a toom.de product page (h1, else og:title, else <title> without the shop suffix)."""
+    for pat in (r"<h1[^>]*>(.*?)</h1>", r'<meta[^>]+property="og:title"[^>]+content="([^"]*)"', r"<title[^>]*>(.*?)</title>"):
+        m = re.search(pat, html_text, re.S)
+        if m:
+            title = html.unescape(re.sub(r"<[^>]+>", "", m.group(1))).strip()
+            title = re.sub(r"\s*\|\s*toom Baumarkt\s*$", "", title)
+            if title:
+                return title
+    return None
 
 
 def _undefined(v: Any) -> Any:
@@ -234,6 +247,16 @@ class Toom:
         if r.url.path.startswith("/p/"):  # an exact article number redirects to the product page
             raise ToomError(f"'{query}' matched exactly one article and toom.de sent its product page ({r.url}); search by words instead.")
         return parse_search_payload(r.text)
+
+    async def product(self, sku: str) -> dict[str, Any]:
+        """Look an article up by its number: toom redirects /s/<number> to the product page."""
+        r = await self._request("GET", f"/s/{quote(str(sku).strip(), safe='')}", headers={"Accept": "text/html"})
+        if not r.url.path.startswith("/p/"):
+            raise ToomError(f"No article with the number '{sku}' found on toom.de.")
+        title = parse_product_page(r.text)
+        if not title:
+            raise ToomError(f"Found the product page for '{sku}' but could not read its title.")
+        return {"sku": str(sku).strip(), "title": title, "url": str(r.url)}
 
     # ------------------------------------------------------------------ basket
     async def basket(self) -> dict[str, Any]:

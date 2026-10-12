@@ -127,6 +127,18 @@ async def test_every_market_has_its_own_basket(mcp, toom):
 
 # ---------------------------------------------------------------- session
 
+async def test_export_session_asks_for_confirmation_and_writes_nothing_without_it(mcp, toom, tmp_path, monkeypatch):
+    from toomy import server
+
+    home = tmp_path / "toomy-home"
+    monkeypatch.setattr(server, "SESSION_DIR", home)
+    res = await call(mcp, "export_session", market="Prenzlau")
+    assert res["written"] is False and "replaces" in res["warning"] and "confirm=True" in res["next"]
+    assert res["would_write"] == str(home / f"session-{PRENZLAU}.json")
+    assert not home.exists()  # nothing written, no directory created
+    assert [r for r in toom.requests if "/basket" in r[1]] == []  # not even a request to toom
+
+
 async def test_export_session_writes_importable_cookies_with_private_permissions(mcp, toom, tmp_path, monkeypatch):
     import json
     import stat
@@ -134,9 +146,9 @@ async def test_export_session_writes_importable_cookies_with_private_permissions
 
     monkeypatch.setattr(server, "SESSION_DIR", tmp_path / "toomy-home")
     await call(mcp, "add_to_basket", sku=A, market="Prenzlau")
-    res = await call(mcp, "export_session", market="Prenzlau")
+    res = await call(mcp, "export_session", market="Prenzlau", confirm=True)
     path = tmp_path / "toomy-home" / f"session-{PRENZLAU}.json"
-    assert res["file"] == str(path) and res["basket_items"] == 1 and res["basket_url"].endswith("/warenkorb")
+    assert res["written"] and res["file"] == str(path) and res["basket_items"] == 1 and res["basket_url"].endswith("/warenkorb")
     assert stat.S_IMODE(path.stat().st_mode) == 0o600  # file readable only by the owner
     assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700
     cookies = {c["name"]: c for c in json.loads(path.read_text())}
@@ -149,6 +161,48 @@ async def test_export_session_writes_importable_cookies_with_private_permissions
 
 async def test_export_session_needs_a_market(mcp, toom):
     assert "No market selected" in await call_err(mcp, "export_session")
+
+
+# ---------------------------------------------------------- article request
+
+async def test_prepare_request_for_an_article_not_in_stock(mcp, toom):
+    toom.set_stock(PRENZLAU, A, 0)
+    res = await call(
+        mcp, "prepare_article_request", sku=A, market="Prenzlau", quantity=2, needed_by="Freitag, 16.10.", note="Gern mit Rückruf."
+    )
+    assert res["status"] == "not_in_stock" and res["stock_in_market"] == 0 and res["quantity_wanted"] == 2
+    assert res["article"]["sku"] == A and res["article"]["url"].endswith(f"/{A}")
+    assert "Akku-Bohrschrauber" in res["article"]["title"] and "&#039;" not in res["article"]["title"]  # entities decoded
+    assert res["market"]["name"] == "Prenzlau" and res["market"]["phone"]
+    text = res["draft_text"]
+    assert f"2× {res['article']['title']} (Artikelnummer {A})" in text and "Prenzlau" in text
+    assert "Freitag, 16.10." in text and "Gern mit Rückruf." in text and "Transportkosten" in text
+    assert any("Artikel anfragen" in s for s in res["steps"]) and any(res["market"]["phone"] in s for s in res["steps"])
+    assert "Nothing was sent" in res["note"]
+    # reads only: no basket change, nothing POSTed except the stock check
+    assert mutations(toom) == [] and [r for r in toom.requests if r[0] == "POST" and "stocks" not in r[1]] == []
+
+
+async def test_prepare_request_reports_partial_and_full_stock(mcp, toom):
+    toom.set_stock(PRENZLAU, A, 1)
+    assert (await call(mcp, "prepare_article_request", sku=A, market="Prenzlau", quantity=2))["status"] == "partly_in_stock"
+    full = await call(mcp, "prepare_article_request", sku=A, market="Prenzlau", quantity=1)
+    assert full["status"] == "in_stock" and "no inquiry needed" in full["steps"][0]
+
+
+async def test_prepare_request_uses_the_selected_market_and_validates(mcp, toom):
+    assert "No market selected" in await call_err(mcp, "prepare_article_request", sku=A)
+    await call(mcp, "set_market", market="Weißensee")
+    assert (await call(mcp, "prepare_article_request", sku=A))["market"]["name"] == "Berlin-Weißensee"
+    assert "quantity" in await call_err(mcp, "prepare_article_request", sku=A, quantity=0)
+    assert "No article with the number" in await call_err(mcp, "prepare_article_request", sku="999999999")
+
+
+async def test_prepare_request_contains_no_personal_data(mcp, toom):
+    res = await call(mcp, "prepare_article_request", sku=A, market="Prenzlau")
+    flat = str(res).lower()
+    assert "@" not in flat.replace("@toombm.de", "")  # no e-mail address of the user, only the market's
+    assert "name:" not in flat and "adresse des" not in flat
 
 
 # ------------------------------------------------------------ copy basket

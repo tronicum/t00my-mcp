@@ -97,7 +97,12 @@ class FakeToom:
                 return httpx.Response(302, headers={"location": self.catalog[unquote(path[3:])]["url"]})
             return httpx.Response(200, text=self.search_html)
         if path.startswith("/p/"):
-            return httpx.Response(200, text="<html>product page</html>")
+            sku = path.rstrip("/").rsplit("/", 1)[-1]
+            title = self.catalog[sku]["title"].replace("'", "&#039;") if sku in self.catalog else "Unknown"
+            return httpx.Response(
+                200,
+                text=f"<html><head><title>Marke {title} | toom Baumarkt</title></head><body><h1>{title}</h1></body></html>",
+            )
         if market is None:
             return httpx.Response(400, text="no market cookie")
 

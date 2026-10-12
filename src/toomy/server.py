@@ -28,7 +28,9 @@ mcp = FastMCP(
         "add_to_basket -> view_basket. Prices and availability depend on the market, so always know which "
         "market you are talking about. To check another store use compare_markets or copy_basket: a market "
         "switch means building a new basket there, and the per-item availability shows what the store has. "
-        "This server cannot check out or pay; give the user the basket summary and links."
+        "This server cannot check out, pay or send inquiries; give the user the basket summary and links. "
+        "export_session replaces the toom.de cookies in the user's browser: explain that and get the "
+        "user's explicit OK before calling it with confirm=True."
     ),
 )
 
@@ -181,24 +183,40 @@ SESSION_DIR = Path(os.environ.get("TOOMY_HOME", Path.home() / ".toomy"))
 
 
 @mcp.tool
-async def export_session(market: str | None = None) -> dict[str, Any]:
+async def export_session(market: str | None = None, confirm: bool = False) -> dict[str, Any]:
     """Write the session cookies of a market's basket to a local file, to look at that basket in your own browser.
 
-    The basket lives in an anonymous toom.de session held by this server. Import the file into your browser
-    with a cookie manager extension (e.g. Cookie-Editor: Import), then open the basket page. This replaces
-    the toom.de cookies of that browser, including a basket it may have had. The file is readable only by you;
-    the cookies belong to an anonymous (not logged in) session but are still a session token: do not share them.
+    The basket lives in an anonymous toom.de session held by this server. Importing the file into your
+    browser (cookie manager extension, e.g. Cookie-Editor: Import) REPLACES the toom.de cookies of that
+    browser, including any basket or market choice it had there. The cookies are an anonymous session
+    token (no login), but still a token: keep the file private and do not share it.
+
+    Ask the user first. Without confirm=True nothing is written and you get the notice to show them; call
+    again with confirm=True only after the user explicitly agreed.
     """
     m = await _market(market)
+    path = SESSION_DIR / f"session-{m.id}.json"
+    if not confirm:
+        return {
+            "written": False,
+            "market": m.name,
+            "would_write": str(path),
+            "warning": (
+                "Importing this file into your browser replaces its toom.de cookies, including a basket or "
+                "market choice it has there. The cookies are an anonymous session token (no login) but still a "
+                "token: do not share the file."
+            ),
+            "next": "Ask the user whether they want this; if yes, call export_session again with confirm=True.",
+        }
     session = _session(m)
     basket = await _call(session.basket())  # makes sure the server has issued the session cookie
     SESSION_DIR.mkdir(mode=0o700, parents=True, exist_ok=True)
-    path = SESSION_DIR / f"session-{m.id}.json"
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
     with os.fdopen(fd, "w", encoding="utf-8") as f:
         json.dump(session.export_cookies(), f, indent=2)
     os.chmod(path, 0o600)
     return {
+        "written": True,
         "market": m.name,
         "file": str(path),
         "basket_url": "https://toom.de/warenkorb",
@@ -208,6 +226,77 @@ async def export_session(market: str | None = None) -> dict[str, Any]:
             "Open https://toom.de, click the extension, choose Import and paste the content of the file.",
             "Reload and open https://toom.de/warenkorb; you should see this basket.",
         ],
+    }
+
+
+@mcp.tool
+async def prepare_article_request(
+    sku: str,
+    market: str | None = None,
+    quantity: int = 1,
+    needed_by: str | None = None,
+    note: str | None = None,
+) -> dict[str, Any]:
+    """Prepare asking a market to order an article that is not in stock there. Sends nothing.
+
+    toom shows "Auf Anfrage bestellbar" / "Artikel anfragen" on the product page for such articles and the
+    market orders them for you (possibly plus transport costs). The request form is protected by a captcha
+    and carries your contact data, so it is done by the user on toom.de. This tool gathers everything
+    needed: the stock in the market, the product page link, the market's phone number and a ready-made
+    text for the form or a phone call. `needed_by` (free text, e.g. "Freitag, 16.10.") and `note` are
+    added to that text. No personal data is read or sent.
+    """
+    if quantity < 1:
+        raise ToolError("quantity must be >= 1")
+    m = await _market(market)
+    session = _session(m)
+    product = await _call(session.product(sku))
+    stock = (await _call(session.stock([{"sku": product["sku"], "quantity": quantity}]))).get(product["sku"], 0)
+    availability = None
+    try:  # best effort: decode toom's availability for this market from a search of the title
+        hits = (await session.search(product["title"]))["products"]
+        availability = next((h["availability"] for h in hits if h["sku"] == product["sku"]), None)
+    except ToomError:
+        pass
+    if stock >= quantity:
+        status = "in_stock"
+    elif stock > 0:
+        status = "partly_in_stock"
+    else:
+        status = "not_in_stock"
+
+    wanted = f"{quantity}× {product['title']} (Artikelnummer {product['sku']})"
+    lines = [
+        "Guten Tag,",
+        f"ich möchte gern {wanted} im toom Markt {m.name} bestellen und dort abholen.",
+    ]
+    if needed_by:
+        lines.append(f"Ich benötige den Artikel bis: {needed_by}.")
+    lines.append("Bitte um Rückmeldung, bis wann der Artikel da sein kann und ob Transportkosten anfallen.")
+    if note:
+        lines.append(note)
+    lines.append("Vielen Dank!")
+
+    if status == "in_stock":
+        steps = [f"It is in stock in {m.name} ({stock}): no inquiry needed, add it to the basket and reserve it on toom.de."]
+    else:
+        steps = [
+            f"Open the product page: {product['url']}",
+            f"Select the market {m.name} (\"Mein Markt\") if the page shows another one.",
+            'Click "Artikel anfragen" (shown as "Auf Anfrage bestellbar"), fill in your contact data and solve the captcha.',
+            f"Or call the market: {m.phone}" if m.phone else "Or call the market.",
+        ]
+    return {
+        "article": product,
+        "market": m.public(),
+        "quantity_wanted": quantity,
+        "stock_in_market": stock,
+        "status": status,
+        "availability": availability,
+        "request_possible_online": bool(availability and availability["market_orderable"]) if availability else None,
+        "steps": steps,
+        "draft_text": "\n".join(lines),
+        "note": "Nothing was sent. The request form needs your contact data and a captcha; do it on toom.de.",
     }
 
 
