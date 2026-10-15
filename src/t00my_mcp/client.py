@@ -32,7 +32,7 @@ API_URL = "https://api.toom.de"  # the host toom's own pages use for recommendat
 API_CLIENT_ID = "pdp-browser"  # the X-Client-Id the product page sends there
 RELATED_KINDS = {"also_bought": "also-bought", "similar": "similar"}
 
-USER_AGENT = "toomy/0.1 (+https://github.com/tronicum/toomy; personal assistant, low request rate)"
+USER_AGENT = "t00my-mcp/0.1 (+https://github.com/tronicum/t00my-mcp; unofficial personal assistant, low request rate)"
 MARKET_COOKIES = ("market_id", "market_name")
 
 # --- search filters/sorting, as the toom.de search page itself puts them into the URL (observed) -------------

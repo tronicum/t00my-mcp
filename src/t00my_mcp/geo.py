@@ -10,7 +10,7 @@ import re
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:  # pragma: no cover
-    from toomy.client import Market
+    from t00my_mcp.client import Market
 
 EARTH_RADIUS_KM = 6371.0088
 # both numbers need a decimal point: "50,94" is a German decimal number, not latitude 50 / longitude 94

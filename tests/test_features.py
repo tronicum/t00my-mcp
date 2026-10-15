@@ -1,5 +1,5 @@
 """Newer features: opening hours, market_info, measures/dimensions, fits_space, compare_articles,
-delivery_info, get_related, best_rated search and the TOOMY_DEFAULT_MARKET / TOOMY_HOME_MARKETS defaults."""
+delivery_info, get_related, best_rated search and the T00MY_DEFAULT_MARKET / T00MY_HOME_MARKETS defaults."""
 
 from __future__ import annotations
 
@@ -15,8 +15,8 @@ import pytest
 
 import conftest
 from conftest import ARTICLE_STATE, DOOR, FIX, call, call_err
-from toomy import fit, hours, server
-from toomy.client import Market, clean_html, extract_dimensions, parse_measure
+from t00my_mcp import fit, hours, server
+from t00my_mcp.client import Market, clean_html, extract_dimensions, parse_measure
 
 BERLIN = ZoneInfo("Europe/Berlin")
 A, B, C, D = "1490300", "10458992", "1501938", "1501286"
@@ -38,8 +38,8 @@ def market(mid: int) -> Market:
 
 @pytest.fixture(autouse=True)
 def clean_env(monkeypatch):
-    monkeypatch.delenv("TOOMY_DEFAULT_MARKET", raising=False)
-    monkeypatch.delenv("TOOMY_HOME_MARKETS", raising=False)
+    monkeypatch.delenv("T00MY_DEFAULT_MARKET", raising=False)
+    monkeypatch.delenv("T00MY_HOME_MARKETS", raising=False)
 
 
 def wrap(toom, monkeypatch, override):
@@ -789,7 +789,7 @@ def test_env_list_splitting(monkeypatch):
 
 
 async def test_default_market_needs_no_set_market(mcp, toom, monkeypatch):
-    monkeypatch.setenv("TOOMY_DEFAULT_MARKET", "Prenzlau")
+    monkeypatch.setenv("T00MY_DEFAULT_MARKET", "Prenzlau")
     res = await call(mcp, "search_products", query="akku")
     assert res["market"] == "Prenzlau" and toom.queries == [("akku", PRENZLAU)]
     basket = await call(mcp, "view_basket")
@@ -798,14 +798,14 @@ async def test_default_market_needs_no_set_market(mcp, toom, monkeypatch):
 
 
 async def test_set_market_beats_default_and_explicit_beats_both(mcp, toom, monkeypatch):
-    monkeypatch.setenv("TOOMY_DEFAULT_MARKET", "Prenzlau")
+    monkeypatch.setenv("T00MY_DEFAULT_MARKET", "Prenzlau")
     await call(mcp, "set_market", market="Troisdorf")
     assert (await call(mcp, "view_basket"))["market"] == "Troisdorf"
     assert (await call(mcp, "view_basket", market="Köln-Zollstock"))["market"] == "Köln-Zollstock"
 
 
 async def test_default_market_that_does_not_exist_is_an_error(mcp, toom, monkeypatch):
-    monkeypatch.setenv("TOOMY_DEFAULT_MARKET", "Atlantis")
+    monkeypatch.setenv("T00MY_DEFAULT_MARKET", "Atlantis")
     assert "No toom market found" in await call_err(mcp, "view_basket")
 
 
@@ -816,7 +816,7 @@ async def test_unset_default_keeps_the_old_error(mcp, toom):
 
 
 async def test_compare_markets_defaults_to_home_markets(mcp, toom, monkeypatch):
-    monkeypatch.setenv("TOOMY_HOME_MARKETS", "Friedrichshain;Weißensee")
+    monkeypatch.setenv("T00MY_HOME_MARKETS", "Friedrichshain;Weißensee")
     toom.set_stock(FRIEDRICHSHAIN, A, 0)
     res = await call(mcp, "compare_markets", items=[{"sku": A, "quantity": 1}])
     assert res["basket_of"] is None and res["items"] == 1
@@ -827,18 +827,18 @@ async def test_compare_markets_defaults_to_home_markets(mcp, toom, monkeypatch):
 
 
 async def test_compare_markets_explicit_markets_beat_home_markets(mcp, toom, monkeypatch):
-    monkeypatch.setenv("TOOMY_HOME_MARKETS", "Friedrichshain;Weißensee")
+    monkeypatch.setenv("T00MY_HOME_MARKETS", "Friedrichshain;Weißensee")
     res = await call(mcp, "compare_markets", markets=["Köln-Zollstock"], items=[{"sku": A, "quantity": 1}])
     assert [r["market"] for r in res["markets"]] == ["Köln-Zollstock"]
 
 
 async def test_compare_markets_without_markets_or_env(mcp, toom):
-    assert "TOOMY_HOME_MARKETS" in await call_err(mcp, "compare_markets", items=[{"sku": A, "quantity": 1}])
+    assert "T00MY_HOME_MARKETS" in await call_err(mcp, "compare_markets", items=[{"sku": A, "quantity": 1}])
 
 
 async def test_plan_pickup_default_primary_and_home_fallbacks(mcp, toom, monkeypatch):
-    monkeypatch.setenv("TOOMY_DEFAULT_MARKET", "Prenzlau")
-    monkeypatch.setenv("TOOMY_HOME_MARKETS", "Friedrichshain;Weißensee;Prenzlau")
+    monkeypatch.setenv("T00MY_DEFAULT_MARKET", "Prenzlau")
+    monkeypatch.setenv("T00MY_HOME_MARKETS", "Friedrichshain;Weißensee;Prenzlau")
     toom.set_stock(PRENZLAU, B, 0)
     toom.set_stock(FRIEDRICHSHAIN, B, 0)
     toom.set_stock(WEISSENSEE, B, 5)
@@ -854,8 +854,8 @@ async def test_plan_pickup_default_primary_and_home_fallbacks(mcp, toom, monkeyp
 
 
 async def test_plan_pickup_uses_selected_market_as_primary(mcp, toom, monkeypatch):
-    monkeypatch.setenv("TOOMY_DEFAULT_MARKET", "Prenzlau")
-    monkeypatch.setenv("TOOMY_HOME_MARKETS", "Friedrichshain;Köln-Zollstock")
+    monkeypatch.setenv("T00MY_DEFAULT_MARKET", "Prenzlau")
+    monkeypatch.setenv("T00MY_HOME_MARKETS", "Friedrichshain;Köln-Zollstock")
     await call(mcp, "set_market", market="Troisdorf")
     res = await call(mcp, "plan_pickup", items=[{"sku": A, "quantity": 1}])
     assert [(s["market"], s["role"]) for s in res["stops"]] == [("Troisdorf", "primary")]
@@ -863,8 +863,8 @@ async def test_plan_pickup_uses_selected_market_as_primary(mcp, toom, monkeypatc
 
 
 async def test_plan_pickup_explicit_empty_fallbacks_beat_env(mcp, toom, monkeypatch):
-    monkeypatch.setenv("TOOMY_DEFAULT_MARKET", "Prenzlau")
-    monkeypatch.setenv("TOOMY_HOME_MARKETS", "Friedrichshain;Weißensee")
+    monkeypatch.setenv("T00MY_DEFAULT_MARKET", "Prenzlau")
+    monkeypatch.setenv("T00MY_HOME_MARKETS", "Friedrichshain;Weißensee")
     toom.set_stock(PRENZLAU, A, 0)
     res = await call(mcp, "plan_pickup", items=[{"sku": A, "quantity": 1}], fallback_markets=[])
     assert res["complete"] is False and [m["sku"] for m in res["missing"]] == [A]
@@ -876,14 +876,14 @@ async def test_plan_pickup_without_any_default_errors(mcp, toom):
 
 
 async def test_home_markets_exclude_primary_and_duplicates(mcp, toom, monkeypatch):
-    monkeypatch.setenv("TOOMY_HOME_MARKETS", "Prenzlau;Weißensee;3382;Köln")
+    monkeypatch.setenv("T00MY_HOME_MARKETS", "Prenzlau;Weißensee;3382;Köln")
     got = await server._home_markets(exclude=market(PRENZLAU))
     assert [m.id for m in got] == [WEISSENSEE, KOELN]
     assert [m.id for m in await server._home_markets()] == [PRENZLAU, WEISSENSEE, KOELN]
 
 
 async def test_markets_nearby_defaults_to_the_default_market(mcp, toom, monkeypatch):
-    monkeypatch.setenv("TOOMY_DEFAULT_MARKET", "Prenzlau")
+    monkeypatch.setenv("T00MY_DEFAULT_MARKET", "Prenzlau")
     res = await call(mcp, "markets_nearby", radius_km=5)
     assert res["centre"]["lat"] == pytest.approx(53.3057, abs=1e-4) and res["centre"]["lon"] == pytest.approx(13.8781, abs=1e-4)
     assert [m["id"] for m in res["markets"]] == [PRENZLAU] and res["markets"][0]["distance_km"] == 0.0
@@ -898,7 +898,7 @@ async def test_markets_nearby_without_near_or_default_errors(mcp, toom):
 
 
 async def test_find_article_nearby_defaults_to_the_default_market(mcp, toom, monkeypatch):
-    monkeypatch.setenv("TOOMY_DEFAULT_MARKET", "Prenzlau")
+    monkeypatch.setenv("T00MY_DEFAULT_MARKET", "Prenzlau")
     toom.set_stock(PRENZLAU, A, 0)
     res = await call(mcp, "find_article_nearby", sku=A, radius_km=5)
     assert res["centre"]["lat"] == pytest.approx(53.3057, abs=1e-4)
@@ -909,7 +909,7 @@ async def test_find_article_nearby_defaults_to_the_default_market(mcp, toom, mon
 
 
 async def test_find_article_nearby_explicit_near_beats_default(mcp, toom, monkeypatch):
-    monkeypatch.setenv("TOOMY_DEFAULT_MARKET", "Prenzlau")
+    monkeypatch.setenv("T00MY_DEFAULT_MARKET", "Prenzlau")
     res = await call(mcp, "find_article_nearby", near="Troisdorf", sku=A, radius_km=5)
     assert [m["id"] for m in res["markets"]] == [TROISDORF]
     assert res["nearest_complete"]["id"] == TROISDORF

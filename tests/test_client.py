@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from toomy.client import Market, ToomError, _price_to_float, build_search_query, decode_availability, match_markets, parse_basket, parse_filters, parse_product_page, parse_search_payload
+from t00my_mcp.client import Market, ToomError, _price_to_float, build_search_query, decode_availability, match_markets, parse_basket, parse_filters, parse_product_page, parse_search_payload
 
 FIX = Path(__file__).parent / "fixtures"
 

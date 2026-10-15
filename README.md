@@ -1,10 +1,20 @@
-# toomy 🔨
+# t00my-mcp 🔨
 
 **EN** · [DE](#deutsch)
 
-An MCP server (Python, [FastMCP](https://gofastmcp.com)) for the [toom.de](https://toom.de) DIY online shop:
-search articles, fill a basket per market, see which market actually has what in stock, and copy a basket from
-one market to another. Unofficial; it talks to the same web endpoints the toom.de site uses.
+> **⚠️ Unofficial.** This is an independent community project. It is **not** made, endorsed, sponsored or supported by
+> toom Baumarkt GmbH or any company behind toom, and it has no access to any internal toom system. "toom" and
+> "toom.de" are names of their respective owners and are used here only to say which website this tool works with.
+> It talks to the same public web pages and endpoints a browser uses on toom.de, which toom may change or block at
+> any time. See [Disclaimer](#disclaimer).
+
+An MCP server (Python, [FastMCP](https://gofastmcp.com)) that lets an AI assistant work with the
+[toom.de](https://toom.de) DIY online shop: search articles (offers, filters, ratings), keep a basket per market, see
+which market really has an article in stock, search within a radius around a place, compare articles, check whether
+something fits into your car or doorway, and plan where to pick up what. It reads and prepares; it does not check
+out, pay or send inquiries for you.
+
+*Why "t00my"?* A playful spelling of the name of the shop it talks to. It does not imply any affiliation.
 
 ## What it does
 
@@ -41,17 +51,18 @@ stop covers everything. Stock is live and can change between planning and pickup
 ## Install
 
 ```sh
-claude mcp add toomy -- uv --directory /path/to/toomy run toomy
+git clone https://github.com/tronicum/t00my-mcp && cd t00my-mcp
+claude mcp add t00my-mcp -- uv --directory "$(pwd)" run t00my-mcp
 ```
 
-stdio transport, no port. Any MCP client can launch `uv run toomy` the same way.
+stdio transport, no port. Any MCP client can launch `uv run t00my-mcp` the same way.
 
 ## Configuration (optional)
 
 | Variable | Meaning |
 |---|---|
-| `TOOMY_DEFAULT_MARKET` | Market used when none is selected (name or id), so `set_market` is not needed |
-| `TOOMY_HOME_MARKETS` | Your markets, separated by `;` (e.g. `Berlin-Friedrichshain;Berlin-Weißensee`): the default for `compare_markets` and the fallbacks of `plan_pickup` |
+| `T00MY_DEFAULT_MARKET` | Market used when none is selected (name or id), so `set_market` is not needed |
+| `T00MY_HOME_MARKETS` | Your markets, separated by `;` (e.g. `Berlin-Friedrichshain;Berlin-Weißensee`): the default for `compare_markets` and the fallbacks of `plan_pickup` |
 
 With these set, `markets_nearby` and `find_article_nearby` also work without `near` (around the default market).
 
@@ -78,7 +89,7 @@ With these set, `markets_nearby` and `find_article_nearby` also work without `ne
   quantities and product links to do that.
 - **Article inquiries are yours to send.** For articles that are only "Auf Anfrage bestellbar" in a market, toom.de
   offers "Artikel anfragen" on the product page. The form carries your contact data and sits behind a captcha, so
-  `toomy` prepares everything (`prepare_article_request`) but does not send it and does not try to get past the captcha.
+  `t00my-mcp` prepares everything (`prepare_article_request`) but does not send it and does not try to get past the captcha.
 - **Distances are straight-line**, not driving distances, and no geocoder is used: `near` is a market name or id,
   a postal code, words in a market's name or city, or coordinates `lat,lon`. Stock is live and can change; the
   phone number of each market is included so you can call before a long drive.
@@ -87,7 +98,7 @@ With these set, `markets_nearby` and `find_article_nearby` also work without `ne
 - **Accessories are toom's suggestions, not a catalogue**: "Häufig dazu gekauft" comes from purchase data, so it can
   contain other sizes of the same article (marked `same_category`) and unrelated things.
 - **Unofficial and undocumented.** toom.de can change its endpoints any time; the live contract tests
-  (`TOOMY_LIVE=1 uv run pytest -m live`) are there to notice that.
+  (`T00MY_LIVE=1 uv run pytest -m live`) are there to notice that.
 - **Polite by design:** requests are throttled (0.5 s apart), search reads only the first result page (toom's
   `robots.txt` disallows `?page=`; filters and sorting narrow a search down instead, and no `+` is ever put in a URL), and the client identifies itself. Personal use, please.
 - Search results decode toom's `availability_code` the way the product page does: `market_reservable` (reserve for
@@ -102,11 +113,26 @@ Planned tools and decisions are in [TODOs.md](TODOs.md).
 
 ```sh
 uv run pytest                           # mocked tests against recorded real response shapes, no network
-TOOMY_LIVE=1 uv run pytest -m live      # contract tests against toom.de (anonymous session, orders nothing)
+T00MY_LIVE=1 uv run pytest -m live      # contract tests against toom.de (anonymous session, orders nothing)
 ```
 
 `tests/conftest.py` is a fake toom.de (`httpx.MockTransport`) with per-market baskets and stock; its fixtures are
 recorded from the real site. Behaviour that was not verified against the real site is marked `ASSUMPTION` there.
+
+## Disclaimer
+
+- **Unofficial and independent.** No affiliation with, or approval by, toom Baumarkt GmbH or its parent companies.
+  Names and marks belong to their owners.
+- **Use at your own risk, no warranty** (see [LICENSE](LICENSE)). Prices, offers and stock are what toom's pages
+  show at that moment and can be wrong or outdated; check with the market before a long drive or a purchase.
+- **You are responsible for how you use it.** Please respect toom's terms of use and applicable law. The tool is
+  built to be a polite guest (throttled requests, first result page only, honest user agent) and does not try to get
+  around captchas or other protections, and neither should you. It is meant for personal use, not for bulk
+  collection or monitoring at scale.
+- **It reads and prepares.** It does not log in, check out, pay or send contact forms for you. Baskets exist only in
+  an anonymous session held by the running server process.
+- **Privacy.** The project collects nothing and sends nothing anywhere except to toom.de. It writes to disk only when
+  you ask for a session export (`export_session`, after confirmation; the file is readable only by you).
 
 ## License
 
@@ -116,9 +142,16 @@ AGPL-3.0-or-later, see [LICENSE](LICENSE). Not affiliated with toom Baumarkt Gmb
 
 ## Deutsch
 
+> **⚠️ Inoffiziell.** Dies ist ein unabhängiges Community-Projekt. Es wird **nicht** von der toom Baumarkt GmbH oder
+> einem Unternehmen hinter toom hergestellt, unterstützt, gefördert oder betreut und hat keinen Zugriff auf interne
+> toom-Systeme. „toom“ und „toom.de“ sind Namen ihrer jeweiligen Inhaber und werden hier nur genannt, um zu sagen, mit
+> welcher Website das Werkzeug arbeitet. Es nutzt dieselben öffentlichen Seiten und Endpunkte wie ein Browser auf
+> toom.de, die toom jederzeit ändern oder sperren kann. Siehe [Haftungsausschluss](#haftungsausschluss).
+
 Ein MCP-Server (Python, [FastMCP](https://gofastmcp.com)) für den [toom.de](https://toom.de)-Onlineshop:
 Artikel suchen, pro Markt einen Warenkorb füllen, sehen, welcher Markt was wirklich auf Lager hat, und einen
-Warenkorb von einem Markt in einen anderen kopieren. Inoffiziell; er nutzt dieselben Web-Endpunkte wie die Seite.
+Warenkorb von einem Markt in einen anderen kopieren, im Umkreis suchen, Artikel vergleichen, prüfen ob etwas ins Auto passt
+und die Abholung planen. Er liest und bereitet vor; bestellen, bezahlen und Anfragen abschicken tut er nicht.
 
 ### Tools
 
@@ -156,10 +189,20 @@ Abholung ändern, bitte vor der Fahrt noch einmal prüfen.
 ### Installation
 
 ```sh
-claude mcp add toomy -- uv --directory /pfad/zu/toomy run toomy
+git clone https://github.com/tronicum/t00my-mcp && cd t00my-mcp
+claude mcp add t00my-mcp -- uv --directory "$(pwd)" run t00my-mcp
 ```
 
-stdio, kein Port. Andere MCP-Clients starten einfach `uv run toomy`.
+stdio, kein Port. Andere MCP-Clients starten einfach `uv run t00my-mcp`.
+
+### Konfiguration (optional)
+
+| Variable | Bedeutung |
+|---|---|
+| `T00MY_DEFAULT_MARKET` | Markt, der gilt, wenn keiner gewählt ist (Name oder ID); `set_market` ist dann nicht nötig |
+| `T00MY_HOME_MARKETS` | Deine Märkte, getrennt mit `;` (z. B. `Berlin-Friedrichshain;Berlin-Weißensee`): Standard für `compare_markets` und die Ausweichmärkte von `plan_pickup` |
+
+Mit beiden gesetzt funktionieren `markets_nearby` und `find_article_nearby` auch ohne `near` (um den Standardmarkt).
 
 ### Grenzen (bitte lesen)
 
@@ -168,7 +211,7 @@ stdio, kein Port. Andere MCP-Clients starten einfach `uv run toomy`.
   Artikelnummern, Mengen und Produktlinks dafür.
 - **Artikelanfragen schickst du selbst ab.** Für Artikel, die in einem Markt nur „Auf Anfrage bestellbar“ sind, bietet
   toom.de auf der Produktseite „Artikel anfragen“ an. Das Formular enthält deine Kontaktdaten und liegt hinter einem
-  Captcha; `toomy` bereitet alles vor (`prepare_article_request`), schickt es aber nicht ab und umgeht das Captcha nicht.
+  Captcha; `t00my-mcp` bereitet alles vor (`prepare_article_request`), schickt es aber nicht ab und umgeht das Captcha nicht.
 - **Entfernungen sind Luftlinie**, keine Fahrstrecke, und es wird kein Geocoder benutzt: `near` ist ein
   Marktname oder eine ID, eine PLZ, Wörter aus Name oder Stadt eines Marktes oder Koordinaten `lat,lon`. Der
   Bestand ist live und kann sich ändern; die Telefonnummer jedes Marktes steht dabei, damit du vor einer langen
@@ -178,7 +221,7 @@ stdio, kein Port. Andere MCP-Clients starten einfach `uv run toomy`.
 - **Zubehör sind Vorschläge von toom, kein Katalog**: „Häufig dazu gekauft“ stammt aus Kaufdaten und kann andere
   Größen desselben Artikels (`same_category`) oder Unzusammenhängendes enthalten.
 - **Inoffiziell und undokumentiert.** toom.de kann die Endpunkte jederzeit ändern; die Live-Tests
-  (`TOOMY_LIVE=1 uv run pytest -m live`) sind dafür da, das zu bemerken.
+  (`T00MY_LIVE=1 uv run pytest -m live`) sind dafür da, das zu bemerken.
 - **Höflich gebaut:** gedrosselte Requests (0,5 s Abstand), die Suche liest nur die erste Ergebnisseite (die
   `robots.txt` von toom sperrt `?page=`), und der Client gibt sich zu erkennen. Bitte nur persönliche Nutzung.
 - Suchergebnisse entschlüsseln toom's `availability_code` wie die Produktseite: `market_reservable` (zur Abholung
@@ -192,8 +235,24 @@ stdio, kein Port. Andere MCP-Clients starten einfach `uv run toomy`.
 
 ```sh
 uv run pytest                           # Mock-Tests gegen aufgezeichnete echte Antwortformate, ohne Netzwerk
-TOOMY_LIVE=1 uv run pytest -m live      # Contract-Tests gegen toom.de (anonyme Session, bestellt nichts)
+T00MY_LIVE=1 uv run pytest -m live      # Contract-Tests gegen toom.de (anonyme Session, bestellt nichts)
 ```
+
+### Haftungsausschluss
+
+- **Inoffiziell und unabhängig.** Keine Verbindung zur toom Baumarkt GmbH oder deren Muttergesellschaften und keine
+  Billigung durch sie. Namen und Marken gehören ihren Inhabern.
+- **Nutzung auf eigene Gefahr, keine Gewähr** (siehe [LICENSE](LICENSE)). Preise, Angebote und Bestände sind das, was
+  die toom-Seiten in dem Moment zeigen, und können falsch oder veraltet sein; vor einer langen Fahrt oder einem Kauf
+  im Markt nachfragen.
+- **Du verantwortest, wie du es benutzt.** Bitte die Nutzungsbedingungen von toom und geltendes Recht beachten. Das
+  Werkzeug ist ein höflicher Gast (gedrosselte Anfragen, nur die erste Ergebnisseite, ehrlicher User-Agent) und
+  versucht nicht, Captchas oder andere Schutzmaßnahmen zu umgehen, und du solltest das auch nicht tun. Gedacht ist es
+  für den persönlichen Gebrauch, nicht für Massenabfragen oder Dauerüberwachung.
+- **Es liest und bereitet vor.** Es meldet sich nicht an, bestellt nicht, bezahlt nicht und schickt keine
+  Kontaktformulare für dich ab. Warenkörbe gibt es nur in einer anonymen Sitzung im laufenden Serverprozess.
+- **Datenschutz.** Das Projekt sammelt nichts und sendet nichts außer an toom.de. Auf die Platte schreibt es nur, wenn
+  du einen Sitzungsexport verlangst (`export_session`, nach Rückfrage; die Datei ist nur für dich lesbar).
 
 ### Lizenz
 

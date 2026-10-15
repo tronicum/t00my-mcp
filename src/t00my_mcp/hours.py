@@ -11,7 +11,7 @@ from datetime import date, datetime, time, timedelta
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:  # pragma: no cover
-    from toomy.client import Market
+    from t00my_mcp.client import Market
 
 WEEKDAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
 HORIZON_DAYS = 21

@@ -10,7 +10,7 @@ import httpx
 import pytest
 from conftest import ARTICLE_STATE, DOOR, call, call_err
 
-from toomy import server
+from t00my_mcp import server
 
 KOELN, TROISDORF, BERGHEIM, LANGENFELD, GREVENBROICH = 3464, 3248, 3668, 3660, 3793
 PRENZLAU, FRIEDRICHSHAIN = 3839, 3646

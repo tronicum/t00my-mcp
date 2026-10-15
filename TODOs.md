@@ -6,7 +6,7 @@ Legende: **[ ]** offen · **[~]** teilweise · **[x]** erledigt
 Grundsätze für alles hier: nur lesen und vorbereiten, nichts abschicken, was Kontaktdaten oder Geld
 betrifft; höfliche Rate (≥ 0,5 s Abstand, nur erste Ergebnisseite, nie `+` oder `page=` in URLs wegen
 `robots.txt`); jede neue Funktion mit Mock-Test gegen aufgezeichnete Antworten und, wo sinnvoll, einem
-Live-Contract-Test (`TOOMY_LIVE=1`).
+Live-Contract-Test (`T00MY_LIVE=1`).
 
 ## Schon da
 
@@ -80,7 +80,7 @@ Live-Contract-Test (`TOOMY_LIVE=1`).
 
 ## Betrieb und Veröffentlichung
 
-- [ ] **GitHub-Repo anlegen** (öffentlich, AGPL-3.0), CI wie bei iceicebaby (liegt als `ci.yml` bereit).
+- [x] GitHub-Repo `tronicum/t00my-mcp` (öffentlich, AGPL-3.0), CI als `ci.yml`.
 - [ ] **Geplanter Live-Contract-Lauf** (wöchentlich, ohne Bestellen), um Änderungen an toom.de früh zu merken.
 - [ ] **PyPI-Release** (Trusted Publishing) wie bei iceicebaby, Paketname vorher prüfen.
 - [ ] **README-Beispiele je Werkzeug** mit echten, anonymisierten Antworten.

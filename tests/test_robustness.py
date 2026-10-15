@@ -11,9 +11,9 @@ import httpx
 import pytest
 
 from conftest import ARTICLE_STATE, DOOR, call, call_err
-from toomy import client as toom_client
-from toomy import geo, server
-from toomy.client import Market, ToomError, fetch_markets, parse_article_state
+from t00my_mcp import client as toom_client
+from t00my_mcp import geo, server
+from t00my_mcp.client import Market, ToomError, fetch_markets, parse_article_state
 
 STOCKS = "/shop/rest/V1/toom/stocks/availability"
 

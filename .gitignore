@@ -4,3 +4,6 @@ __pycache__/
 .env
 dist/
 .pytest_cache/
+*.swp
+*.swo
+.DS_Store

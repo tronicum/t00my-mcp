@@ -19,8 +19,8 @@ import pytest
 from fastmcp import Client
 from fastmcp.exceptions import ToolError
 
-from toomy import client as toom_client
-from toomy import server
+from t00my_mcp import client as toom_client
+from t00my_mcp import server
 
 FIX = Path(__file__).parent / "fixtures"
 TEMPLATE = json.loads((FIX / "basket_template.json").read_text(encoding="utf-8"))

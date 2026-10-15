@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from toomy.planner import plan_pickup
+from t00my_mcp.planner import plan_pickup
 
 NAMES = {1: "Fallback-A", 2: "Fallback-B", 3: "Primary"}
 LINES = [

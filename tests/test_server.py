@@ -236,9 +236,9 @@ async def test_every_market_has_its_own_basket(mcp, toom):
 # ---------------------------------------------------------------- session
 
 async def test_export_session_asks_for_confirmation_and_writes_nothing_without_it(mcp, toom, tmp_path, monkeypatch):
-    from toomy import server
+    from t00my_mcp import server
 
-    home = tmp_path / "toomy-home"
+    home = tmp_path / "t00my-home"
     monkeypatch.setattr(server, "SESSION_DIR", home)
     res = await call(mcp, "export_session", market="Prenzlau")
     assert res["written"] is False and "replaces" in res["warning"] and "confirm=True" in res["next"]
@@ -250,12 +250,12 @@ async def test_export_session_asks_for_confirmation_and_writes_nothing_without_i
 async def test_export_session_writes_importable_cookies_with_private_permissions(mcp, toom, tmp_path, monkeypatch):
     import json
     import stat
-    from toomy import server
+    from t00my_mcp import server
 
-    monkeypatch.setattr(server, "SESSION_DIR", tmp_path / "toomy-home")
+    monkeypatch.setattr(server, "SESSION_DIR", tmp_path / "t00my-home")
     await call(mcp, "add_to_basket", sku=A, market="Prenzlau")
     res = await call(mcp, "export_session", market="Prenzlau", confirm=True)
-    path = tmp_path / "toomy-home" / f"session-{PRENZLAU}.json"
+    path = tmp_path / "t00my-home" / f"session-{PRENZLAU}.json"
     assert res["written"] and res["file"] == str(path) and res["basket_items"] == 1 and res["basket_url"].endswith("/warenkorb")
     assert stat.S_IMODE(path.stat().st_mode) == 0o600  # file readable only by the owner
     assert stat.S_IMODE(path.parent.stat().st_mode) == 0o700

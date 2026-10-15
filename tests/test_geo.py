@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from toomy.client import Market
-from toomy.geo import haversine_km, resolve_center, within
+from t00my_mcp.client import Market
+from t00my_mcp.geo import haversine_km, resolve_center, within
 
 FIX = Path(__file__).parent / "fixtures"
 MARKETS = [Market.from_api(m) for m in json.loads((FIX / "markets.json").read_text(encoding="utf-8"))["markets"]]

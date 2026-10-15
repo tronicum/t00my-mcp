@@ -1,4 +1,4 @@
-"""toomy: MCP server for the toom.de online shop.
+"""t00my-mcp: unofficial MCP server for the toom.de online shop (not affiliated with toom).
 
 Search products, manage a basket per market (toom "Markt"), compare availability across markets and
 copy a basket from one market to another. Unofficial; talks to toom.de's own web endpoints.
@@ -22,8 +22,8 @@ import httpx
 from fastmcp import FastMCP
 from fastmcp.exceptions import ToolError
 
-from toomy import fit, geo, hours, planner
-from toomy.client import (
+from t00my_mcp import fit, geo, hours, planner
+from t00my_mcp.client import (
     AVAILABILITY_FILTERS,
     DELIVERY_TYPES,
     FILTER_OFFERS,
@@ -40,7 +40,7 @@ from toomy.client import (
 )
 
 mcp = FastMCP(
-    "toomy",
+    "t00my-mcp",
     instructions=(
         "Assistant for the toom.de DIY store. Workflow: find_markets -> set_market -> search_products -> "
         "add_to_basket -> view_basket. Prices and availability depend on the market, so always know which "
@@ -95,23 +95,23 @@ def _env_list(name: str) -> list[str]:
 
 
 async def _market(market: str | int | None) -> Market:
-    """The market to work with: explicit, else the one chosen with set_market, else TOOMY_DEFAULT_MARKET."""
+    """The market to work with: explicit, else the one chosen with set_market, else T00MY_DEFAULT_MARKET."""
     if market is not None:
         return await _resolve(market)
     if _current is not None:
         return _current
-    default = os.environ.get("TOOMY_DEFAULT_MARKET", "").strip()
+    default = os.environ.get("T00MY_DEFAULT_MARKET", "").strip()
     if default:
         return await _resolve(default)
     raise ToolError(
-        "No market selected. Use find_markets, then set_market (or pass market=..., or set TOOMY_DEFAULT_MARKET)."
+        "No market selected. Use find_markets, then set_market (or pass market=..., or set T00MY_DEFAULT_MARKET)."
     )
 
 
 async def _home_markets(exclude: Market | None = None) -> list[Market]:
-    """Markets from TOOMY_HOME_MARKETS (names or ids, separated by ';'), without `exclude`."""
+    """Markets from T00MY_HOME_MARKETS (names or ids, separated by ';'), without `exclude`."""
     out: list[Market] = []
-    for q in _env_list("TOOMY_HOME_MARKETS"):
+    for q in _env_list("T00MY_HOME_MARKETS"):
         m = await _resolve(q)
         if (exclude is None or m.id != exclude.id) and all(m.id != x.id for x in out):
             out.append(m)
@@ -378,7 +378,7 @@ async def clear_basket(market: str | None = None) -> dict[str, Any]:
     return {"market": m.name, **await _call(_session(m).clear())}
 
 
-SESSION_DIR = Path(os.environ.get("TOOMY_HOME", Path.home() / ".toomy"))
+SESSION_DIR = Path(os.environ.get("T00MY_HOME", Path.home() / ".t00my-mcp"))
 
 
 @mcp.tool
@@ -1006,7 +1006,7 @@ async def compare_markets(
 ) -> dict[str, Any]:
     """Check articles against several markets without touching any basket.
 
-    `markets` defaults to the markets in TOOMY_HOME_MARKETS.
+    `markets` defaults to the markets in T00MY_HOME_MARKETS.
 
     Articles come from `items` ([{"sku": "...", "quantity": 2}]) or, if omitted, from the basket of
     from_market / the current market.
@@ -1020,7 +1020,7 @@ async def compare_markets(
     else:
         targets = await _home_markets()
         if not targets:
-            raise ToolError("Give `markets` or set TOOMY_HOME_MARKETS.")
+            raise ToolError("Give `markets` or set T00MY_HOME_MARKETS.")
     stock = await _stock_matrix(lines, targets)
     rows = []
     for m in targets:
@@ -1054,13 +1054,13 @@ async def plan_pickup(
     i.e. no trip to a fallback market and no own transport are needed. With apply=True the planned pickups
     are built as (replaced) baskets in each stop's market, ready to be reserved on toom.de.
 
-    Defaults: the primary market is the selected one (set_market / TOOMY_DEFAULT_MARKET) and the fallbacks
-    are TOOMY_HOME_MARKETS without it.
+    Defaults: the primary market is the selected one (set_market / T00MY_DEFAULT_MARKET) and the fallbacks
+    are T00MY_HOME_MARKETS without it.
     """
     _, lines = await _lines(from_market, items)
     primary = await _market(primary_market)
     if fallback_markets is None:
-        fallbacks = await _home_markets(exclude=primary)  # TOOMY_HOME_MARKETS, if set
+        fallbacks = await _home_markets(exclude=primary)  # T00MY_HOME_MARKETS, if set
     else:
         fallbacks = [await _resolve(q) for q in fallback_markets]
     bulky = {str(b) for b in (bulky_skus or [])}

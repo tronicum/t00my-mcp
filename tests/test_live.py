@@ -1,4 +1,4 @@
-"""Contract tests against the REAL toom.de. Opt-in: TOOMY_LIVE=1 uv run pytest -m live
+"""Contract tests against the REAL toom.de. Opt-in: T00MY_LIVE=1 uv run pytest -m live
 
 They use an anonymous throwaway session (no login, nothing is ordered) and a handful of requests, and
 check that the shapes the mocked tests rely on are still what toom.de sends.
@@ -10,12 +10,12 @@ import os
 
 import pytest
 
-from toomy import client
-from toomy.client import PICKUP, Toom, fetch_markets, match_markets
+from t00my_mcp import client
+from t00my_mcp.client import PICKUP, Toom, fetch_markets, match_markets
 
 pytestmark = [
     pytest.mark.live,
-    pytest.mark.skipif(not os.environ.get("TOOMY_LIVE"), reason="set TOOMY_LIVE=1 to talk to the real toom.de"),
+    pytest.mark.skipif(not os.environ.get("T00MY_LIVE"), reason="set T00MY_LIVE=1 to talk to the real toom.de"),
 ]
 
 
@@ -45,7 +45,7 @@ async def test_search_page_still_embeds_the_product_list(session):
 
 
 async def test_offers_filter_sorting_and_price_range_work_on_the_search_page(session):
-    from toomy.client import FILTER_OFFERS, FILTER_PRICE, SORTS
+    from t00my_mcp.client import FILTER_OFFERS, FILTER_PRICE, SORTS
 
     plain = await session.search("bohrmaschine")
     offers = await session.search("bohrmaschine", {FILTER_OFFERS: ["true"]})
@@ -58,7 +58,7 @@ async def test_offers_filter_sorting_and_price_range_work_on_the_search_page(ses
 
 
 async def test_availability_filter_is_per_market(session):
-    from toomy.client import AVAILABILITY_FILTERS
+    from t00my_mcp.client import AVAILABILITY_FILTERS
 
     plain = await session.search("bohrmaschine")
     in_market = await session.search("bohrmaschine", {AVAILABILITY_FILTERS["1"]: [str(session.market.id)]})
@@ -84,11 +84,11 @@ async def test_basket_roundtrip_in_an_anonymous_session(session):
 
 
 async def test_search_is_throttled_and_polite():
-    assert client.MIN_INTERVAL >= 0.5 and "toomy" in client.USER_AGENT
+    assert client.MIN_INTERVAL >= 0.5 and "t00my-mcp" in client.USER_AGENT
 
 
 async def test_markets_have_coordinates_and_radius_search_finds_the_cologne_area(markets):
-    from toomy import geo
+    from t00my_mcp import geo
 
     assert sum(1 for m in markets if m.lat is not None) > 250
     lat, lon, _ = geo.resolve_center(markets, "Köln")

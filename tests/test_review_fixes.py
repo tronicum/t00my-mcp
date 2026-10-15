@@ -9,8 +9,8 @@ from zoneinfo import ZoneInfo
 import pytest
 
 from conftest import call, call_err
-from toomy import fit, hours, server
-from toomy.client import (
+from t00my_mcp import fit, hours, server
+from t00my_mcp.client import (
     Market,
     ToomError,
     clean_html,
