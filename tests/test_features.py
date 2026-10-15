@@ -194,13 +194,13 @@ async def test_market_info_prenzlau(mcp, toom, monkeypatch):
         "rental_van": True, "trailer_rental": True, "wood_cutting": True,
         "tool_rental": True, "delivery_service": True, "pickup_service": True,
     }
-    assert res["pickup"]["phone"] == "03984 8327210"
+    assert res["pickup"]["phone"] == "+49 000 0000000"
     assert res["pickup"]["click_and_collect"] is True
     assert res["pickup"]["where_in_the_market"].startswith("Im toom Baumarkt Prenzlau befindet sich die Abholstation")
     assert res["pickup"]["parking"] == "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung."
     assert res["pickup"]["public_transport"].startswith("Bus 403, 431, 432, 435, 447, 466")
     assert "<" not in res["pickup"]["public_transport"] and "Haltestelle Prenzlau Einkaufszentrum" in res["pickup"]["public_transport"]
-    assert res["contact"] == {"phone": "03984 832721-0", "email": "Prenzlau@toombm.de"}
+    assert res["contact"] == {"phone": "+49 000 0000000", "email": "markt@example.invalid"}
 
 
 async def test_market_info_has_flags_differ_per_market(mcp, toom, monkeypatch):
@@ -630,7 +630,7 @@ async def test_get_related_also_bought(mcp, toom):
     assert first["was_price_eur"] is None and first["rating"] is None and first["reviews"] == 0
     assert first["category"] == "Werkstatt & Maschinen > Eisenwaren & Beschläge > Dübel"
     assert first["availability"] == {"home_delivery": False, "market_reservable": True, "market_orderable": False}
-    assert first["selling_points"][0] == "passend für Hörmann Brandschutztür H8-5 mit Eckzarge" and len(first["selling_points"]) == 5
+    assert first["selling_points"][0] == "passend für Hörmann Brandschutztür H8-5 mit Eckzarge" and len(first["selling_points"]) == 2  # the fixture keeps the first two
     assert first["url"] == "https://toom.de/p/schrauben-inklusive-duebel-h8-5-17-stueck/110023"
 
 

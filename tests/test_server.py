@@ -309,7 +309,7 @@ async def test_prepare_request_uses_the_selected_market_and_validates(mcp, toom)
 async def test_prepare_request_contains_no_personal_data(mcp, toom):
     res = await call(mcp, "prepare_article_request", sku=A, market="Prenzlau")
     flat = str(res).lower()
-    assert "@" not in flat.replace("@toombm.de", "")  # no e-mail address of the user, only the market's
+    assert "@" not in flat.replace("@example.invalid", "")  # no e-mail address of the user, only the (placeholder) market contact
     assert "name:" not in flat and "adresse des" not in flat
 
 

@@ -3,7 +3,7 @@
   {
    "id": 3059,
    "name": "Radolfzell",
-   "phone": "07732 92230",
+   "phone": "+49 000 0000000",
    "link": "m/radolfzell/",
    "address": {
     "street": "Zeppelinstraße 6",
@@ -114,16 +114,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "07732 92230",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 7<br /> Haltestelle BEZ</p>",
-   "email": "Radolfzell@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3248,
    "name": "Troisdorf",
-   "phone": "02241 95180-0",
+   "phone": "+49 000 0000000",
    "link": "m/troisdorf/",
    "address": {
     "street": "Heuserweg 1-5",
@@ -236,16 +236,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02241/95 18 00",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Troisdorf befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bahn S12<br />Haltestelle Spich<br /><br />Bus 503<br />Haltestelle Vogelgesang, Straße am Parkplatz<br /><br />Bus 507<br />Haltestelle Dachsweg</p>",
-   "email": "Troisdorf@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3340,
    "name": "Albstadt",
-   "phone": "07431 933431-0",
+   "phone": "+49 000 0000000",
    "link": "m/albstadt/",
    "address": {
     "street": "Berliner Str. 94",
@@ -370,16 +370,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "07431 933431-0",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Albstadt befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bahnhof Albstadt-Ebingen<br />B463</p>",
-   "email": "albstadt@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3373,
    "name": "Bochum",
-   "phone": "02327 307981-0",
+   "phone": "+49 000 0000000",
    "link": "m/bochum/",
    "address": {
     "street": "Berliner Straße 50-62",
@@ -492,16 +492,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02327 3079810",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Bochum befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "",
-   "email": "bochum@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3378,
    "name": "Hagen",
-   "phone": "02331 4803-0",
+   "phone": "+49 000 0000000",
    "link": "m/hagen/",
    "address": {
     "street": "Berliner Strasse 13-15",
@@ -611,16 +611,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02331 48030",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Hagen-Haspe befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "",
-   "email": "Hagen-Haspe@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3382,
    "name": "Berlin-Weißensee",
-   "phone": "030 39837169-0",
+   "phone": "+49 000 0000000",
    "link": "m/berlin-weissensee/",
    "address": {
     "street": "Roelckestr. 108",
@@ -716,16 +716,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "030 39837169-0",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Berlin-Weißensee befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Straßenbahn 12<br />Haltestelle Pasedagplatz</p>\r\n<p>Bus X54 und 156<br />Haltestelle Rennbahnstr./Gustav-Adolf-Str.</p>\r\n<p>Bus 255<br />Haltestelle Roelckestr./Nüßlerstr.</p>",
-   "email": "berlin-weissensee@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3532,
    "name": "Magdeburg-Brückfeld",
-   "phone": "0391 8110215",
+   "phone": "+49 000 0000000",
    "link": "m/magdeburg-brueckfeld/",
    "address": {
     "street": "Berliner Chaussee 48-50",
@@ -836,16 +836,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": false,
-   "pickupPhone": "0391 8110215",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Magdeburg-Brückfeld befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 51<br />Haltestelle Bördelandhalle<br /><br />Straßenbahn 6<br />Haltestelle Berliner Chaussee</p>",
-   "email": "Magdeburg@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3646,
    "name": "Berlin-Friedrichshain",
-   "phone": "030 4677621-0",
+   "phone": "+49 000 0000000",
    "link": "m/berlin-friedrichshain/",
    "address": {
     "street": "Hermann-Blankenstein-Str. 44",
@@ -945,16 +945,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "+49 30/467 76 21-70",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Berlin-Friedrichshain befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bahn S8, S9, S41, S42<br />Haltestelle Storkower Straße<br /><br />Bus 156, 240<br />Haltestelle S-Bf Storkower Straße<br /><br />Straßenbahn 21<br />Haltestelle Proskauer Straße</p>",
-   "email": "Berlin-Friedrichshain@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3839,
    "name": "Prenzlau",
-   "phone": "03984 832721-0",
+   "phone": "+49 000 0000000",
    "link": "m/prenzlau/",
    "address": {
     "street": "Seelübber Weg 3",
@@ -1066,16 +1066,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "03984 8327210",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Prenzlau befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 403, 431, 432, 435, 447, 466<br /> Haltestelle Prenzlau Einkaufszentrum</p>",
-   "email": "Prenzlau@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3073,
    "name": "Diez",
-   "phone": "06432 645331-0",
+   "phone": "+49 000 0000000",
    "link": "m/diez/",
    "address": {
     "street": "Industriestraße 11-15",
@@ -1188,16 +1188,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "06432 6453310",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "",
-   "email": "Diez@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3124,
    "name": "Schwerte",
-   "phone": "02304 94225-0",
+   "phone": "+49 000 0000000",
    "link": "m/schwerte/",
    "address": {
     "street": "Schützenstraße 75-77",
@@ -1308,16 +1308,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02304 942250",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "In Ihrem toom Baumarkt befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus R30, R50<br /> Haltestelle Paul-Hoffmann-Straße</p>",
-   "email": "Schwerte@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3209,
    "name": "Duisburg-Kaßlerfeld",
-   "phone": "0203 3189990",
+   "phone": "+49 000 0000000",
    "link": "m/duisburg-kasslerfeld/",
    "address": {
     "street": "Max-Peters-Straße 3",
@@ -1428,16 +1428,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02033189990",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Duisburg-Kaßlerfeld befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 934<br /> Haltestelle Innenhafen<br /> <br /> Bus 933<br /> Haltestelle Schifferstraße<br /> <br /> Straßenbahn 901<br /> Haltestelle Scharnhorststraße</p>",
-   "email": "Duisburg-Kasslerfeld@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3223,
    "name": "Hamm",
-   "phone": "02381 972061-0",
+   "phone": "+49 000 0000000",
    "link": "m/hamm/",
    "address": {
     "street": "Dortmunder Straße 110",
@@ -1548,16 +1548,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02381 9720610",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Hamm befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 7, 17, E35, E57<br />Haltestelle Schmiedestraße<br /><br />Bus 1, E35, E57, E72, E78, E79<br />Haltestelle Isenbecker Hof</p>",
-   "email": "Hamm@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3353,
    "name": "Herten",
-   "phone": "02366 930311-0",
+   "phone": "+49 000 0000000",
    "link": "m/herten-zumaltenschacht/",
    "address": {
     "street": "Zum alten Schacht 2",
@@ -1669,16 +1669,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02366/930311-0",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Herten befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Buslinie 214<br /> Josefstraße</p>\r\n<p>Buslinie 249<br /> Hollenbeck</p>",
-   "email": "herten-zumaltenschacht@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3374,
    "name": "Mönchengladbach",
-   "phone": "02161-247631-0",
+   "phone": "+49 000 0000000",
    "link": "m/moenchengladbach/",
    "address": {
     "street": "Lürriper Str. 208",
@@ -1788,16 +1788,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02161-247631-0",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Mönchengladbach befindet sich die Abholstation für deine Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "",
-   "email": "Moenchengladbach@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3376,
    "name": "Alsdorf",
-   "phone": "02404 674341-0",
+   "phone": "+49 000 0000000",
    "link": "m/alsdorf/",
    "address": {
     "street": "Am Rosenkränzchen 1-3",
@@ -1910,16 +1910,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02404 6743410",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Alsdorf befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "",
-   "email": "Alsdorf@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3379,
    "name": "Duisburg-Rheinhausen",
-   "phone": "02065 90431-0",
+   "phone": "+49 000 0000000",
    "link": "m/duisburg-rheinhausen/",
    "address": {
     "street": "Asterlager Straße 94",
@@ -2029,16 +2029,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02065 904310",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Duisburg-Rheinhausen befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 912<br />Haltestelle Einkaufszentrum</p>",
-   "email": "Duisburg-Rheinhausen@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3381,
    "name": "Gelsenkirchen",
-   "phone": "0209 93081-0",
+   "phone": "+49 000 0000000",
    "link": "m/gelsenkirchen/",
    "address": {
     "street": "Sperberstraße 21a",
@@ -2150,16 +2150,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "0209 930810",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Gelsenkirchen befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 255<br />Haltestelle Sperberstraße</p>",
-   "email": "Gelsenkirchen@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3453,
    "name": "Mülheim/Ruhr",
-   "phone": "0208 78095-0",
+   "phone": "+49 000 0000000",
    "link": "m/muelheim-ruhr/",
    "address": {
     "street": "Am Förderturm 20",
@@ -2275,16 +2275,16 @@
     "Tapeten&shy;wechsel"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "0208 78095-0",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Mülheim/Ruhr befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "",
    "publicTransportation": "<p>Bus 129<br />Haltestelle Am Förderturm</p>",
-   "email": "MuelheimRuhr@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3464,
    "name": "Köln-Zollstock",
-   "phone": "0221 1397581-0",
+   "phone": "+49 000 0000000",
    "link": "m/koeln-zollstock/",
    "address": {
     "street": "Neuer Weyerstraßerweg 2",
@@ -2395,16 +2395,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "0221 1397581-0",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Köln-Zollstock befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 130<br />Haltestelle Bernkasteller Straße<br /><br />Straßenbahn 12<br />Haltestelle Zollstockgürtel<br />&nbsp;</p>\r\n<p>Navigationssystem bitte<br />\"Bernkasteler Straße 77\"<br />als Ziel eingeben</p>",
-   "email": "Koeln-Zollstock@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3466,
    "name": "Düren",
-   "phone": "02421 40779-0",
+   "phone": "+49 000 0000000",
    "link": "m/dueren-roelsdorf/",
    "address": {
     "street": "Bahnstraße 11",
@@ -2515,16 +2515,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02421 407790",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Düren befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 202, 286<br /> Haltestelle Rölsdorf-Dreieck</p>",
-   "email": "Dueren-Roelsdorf@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3472,
    "name": "Witten",
-   "phone": "02302 91430-0",
+   "phone": "+49 000 0000000",
    "link": "m/witten/",
    "address": {
     "street": "Dortmunder Straße 21",
@@ -2637,16 +2637,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02302 914300",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Witten befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 320, 376<br />Haltestelle Husemann-Sporthalle<br /><br />Bus 375<br />Haltestelle Rheinische Straße</p>",
-   "email": "Witten@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3500,
    "name": "Wirges",
-   "phone": "02602 687-54",
+   "phone": "+49 000 0000000",
    "link": "m/wirges/",
    "address": {
     "street": "Samoborstraße 5",
@@ -2755,16 +2755,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": false,
-   "pickupPhone": "02602 68754",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Wirges befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 115, 462, 464, 485<br /> Haltestelle Wirges Mitte</p>",
-   "email": "Wirges@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3530,
    "name": "Remagen",
-   "phone": "02642 93010",
+   "phone": "+49 000 0000000",
    "link": "m/remagen/",
    "address": {
     "street": "Zeppelinstraße 1-5",
@@ -2875,16 +2875,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": false,
-   "pickupPhone": "02642 93010",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Remagen befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 841, 851, 852, 853<br />Haltestelle FH RheinAhrCampus</p>",
-   "email": "Remagen@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3633,
    "name": "Bottrop",
-   "phone": "02041 706071-0",
+   "phone": "+49 000 0000000",
    "link": "m/bottrop/",
    "address": {
     "street": "Ruhrölstraße 2",
@@ -2996,16 +2996,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02041/706 071-70",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Bottrop befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 260<br />Haltestelle Am Jugendkombihaus</p>",
-   "email": "bottrop@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3645,
    "name": "Plettenberg",
-   "phone": "02391 91761-0",
+   "phone": "+49 000 0000000",
    "link": "m/plettenberg/",
    "address": {
     "street": "Breddestraße 1",
@@ -3115,16 +3115,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02391 917610",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Plettenberg befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 74, 90, 274, 276, R80<br /> Haltestelle Lennebrücke</p>",
-   "email": "Plettenberg@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3655,
    "name": "Altenkirchen",
-   "phone": "02681 95081-0",
+   "phone": "+49 000 0000000",
    "link": "m/altenkirchen/",
    "address": {
     "street": "Siegener Straße 67",
@@ -3234,16 +3234,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02681 950810",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "In Ihrem toom Baumarkt befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 295<br />Haltestelle Toom Baumarkt</p>",
-   "email": "Altenkirchen@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3658,
    "name": "Neukirchen-Vluyn",
-   "phone": "02845 941971-0",
+   "phone": "+49 000 0000000",
    "link": "m/neukirchen-vluyn/",
    "address": {
     "street": "Inneboltstraße 99",
@@ -3355,16 +3355,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "028459419710",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Neukirchen-Vluyn befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 912<br />Haltestelle Diesterwegschule</p>",
-   "email": "Neukirchen-Vluyn@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3660,
    "name": "Langenfeld",
-   "phone": "02173 394611-0",
+   "phone": "+49 000 0000000",
    "link": "m/langenfeld/",
    "address": {
     "street": "Hardt 2-4",
@@ -3477,16 +3477,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02173 394611-0",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Langenfeld befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 254, 777, 791<br />Haltestelle Gladbacher Straße</p>",
-   "email": "Langenfeld@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3661,
    "name": "Nettetal-Lobberich",
-   "phone": "02153 910811-0",
+   "phone": "+49 000 0000000",
    "link": "m/nettetal-lobberich/",
    "address": {
     "street": "Van-der-Upwich-Straße 1",
@@ -3598,16 +3598,16 @@
     "Tapeten&shy;wechsel"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "021539108110",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Nettetal-Lobberich befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 93<br /> Haltestelle Florastraße</p>",
-   "email": "Nettetal@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3668,
    "name": "Bergheim-Zieverich",
-   "phone": "02271 983291-0",
+   "phone": "+49 000 0000000",
    "link": "m/bergheim-zieverich/",
    "address": {
     "street": "Sportparkstraße 12",
@@ -3720,16 +3720,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02271 9832910",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Bergheim-Zieverich befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bahn RB38<br />Haltestelle Zieverich Bf<br /><br />Bus 922, 923, 939, 940, 963<br />Haltestelle Gutenbergstraße</p>",
-   "email": "Bergheim@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3686,
    "name": "Jülich",
-   "phone": "02461 621801-0",
+   "phone": "+49 000 0000000",
    "link": "m/juelich/",
    "address": {
     "street": "Am Klingerpützchen 4",
@@ -3841,16 +3841,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02461 6218010",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Jülich befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "",
-   "email": "Juelich@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3692,
    "name": "Gummersbach",
-   "phone": "02261 911801-0",
+   "phone": "+49 000 0000000",
    "link": "m/gummersbach/",
    "address": {
     "street": "Vollmerhauser Straße 36",
@@ -3961,16 +3961,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02261 911801-70",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Gummersbach befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "",
-   "email": "gummersbach@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3711,
    "name": "Wissen/Sieg",
-   "phone": "02742 9321-0",
+   "phone": "+49 000 0000000",
    "link": "m/wissen-sieg/",
    "address": {
     "street": "Koblenzer Straße 192",
@@ -4080,16 +4080,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02742/93 21-70",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Wissen/Sieg befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 295<br />Haltestelle Hüttensiedlung</p>",
-   "email": "WissenSieg@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3793,
    "name": "Grevenbroich",
-   "phone": "02181 47571-0",
+   "phone": "+49 000 0000000",
    "link": "m/grevenbroich/",
    "address": {
     "street": "An der Zuckerfabrik 1",
@@ -4200,16 +4200,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02181 475710",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Grevenbroich befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 858, 869, 877, 893<br /> Haltestelle Zuckerfabrik</p>",
-   "email": "Grevenbroich@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3819,
    "name": "Lünen",
-   "phone": "02306 202841-0",
+   "phone": "+49 000 0000000",
    "link": "m/luenen/",
    "address": {
     "street": "Buchenberg 1",
@@ -4320,16 +4320,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02306 2028410",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Lünen befindet sich die Abholstation für Ihre Artikel direkt beim Kundenservice Center.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 116<br /> Haltestelle Buchenberg</p>",
-   "email": "Luenen@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3823,
    "name": "Marl",
-   "phone": "02365 20719-0",
+   "phone": "+49 000 0000000",
    "link": "m/marl/",
    "address": {
     "street": "Zechenstraße 26",
@@ -4442,16 +4442,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02365 207190",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Marl befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus SB26<br />Haltestelle Lippestraße</p>",
-   "email": "Marl@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3848,
    "name": "Soest",
-   "phone": "02921 983-0",
+   "phone": "+49 000 0000000",
    "link": "m/soest/",
    "address": {
     "street": "Senator-Schwartz-Ring 29-35",
@@ -4562,16 +4562,16 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02921 9830",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Soest befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "",
    "publicTransportation": "<p>Bus C 4<br />Haltestelle Schüttweg</p>",
-   "email": "Soest@toombm.de"
+   "email": "markt@example.invalid"
   },
   {
    "id": 3875,
    "name": "Voerde",
-   "phone": "02855 9635-0",
+   "phone": "+49 000 0000000",
    "link": "m/voerde/",
    "address": {
     "street": "Zunftweg 11",
@@ -4682,11 +4682,11 @@
     "Schlüssel&shy;dienst"
    ],
    "clickAndCollectEnabled": true,
-   "pickupPhone": "02855 96350",
+   "pickupPhone": "+49 000 0000000",
    "pickupPoint": "Im toom Baumarkt Voerde befindet sich die Abholstation für Ihre Artikel direkt im Haupteingangsbereich.",
    "pickupParking": "An unserem toom Baumarkt stehen ausreichend Parkplätze zur Verfügung.",
    "publicTransportation": "<p>Bus 16<br /> Haltestelle Heideweg</p>",
-   "email": "Voerde@toombm.de"
+   "email": "markt@example.invalid"
   }
  ]
 }

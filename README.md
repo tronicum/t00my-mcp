@@ -116,6 +116,9 @@ uv run pytest                           # mocked tests against recorded real res
 T00MY_LIVE=1 uv run pytest -m live      # contract tests against toom.de (anonymous session, orders nothing)
 ```
 
+The recorded responses in `tests/fixtures/` are short snapshots of public toom.de pages with contact data replaced by
+placeholders (see [tests/fixtures/README.md](tests/fixtures/README.md)); toom's content stays with its owners.
+
 `tests/conftest.py` is a fake toom.de (`httpx.MockTransport`) with per-market baskets and stock; its fixtures are
 recorded from the real site. Behaviour that was not verified against the real site is marked `ASSUMPTION` there.
 

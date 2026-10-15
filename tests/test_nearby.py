@@ -59,7 +59,7 @@ async def test_get_article_details_of_the_door(mcp, toom):
     assert art["characteristics"]["weitere-eigenschaften"]["Material"] == "Metall"  # single value stays a string
     assert art["categories"] == ["Bauen & Renovieren", "Fenster, Türen & Vordächer", "Eingangstüren", "Stahltüren"]
     assert art["manufacturer"]["name"] == "Hörmann KG Verkaufsgesellschaft"
-    assert art["manufacturer"]["email"] == "info@hoermann.de"
+    assert art["manufacturer"]["email"] == "hersteller@example.invalid"
     assert len(art["summary"]) == 5
     assert "produktdetails" not in art["characteristics"] and "herstellerinformationen" not in art["characteristics"]
     assert res["market"] == "Prenzlau" and res["quantity_asked"] == 1
